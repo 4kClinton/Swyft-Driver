@@ -1,0 +1,128 @@
+.earnings-container {
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    background-color: #F9F9F9;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 1px solid #E6E6E6;
+}
+
+.earnings-heading {
+    color: #000;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.earnings-text {
+    color: #666;
+    font-size: 18px;
+    margin: 12px 0;
+    line-height: 1.6;
+}
+
+.earnings-highlight {
+    color: #007AFF;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.phone-input-container {
+    margin: 20px 0;
+}
+
+.phone-label {
+    display: block;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.phone-input {
+    width: 90%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #CCC;
+    font-size: 16px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s;
+}
+
+.phone-input:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+.error-text {
+    color: #FF3B30;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.payment-button,
+.go-back-button {
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    padding: 14px 20px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 8px;
+    background-color: #007AFF;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.payment-button:hover,
+.go-back-button:hover {
+    background-color: #005BB5;
+    transform: translateY(-2px);
+}
+
+.payment-button:active,
+.go-back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 122, 255, 0.2);
+}
+
+.payment-button:disabled {
+    background-color: #CCC;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .earnings-container {
+        padding: 20px;
+    }
+
+    .earnings-heading {
+        font-size: 22px;
+    }
+
+    .earnings-text {
+        font-size: 16px;
+    }
+
+    .phone-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .payment-button,
+    .go-back-button {
+        font-size: 16px;
+        padding: 12px 16px;
+    }
+}

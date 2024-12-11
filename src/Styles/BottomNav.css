@@ -1,0 +1,25 @@
+/* Updated external CSS for BottomNav component */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 60px;
+    background-color: #212121;
+    color: #ffffff;
+    z-index: 6000;
+}
+
+.bottom-nav svg {
+    color: #FFA500;
+    font-size: 28px;
+}
+
+.bottom-nav .MuiBottomNavigationAction-root {
+    color: #FFA500;
+}
+label{
+    color: #ffffff;
+}

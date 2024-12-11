@@ -1,0 +1,37 @@
+{
+  "Online": [
+    {
+      "id": "f352",
+      "online": true,
+      "location": {
+        "latitude": -1.3338617689079464,
+        "longitude": 36.67557939777392
+      }
+    }
+  ],
+  "Drivers": [
+    {
+      "id": "e944",
+      "name": "Savannah",
+      "phone": "0715909026",
+      "email": "Savannah@gmail.com",
+      "carType": "Pick-up",
+      "password": "1234567890",
+      "licenseNumber": "kfi.lcxjgcc.gc",
+      "idNumber": "itd.cgc,jc,jgcj",
+      "licensePlate": "hfxy,fhxxxf"
+    },
+    {
+      "id": "6e45",
+      "name": "Marion",
+      "phone": "0796205375",
+      "email": "Marion2@gmail.com",
+      "carType": "pickup",
+      "password": "123456789",
+      "licenseNumber": "uc,j.fikfy.ikyfi",
+      "idNumber": ";iyf;iyfiyf",
+      "licensePlate": "iyfluifliuyfij"
+    }
+  ],
+  "Orders": []
+}

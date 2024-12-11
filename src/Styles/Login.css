@@ -1,0 +1,309 @@
+:root {
+    --primary-color: #121212;
+    /* Darker background color for main sections */
+    --secondary-color: #00D46A;
+    /* Softer green accent for dark mode */
+    --text-color: #E0E0E0;
+    /* Light gray text for readability */
+    --input-background: #1E1E1E;
+    /* Dark gray background for input fields */
+    --card-background: #252525;
+    /* Medium-dark gray for cards/containers */
+    --highlight-color: #FFD54F;
+    /* Warm yellow for highlights or alerts */
+    --border-color: #333333;
+    /* Subtle border color for dividing elements */
+    --border-radius: 5vh;
+    /* Same border radius for rounded effect */
+    font-family: 'Montserrat', sans-serif;
+}
+
+.login-container {
+    display: block;
+    align-items: center;
+    background-color: var(--primary-color);
+    /* Uses card background color */
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    padding-top: 20px;
+}
+
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin: 8px 0;
+    text-decoration: none;
+    font-style: normal;
+    font-family: var(--font-family);
+    color: var(--text-color);
+    /* Uses text color */
+}
+
+.login-button {
+    background-color: var(--secondary-color);
+    /* Uses secondary color */
+    color: var(--text-color);
+    /* Uses text color */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-weight: bold;
+    width: 80%;
+}
+
+.login-button:hover {
+    background-color: var(--secondary-color);
+    /* Consistent color on hover */
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    color: var(--text-color);
+    /* Matches icon color with text color */
+}
+
+.login-header {
+    font-family: var(--font-family);
+    font-size: 25px;
+    font-weight: 600;
+    color: var(--text-color);
+    /* Uses text color */
+}
+
+.login-input {
+    padding: 10px;
+    margin: 10px 0;
+    width: 80%;
+    background-color: var(--input-background);
+    /* Uses input background color */
+    color: var(--text-color);
+    /* Uses text color */
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    /* Uses border color */
+}
+
+.login-input::placeholder {
+    color: var(--border-color);
+    /* Matches placeholder color with border */
+}
+
+.socials-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 20px 20px 20px 20px;
+    padding-top: 20px;
+}
+
+.login-component {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+svg {
+    color: var(--text-color);
+    /* SVG icon color */
+}
+
+
+
+
+/* verification */
+:root {
+    --primary-color: #121212;
+    --secondary-color: #00D46A;
+    --text-color: #E0E0E0;
+    --input-background: #1E1E1E;
+    --card-background: #252525;
+    --highlight-color: #FFD54F;
+    --border-color: #333333;
+    --border-radius: 5vh;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* body {
+    background-color: var(--primary-color);
+    font-family: var(--font-family);
+    color: var(--text-color);
+} */
+
+.form-container {
+    background-color: var(--primary-color);
+    width: 320px;
+    margin: auto;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    padding: 2rem;
+}
+
+.title {
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+}
+
+.input-group {
+    margin-top: 1rem;
+}
+
+.input-group label {
+    display: block;
+    color: var(--text-color);
+    margin-bottom: 4px;
+}
+
+.input-group input {
+    width: 80%;
+    border-radius: 0.375rem;
+    border: 1px solid var(--border-color);
+    outline: none;
+    background-color: var(--input-background);
+    padding: 0.75rem 1rem;
+    color: var(--text-color);
+}
+
+.input-group input:focus {
+    border-color: var(--secondary-color);
+}
+
+.sign {
+    display: block;
+    width: 100%;
+    background-color: var(--secondary-color);
+    padding: 0.75rem;
+    text-align: center;
+    color: var(--primary-color);
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.sign:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+.social-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.line {
+    height: 1px;
+    flex: 1;
+    background-color: var(--border-color);
+}
+
+.social-message .message {
+    padding: 0 0.5rem;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.icon {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    margin: 0 0.25rem;
+    cursor: pointer;
+}
+
+.icon:hover {
+    background-color: var(--highlight-color);
+}
+
+.signup {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.signup a {
+    color: var(--highlight-color);
+    text-decoration: none;
+}
+
+.signup a:hover {
+    text-decoration: underline;
+}
+
+.verification-header {
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+}
+
+.car-type {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.car-type-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.car-type-select {
+    display: flex;
+}
+
+.car-type-dropdown {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.verification-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.verification-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.car-type-label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.car-type-select select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+.verify-button {
+    font-size: 16px;
+    width: 100%;
+}
