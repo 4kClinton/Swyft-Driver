@@ -1,8 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 
-const GoOnlineButton = ({ driverId }) => {
-  const [isOnline, setIsOnline] = useState(false);
+const GoOnlineButton = () => {
+  const [isOnline, setIsOnline] = useState(() => {
+    // Retrieve the online status from localStorage
+    const savedStatus = localStorage.getItem("isOnline,uniqueId");
+    return savedStatus === "true"; // Convert string back to boolean
+  });
+
+  // Get uniqueId from sessionStorage
+  const uniqueId = sessionStorage.getItem("uniqueId");
+
+  useEffect(() => {
+    // Save the online status to localStorage whenever it changes
+    localStorage.setItem("isOnline", isOnline.toString());
+  }, [isOnline]);
 
   const handleToggle = async () => {
     const newStatus = !isOnline;
@@ -17,13 +29,14 @@ const GoOnlineButton = ({ driverId }) => {
 
             try {
               const response = await fetch(
-                `https://swyft-server-t7f5.onrender.com/online/${driverId}`,
+                `https://swyft-server-t7f5.onrender.com/online/${uniqueId}`,
                 {
-                  method: "POST",
+                  method: "PUT",
                   headers: {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
+                    uniqueId, // Including the uniqueId in the body
                     online: true,
                     location: {
                       latitude,
@@ -32,7 +45,7 @@ const GoOnlineButton = ({ driverId }) => {
                   }),
                 }
               );
-
+              console.log(uniqueId);
               if (response.ok) {
                 console.log("Location pushed to DB:", { latitude, longitude });
               } else {
@@ -53,18 +66,19 @@ const GoOnlineButton = ({ driverId }) => {
       // Driver going offline
       try {
         const response = await fetch(
-          `https://swyft-server-t7f5.onrender.com/online/${driverId}`,
+          `https://swyft-server-t7f5.onrender.com/online/${uniqueId}`,
           {
-            method: "PATCH",
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              uniqueId, // Including the uniqueId in the body
               online: false,
             }),
           }
         );
-
+        console.log(uniqueId);
         if (response.ok) {
           console.log("Driver is now offline.");
         } else {

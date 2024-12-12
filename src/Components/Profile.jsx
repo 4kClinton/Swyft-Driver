@@ -1,25 +1,78 @@
-// src/Components/Profile.jsx
-
 import React, { useEffect, useState } from "react";
-import { Typography, Card, CardContent, Avatar } from "@mui/material";
+import {
+  Typography,
+  Card,
+  CardContent,
+  Avatar,
+  CircularProgress,
+} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import BottomNav from "./BottomNav.jsx";
 
 const Profile = () => {
-  // Mock user profile data
-  const mockProfile = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-    phone: "0796-123-456",
-    joinDate: "2023-01-15",
-  };
-
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState(null); // Profile data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
   useEffect(() => {
-    // Replace with actual profile data fetching in the future
-    setProfile(mockProfile);
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch(
+          "https://swyft-server-t7f5.onrender.com/user/profile",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Assumes an auth token is stored in localStorage
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile data");
+        }
+
+        const data = await response.json();
+        setProfile(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
   }, []);
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography color="error">{error}</Typography>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: "16px", display: "flex", justifyContent: "center" }}>
@@ -42,10 +95,11 @@ const Profile = () => {
             Phone: {profile.phone}
           </Typography>
           <Typography variant="body1" color="textSecondary">
-            Joined: {profile.joinDate}
+            Joined: {new Date(profile.joinDate).toLocaleDateString()}
           </Typography>
         </CardContent>
       </Card>
+      {/* Uncomment BottomNav if required */}
       {/* <BottomNav /> */}
     </div>
   );

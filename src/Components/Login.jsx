@@ -33,7 +33,7 @@ const Login = () => {
       if (response.ok) {
         // Assuming the server sends a token on successful login
         localStorage.setItem("authToken", data.token);
-        navigate("/dash"); // Redirect to Dashboard on successful login
+        navigate("/dashboard"); // Redirect to Dashboard on successful login
       } else {
         setError(data.message || "Login failed. Please try again.");
       }

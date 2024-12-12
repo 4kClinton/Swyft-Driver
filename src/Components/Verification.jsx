@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Box } from "@mui/material";
-import ShieldIcon from "@mui/icons-material/Shield"; // Shield icon
-import SecurityIcon from '@mui/icons-material/Security';
+import SecurityIcon from "@mui/icons-material/Security";
 import "../Styles/Login.css";
 
 const Verification = () => {
@@ -12,7 +11,19 @@ const Verification = () => {
   const storedData = JSON.parse(sessionStorage.getItem("signupData")) || {};
   const { name, phoneNumber, email, password } = storedData;
 
-  const [carType, setCarType] = useState(""); // Added carType state
+  // Retrieve uniqueId from sessionStorage or generate if not present
+  const uniqueId =
+    sessionStorage.getItem("uniqueId") ||
+    Math.random().toString(36).substring(2, 15);
+
+  // Set uniqueId in sessionStorage if not already stored
+  useEffect(() => {
+    if (!sessionStorage.getItem("uniqueId")) {
+      sessionStorage.setItem("uniqueId", uniqueId);
+    }
+  }, [uniqueId]);
+
+  const [carType, setCarType] = useState("");
   const [licenseNumber, setLicenseNumber] = useState("");
   const [idNumber, setIdNumber] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
@@ -40,6 +51,7 @@ const Verification = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            id: uniqueId, // Use the uniqueId retrieved from sessionStorage
             name,
             phone: phoneNumber,
             email,
@@ -52,10 +64,30 @@ const Verification = () => {
         }
       );
 
+      // Log the request body for debugging
+      console.log({
+        id: uniqueId, // Use the consistent uniqueId
+        name,
+        phone: phoneNumber,
+        email,
+        carType,
+        password,
+        licenseNumber,
+        idNumber,
+        licensePlate,
+      });
+
+      // Check response
+      const responseData = await response.json();
+      console.log(responseData); // Log the response from the server
+
       if (!response.ok) {
-        throw new Error("Verification failed. Please try again.");
+        throw new Error(
+          `Verification failed: ${responseData.message || "Please try again."}`
+        );
       }
 
+      // Successfully verified, redirect to the dashboard
       navigate("/dashboard");
     } catch (err) {
       console.error("An error occurred during verification:", err);
@@ -69,7 +101,7 @@ const Verification = () => {
     <div className="verification-component">
       <Box className="verification-container">
         <SecurityIcon
-          style={{ fontSize: "100px", color: "#18b700", marginBottom: "16px" }} // Shield icon styling
+          style={{ fontSize: "100px", color: "#18b700", marginBottom: "16px" }}
         />
         <header className="verification-header">
           {`Let’s verify your account, ${name}!`}
@@ -92,10 +124,10 @@ const Verification = () => {
                   <option value="" disabled>
                     Select Car Type
                   </option>
-                  <option value="pickup">pickup</option>
-                  <option value="miniTruck">miniTruck</option>
-                  <option value="lorry">lorry</option>
-                  <option value="flatbed">flatbed</option>
+                  <option value="pickup">Pickup</option>
+                  <option value="miniTruck">Mini Truck</option>
+                  <option value="lorry">Lorry</option>
+                  <option value="flatbed">Flatbed</option>
                 </select>
               </div>
             </div>

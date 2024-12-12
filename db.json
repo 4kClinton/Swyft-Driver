@@ -31,6 +31,28 @@
       "licenseNumber": "uc,j.fikfy.ikyfi",
       "idNumber": ";iyf;iyfiyf",
       "licensePlate": "iyfluifliuyfij"
+    },
+    {
+      "id": "6e5d",
+      "name": "Clinton",
+      "phone": "0796205375",
+      "email": "borclinton20@gmail.com",
+      "carType": "pickup",
+      "password": "Incorrect69.",
+      "licenseNumber": "dukfududt",
+      "idNumber": "34567u8i76",
+      "licensePlate": "mydhcjhvhcv"
+    },
+    {
+      "id": "8d70",
+      "name": "Obadiah Mukhwana",
+      "phone": "0796205375",
+      "email": "obadiah@swyft.com",
+      "carType": "pickup",
+      "password": "123456789",
+      "licenseNumber": "hswsdftyuikjhf",
+      "idNumber": "dhjkjh",
+      "licensePlate": "dfghjhgfdsdfg"
     }
   ],
   "Orders": []
