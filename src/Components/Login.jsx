@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button, Typography, Box, Link } from "@mui/material";
 import { Google, Twitter, GitHub } from "@mui/icons-material";
 import "../Styles/Login.css";
-// import { supabase } from "../Utils/supabaseClient"; // Ensure this path is correct
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,15 +17,25 @@ const Login = () => {
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const response = await fetch(
+        "https://swyft-server-t7f5.onrender.com/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
-      if (error) {
-        setError("Login failed. Please try again.");
-      } else {
+      const data = await response.json();
+
+      if (response.ok) {
+        // Assuming the server sends a token on successful login
+        localStorage.setItem("authToken", data.token);
         navigate("/dash"); // Redirect to Dashboard on successful login
+      } else {
+        setError(data.message || "Login failed. Please try again.");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");

@@ -32,22 +32,25 @@ const Verification = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:3000/Drivers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          phone: phoneNumber,
-          email,
-          carType,
-          password,
-          licenseNumber,
-          idNumber,
-          licensePlate,
-        }),
-      });
+      const response = await fetch(
+        "https://swyft-server-t7f5.onrender.com/driver/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            phone: phoneNumber,
+            email,
+            carType,
+            password,
+            licenseNumber,
+            idNumber,
+            licensePlate,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Verification failed. Please try again.");

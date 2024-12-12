@@ -1,21 +1,12 @@
-// src/components/GoOnlineButton.jsx
-
 import React, { useState } from "react";
 import { Button } from "@mui/material";
 
-const GoOnlineButton = ({ onToggle }) => {
+const GoOnlineButton = ({ driverId }) => {
   const [isOnline, setIsOnline] = useState(false);
 
   const handleToggle = async () => {
     const newStatus = !isOnline;
     setIsOnline(newStatus);
-
-    // Check if onToggle is a valid function before calling it
-    if (typeof onToggle === "function") {
-      onToggle(newStatus);
-    } else {
-      console.warn("onToggle prop is not provided or not a function.");
-    }
 
     if (newStatus) {
       // Driver going online: Get and push location to the JSON server
@@ -25,19 +16,22 @@ const GoOnlineButton = ({ onToggle }) => {
             const { latitude, longitude } = position.coords;
 
             try {
-              const response = await fetch("http://localhost:3000/Online", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  online: true,
-                  location: {
-                    latitude,
-                    longitude,
+              const response = await fetch(
+                `https://swyft-server-t7f5.onrender.com/online/${driverId}`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
                   },
-                }),
-              });
+                  body: JSON.stringify({
+                    online: true,
+                    location: {
+                      latitude,
+                      longitude,
+                    },
+                  }),
+                }
+              );
 
               if (response.ok) {
                 console.log("Location pushed to DB:", { latitude, longitude });
@@ -56,17 +50,20 @@ const GoOnlineButton = ({ onToggle }) => {
         console.error("Geolocation is not supported by this browser.");
       }
     } else {
-      // Driver going offline: Update online status to false
+      // Driver going offline
       try {
-        const response = await fetch("http://localhost:3000/Online", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            online: false,
-          }),
-        });
+        const response = await fetch(
+          `https://swyft-server-t7f5.onrender.com/online/${driverId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              online: false,
+            }),
+          }
+        );
 
         if (response.ok) {
           console.log("Driver is now offline.");
@@ -82,7 +79,6 @@ const GoOnlineButton = ({ onToggle }) => {
   return (
     <Button
       variant="contained"
-      // color={isOnline ? "success" : "primary"}
       onClick={handleToggle}
       sx={{ margin: "20px", width: "200px", backgroundColor: "#2AC352" }}
     >
