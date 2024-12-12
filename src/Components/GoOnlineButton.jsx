@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
+import toast, { Toaster } from "react-hot-toast";
 
 const GoOnlineButton = () => {
   const [isOnline, setIsOnline] = useState(() => {
     // Retrieve the online status from localStorage
-    const savedStatus = localStorage.getItem("isOnline,uniqueId");
+    const savedStatus = localStorage.getItem("isOnline");
     return savedStatus === "true"; // Convert string back to boolean
   });
 
@@ -21,6 +22,9 @@ const GoOnlineButton = () => {
     setIsOnline(newStatus);
 
     if (newStatus) {
+      // Notify the driver they are now online
+      toast.success("You are now online!");
+
       // Driver going online: Get and push location to the JSON server
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -45,7 +49,6 @@ const GoOnlineButton = () => {
                   }),
                 }
               );
-              console.log(uniqueId);
               if (response.ok) {
                 console.log("Location pushed to DB:", { latitude, longitude });
               } else {
@@ -63,6 +66,9 @@ const GoOnlineButton = () => {
         console.error("Geolocation is not supported by this browser.");
       }
     } else {
+      // Notify the driver they are now offline
+      toast("You are now offline.");
+
       // Driver going offline
       try {
         const response = await fetch(
@@ -78,7 +84,17 @@ const GoOnlineButton = () => {
             }),
           }
         );
-        console.log(uniqueId);
+        // Check response
+        const responseData = await response.json();
+        console.log(responseData); // Log the response from the server
+
+        if (!response.ok) {
+          throw new Error(
+            `update failed: ${
+              responseData.message || "Please try again."
+            }`
+          );
+        }
         if (response.ok) {
           console.log("Driver is now offline.");
         } else {
@@ -91,13 +107,22 @@ const GoOnlineButton = () => {
   };
 
   return (
-    <Button
-      variant="contained"
-      onClick={handleToggle}
-      sx={{ margin: "20px", width: "200px", backgroundColor: "#2AC352" }}
-    >
-      {isOnline ? "Go Offline" : "Go Online"}
-    </Button>
+    <div style={{ width: "100%", padding: "5px" }}>
+      <Toaster />
+      <Button
+        variant="contained"
+        onClick={handleToggle}
+        sx={{
+          width: "100%",
+          height: "60px",
+          backgroundColor: isOnline ? "#FF3E3E" : "#2AC352",
+          color: "white",
+          fontSize: "18px",
+        }}
+      >
+        {isOnline ? "Go Offline" : "Go Online"}
+      </Button>
+    </div>
   );
 };
 

@@ -33,10 +33,12 @@ const Dash = () => {
       <div className="notch" onClick={toggleDash}>
         <div className="notch-indicator"></div>
       </div>
-      <GoOnlineButton />
-      <h2 className="catch">Your Performance Overview</h2>
+      <GoOnlineButton onClick={toggleDash} />
+      <h2 className="catch" onClick={toggleDash}>
+        Your Performance Overview
+      </h2>
 
-      <div className="dash-content">
+      <div className="dash-content" >
         <Link to="/earnings" className="card-link">
           <div className="card">
             <FaMoneyBillWave size={24} className="card-icon" />
@@ -44,11 +46,11 @@ const Dash = () => {
             <p>{data.earnings}</p>
           </div>
         </Link>
-        <div className="card">
+        {/* <div className="card">
           <FaChartLine size={24} className="card-icon" />
           <h3>Activity Score</h3>
           <p>{data.activityScore}</p>
-        </div>
+        </div> */}
         <div className="card">
           <FaStar size={24} className="card-icon" />
           <h3>Ratings</h3>

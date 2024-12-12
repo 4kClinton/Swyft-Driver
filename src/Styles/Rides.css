@@ -1,0 +1,65 @@
+/* General container styling */
+.rides-history-container {
+    padding: 16px;
+    background-color: #ffffff;
+    /* White background */
+    min-height: 100vh;
+    font-family: "Arial", sans-serif;
+    border-radius: 20px;
+}
+
+/* Typography styling */
+.rides-history-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00d46a;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+/* List styling */
+.rides-history-list {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    /* Light gray background for the list */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual ListItem styling */
+.rides-history-list-item {
+    padding: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.rides-history-list-item:hover {
+    background-color: #e6f8ee;
+    /* Slight green tint on hover */
+}
+
+/* Icon styling */
+.rides-history-icon {
+    color: #00d46a;
+    font-size: 32px;
+    /* Larger size for emphasis */
+}
+
+/* Divider styling */
+.rides-history-divider {
+    background-color: #e0e0e0;
+    /* Neutral gray */
+}
+
+/* Text styling */
+.rides-history-primary {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+    /* Dark gray for contrast */
+}
+
+.rides-history-secondary {
+    font-size: 14px;
+    color: #666666;
+    /* Medium gray for secondary text */
+}

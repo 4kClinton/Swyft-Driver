@@ -26,7 +26,7 @@
 }
 
 .earnings-highlight {
-    color: #007AFF;
+    color: #00D46A;
     font-weight: 700;
     font-size: 20px;
 }
@@ -55,7 +55,7 @@
 }
 
 .phone-input:focus {
-    border-color: #007AFF;
+    border-color: #00D46A;
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
 }
@@ -75,18 +75,18 @@
     margin: 12px 0;
     border: none;
     border-radius: 8px;
-    background-color: #007AFF;
+    background-color: #00D46A;
     color: #fff;
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 255, 89, 0.3);
     transition: background-color 0.3s, transform 0.2s;
 }
 
 .payment-button:hover,
 .go-back-button:hover {
-    background-color: #005BB5;
+    background-color: #00D46A;
     transform: translateY(-2px);
 }
 

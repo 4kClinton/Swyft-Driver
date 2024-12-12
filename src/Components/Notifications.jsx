@@ -1,5 +1,3 @@
-// src/Components/Notifications.jsx
-
 import React, { useEffect, useState } from "react";
 import {
   List,
@@ -9,8 +7,8 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import BottomNav from "./BottomNav.jsx"
 import NotificationsIcon from "@mui/icons-material/Notifications"; // Icon for each notification item
+import "../Styles/Rides.css"; // Import shared styles
 
 const Notifications = () => {
   // Mock data for notifications
@@ -24,31 +22,38 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    // Replace with an actual database call in the future
+    // Simulating fetching data from a database
     setNotifications(mockNotifications);
   }, []);
 
   return (
-    <div style={{ padding: "16px" }}>
-      <Typography variant="h5" gutterBottom>
-        Notifications
-      </Typography>
-      <List>
+    <div className="rides-history-container">
+      <Typography className="rides-history-title">Notifications</Typography>
+      <List className="rides-history-list">
         {notifications.map((notification) => (
           <React.Fragment key={notification.id}>
-            <ListItem>
+            <ListItem className="rides-history-list-item">
               <ListItemIcon>
-                <NotificationsIcon />
+                <NotificationsIcon className="rides-history-icon" />
               </ListItemIcon>
               <ListItemText
-                primary={notification.message}
-                secondary={`Date: ${notification.date}`}
+                primary={
+                  <Typography className="rides-history-primary">
+                    {notification.message}
+                  </Typography>
+                }
+                secondary={
+                  <Typography className="rides-history-secondary">
+                    Date: {notification.date}
+                  </Typography>
+                }
               />
             </ListItem>
-            <Divider />
+            <Divider className="rides-history-divider" />
           </React.Fragment>
         ))}
       </List>
+      {/* Uncomment if BottomNav is needed */}
       {/* <BottomNav /> */}
     </div>
   );
