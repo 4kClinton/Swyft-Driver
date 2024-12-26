@@ -27,7 +27,12 @@ const RidesHistory = () => {
   return (
     <div className="rides-history-container">
       <Typography className="rides-history-title">Rides History</Typography>
-      <List className="rides-history-list">
+      <List
+        className="rides-history-list"
+        sx={{
+          paddingBottom: 0,
+        }}
+      >
         {rides.map((ride) => (
           <React.Fragment key={ride.id}>
             <ListItem className="rides-history-list-item">

@@ -117,9 +117,9 @@ const Map = () => {
       </GoogleMap>
 
       {/* Display distance in a user-friendly format */}
-      <div className="distance-info">
+      {/* <div className="distance-info">
         {distance > 0 ? `${distance.toFixed(2)} km` : "Calculating distance..."}
-      </div>
+      </div> */}
 
       {/* Pass distance, userLocation, and destination as props to the Dash component */}
       <Dash

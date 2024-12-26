@@ -116,7 +116,7 @@ const GoOnlineButton = () => {
         onClick={handleToggle}
         sx={{
           position: "absolute",
-          top: "65px",
+          top: "100px",
           // right: "20px",
           // backgroundColor: "#2AC352",
           // color: "white",
@@ -128,7 +128,7 @@ const GoOnlineButton = () => {
           display: "flex",
           justifyContent: "center",
           width: "80%",
-          height: "60px",
+          height: "50px",
           
           marginRight: "2px",
           backgroundColor: isOnline ? "#FF3E3E" : "#2AC352",

@@ -27,7 +27,12 @@ const Notifications = () => {
   }, []);
 
   return (
-    <div className="rides-history-container">
+    <div
+      className="rides-history-container"
+      sx={{
+        paddingBottom: 0,
+      }}
+    >
       <Typography className="rides-history-title">Notifications</Typography>
       <List className="rides-history-list">
         {notifications.map((notification) => (
