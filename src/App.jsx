@@ -9,6 +9,7 @@ import Profile from "./Components/Profile";
 import Login from "./Components/Login";
 import Signup from "./Components/SignUp";
 import Verification from "./Components/Verification";
+import GoOnlineButton from "./Components/GoOnlineButton"
 import Earnings from "./Components/Earnings";
 import "./App.css";
 
@@ -49,18 +50,21 @@ function App() {
   return (
     <Router>
       <div className="app">
+       
         <Routes>
           <Route
             path="/"
             element={<Login onLogin={() => setIsLoggedIn(true)} />}
           />
           <Route
+          
             path="/dashboard"
             element={
               <>
                 {/* <Dash /> */}
                 <Map />
                 <BottomNav value={count} onChange={setCount} />
+                <GoOnlineButton />
               </>
             }
           />

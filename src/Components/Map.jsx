@@ -5,6 +5,7 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import CircularProgress from "@mui/material/CircularProgress"; // For loader
+import GoOnlineButton from "./GoOnlineButton";
 import "../Styles/Map.css";
 
 import Dash from "./Dash"; // Import the Dash component

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Box, Link } from "@mui/material";
 import { Google, Twitter, GitHub } from "@mui/icons-material";
+import CircularProgress from "@mui/material/CircularProgress"; // For loader
 import "../Styles/Login.css";
 
 const Login = () => {
@@ -77,7 +78,7 @@ const Login = () => {
             sx={{ mt: 2, backgroundColor: "#18b700", fontWeight: "bold" }}
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Log In"}
+            {loading ? <CircularProgress /> : "Log In"}
           </Button>
         </form>
         <Button

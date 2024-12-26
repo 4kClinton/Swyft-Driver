@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
+import "../Styles/GoOnline.css";
 
 const GoOnlineButton = () => {
   const [isOnline, setIsOnline] = useState(() => {
@@ -110,14 +111,29 @@ const GoOnlineButton = () => {
     <div style={{ width: "100%", padding: "5px" }}>
       <Toaster />
       <Button
+      className="btn-online"
         variant="contained"
         onClick={handleToggle}
         sx={{
-          width: "100%",
+          position: "absolute",
+          top: "65px",
+          // right: "20px",
+          // backgroundColor: "#2AC352",
+          // color: "white",
+          // fontSize: "20px",
+          border:"none !important",
+          borderRadius: "40px",
+          // padding: "10px 20px",
+          cursor: "pointer",
+          display: "flex",
+          justifyContent: "center",
+          width: "80%",
           height: "60px",
+          
+          marginRight: "2px",
           backgroundColor: isOnline ? "#FF3E3E" : "#2AC352",
           color: "white",
-          fontSize: "18px",
+          fontSize: "25px",
         }}
       >
         {isOnline ? "Go Offline" : "Go Online"}

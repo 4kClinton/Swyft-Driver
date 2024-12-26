@@ -3,6 +3,7 @@ import "../Styles/Dash.css";
 import GoOnlineButton from "../Components/GoOnlineButton.jsx";
 import { FaMoneyBillWave, FaChartLine, FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import Alert from "../Components/Alert";
 
 
 const Dash = () => {
@@ -33,12 +34,13 @@ const Dash = () => {
       <div className="notch" onClick={toggleDash}>
         <div className="notch-indicator"></div>
       </div>
-      <GoOnlineButton onClick={toggleDash} />
+      {/* <GoOnlineButton onClick={toggleDash} /> */}
       <h2 className="catch" onClick={toggleDash}>
         Your Performance Overview
       </h2>
 
-      <div className="dash-content" >
+      <div className="dash-content">
+        <Alert />
         <Link to="/earnings" className="card-link">
           <div className="card">
             <FaMoneyBillWave size={24} className="card-icon" />
