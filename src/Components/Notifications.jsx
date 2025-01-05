@@ -33,7 +33,7 @@ const Notifications = () => {
         paddingBottom: 0,
       }}
     >
-      <Typography className="rides-history-title">Notifications</Typography>
+      <header className="rides-history-title">Notifications</header>
       <List className="rides-history-list">
         {notifications.map((notification) => (
           <React.Fragment key={notification.id}>

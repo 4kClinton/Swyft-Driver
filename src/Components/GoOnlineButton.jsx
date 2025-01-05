@@ -91,9 +91,7 @@ const GoOnlineButton = () => {
 
         if (!response.ok) {
           throw new Error(
-            `update failed: ${
-              responseData.message || "Please try again."
-            }`
+            `update failed: ${responseData.message || "Please try again."}`
           );
         }
         if (response.ok) {
@@ -109,9 +107,17 @@ const GoOnlineButton = () => {
 
   return (
     <div style={{ width: "100%", padding: "5px" }}>
-      <Toaster />
+      <Toaster
+      className="online-toast"
+        style={{
+          position:"absolute",
+          top: "10vh",
+          marginTop: "20px",
+          inset:"50px"
+        }}
+      />
       <Button
-      className="btn-online"
+        className="btn-online"
         variant="contained"
         onClick={handleToggle}
         sx={{
@@ -121,7 +127,7 @@ const GoOnlineButton = () => {
           // backgroundColor: "#2AC352",
           // color: "white",
           // fontSize: "20px",
-          border:"none !important",
+          border: "none !important",
           borderRadius: "40px",
           // padding: "10px 20px",
           cursor: "pointer",
@@ -129,7 +135,7 @@ const GoOnlineButton = () => {
           justifyContent: "center",
           width: "80%",
           height: "50px",
-          
+
           marginRight: "2px",
           backgroundColor: isOnline ? "#FF3E3E" : "#2AC352",
           color: "white",

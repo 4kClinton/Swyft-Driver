@@ -11,6 +11,7 @@ const BottomNav = ({ value, onChange }) => {
 
   return (
     <BottomNavigation
+      className="BottomNavigation"
       value={location.pathname} // Use the current path as the value
       onChange={(event, newValue) => {
         onChange(newValue); // Optional: Lift state up to parent if needed
@@ -21,6 +22,7 @@ const BottomNav = ({ value, onChange }) => {
         bottom: 0,
         left: 0,
         right: 0,
+        height: "60px",
         zIndex: 6000,
         backgroundColor: "#212121",
         color: "#fff",

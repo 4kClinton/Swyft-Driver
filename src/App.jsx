@@ -11,6 +11,7 @@ import Signup from "./Components/SignUp";
 import Verification from "./Components/Verification";
 import GoOnlineButton from "./Components/GoOnlineButton"
 import Earnings from "./Components/Earnings";
+import OrderMap from "./Components/ReceivedOrder"
 import "./App.css";
 import { SocketProvider } from "./contexts/SocketContext";
 import { useDispatch } from "react-redux";
@@ -106,6 +107,9 @@ function App() {
           />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verification" element={<Verification />} />
+          <Route
+            path="/order"
+            element={<OrderMap/>} />
           <Route
             path="/rides"
             element={

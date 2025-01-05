@@ -17,7 +17,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 90%;
+    width: 90.3%;
     max-height: 600px;
     height: 500px;
     background-color: var(--primary-color);
@@ -67,6 +67,7 @@ display: grid;
     gap: 10px;
     /* padding: 10px; */
     max-width: 100%;
+    margin-left: 1.6vh;
     box-sizing: border-box;
     justify-items: center;
     align-items: start;
@@ -92,7 +93,7 @@ background-color: #404040;
     /* Center items vertically */
     text-align: center;
     /* Center text */
-    width: 100%;
+    width: 20vh;
     /* Responsive card width */
     box-sizing: border-box;
     /* Includes padding in total width */
