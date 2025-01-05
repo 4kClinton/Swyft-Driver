@@ -44,7 +44,7 @@ const Verification = () => {
 
     try {
       const response = await fetch(
-        "https://swyft-server-t7f5.onrender.com/driver/signup",
+        "https://swyft-backend-client-eta.vercel.app/driver/signup",
         {
           method: "POST",
           headers: {

@@ -4,3 +4,9 @@
     z-index : 10000;
     
 }
+.online-toast{
+        position: fixed;
+            z-index: 9999;
+            inset: 50px;
+            pointer-events: none;
+}

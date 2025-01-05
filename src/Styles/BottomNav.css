@@ -11,6 +11,10 @@
     color: #ffffff;
     z-index: 6000;
 }
+.BottomNavigation{
+    height:60px;
+    /* background-color: #212121; */
+}
 
 .bottom-nav svg {
     color: #FFA500;
@@ -22,4 +26,7 @@
 }
 label{
     color: #ffffff;
+}
+.css-k3djb5-MuiBottomNavigation-root{
+    height:60px;
 }
