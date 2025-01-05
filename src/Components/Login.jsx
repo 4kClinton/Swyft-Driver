@@ -4,6 +4,8 @@ import { Button, Typography, Box, Link } from "@mui/material";
 import { Google, Twitter, GitHub } from "@mui/icons-material";
 import CircularProgress from "@mui/material/CircularProgress"; // For loader
 import "../Styles/Login.css";
+import { addUser } from "../Redux/Reducers/UserSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,6 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const logIn = async (event) => {
     event.preventDefault();
@@ -19,7 +22,9 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://swyft-backend-client-eta.vercel.app/login",
+
+        "https://swyft-backend-client-eta.vercel.app/driver/login",
+
         {
           method: "POST",
           headers: {
@@ -28,12 +33,17 @@ const Login = () => {
           body: JSON.stringify({ email, password }),
         }
       );
-
       const data = await response.json();
 
       if (response.ok) {
         // Assuming the server sends a token on successful login
-        localStorage.setItem("authToken", data.token);
+        
+        const {access_token, user, message} = data;
+        console.log(data);
+        
+        sessionStorage.setItem("message", message || "Login successful!");
+        sessionStorage.setItem("authToken", access_token);
+        dispatch(addUser(user));
         navigate("/dashboard"); // Redirect to Dashboard on successful login
       } else {
         setError(data.message || "Login failed. Please try again.");

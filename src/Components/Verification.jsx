@@ -1,27 +1,20 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Box } from "@mui/material";
 import SecurityIcon from "@mui/icons-material/Security";
 import "../Styles/Login.css";
+import { addUser } from "../Redux/Reducers/UserSlice";
+import { useDispatch } from "react-redux";
 
 const Verification = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Retrieve data from sessionStorage
   const storedData = JSON.parse(sessionStorage.getItem("signupData")) || {};
   const { name, phoneNumber, email, password } = storedData;
 
   // Retrieve uniqueId from sessionStorage or generate if not present
-  const uniqueId =
-    sessionStorage.getItem("uniqueId") ||
-    Math.random().toString(36).substring(2, 15);
-
-  // Set uniqueId in sessionStorage if not already stored
-  useEffect(() => {
-    if (!sessionStorage.getItem("uniqueId")) {
-      sessionStorage.setItem("uniqueId", uniqueId);
-    }
-  }, [uniqueId]);
 
   const [carType, setCarType] = useState("");
   const [licenseNumber, setLicenseNumber] = useState("");
@@ -51,7 +44,7 @@ const Verification = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: uniqueId, // Use the uniqueId retrieved from sessionStorage
+           
             name,
             phone: phoneNumber,
             email,
@@ -66,7 +59,7 @@ const Verification = () => {
 
       // Log the request body for debugging
       console.log({
-        id: uniqueId, // Use the consistent uniqueId
+        
         name,
         phone: phoneNumber,
         email,
@@ -79,6 +72,7 @@ const Verification = () => {
 
       // Check response
       const responseData = await response.json();
+
       console.log(responseData); // Log the response from the server
 
       if (!response.ok) {
@@ -86,7 +80,13 @@ const Verification = () => {
           `Verification failed: ${responseData.message || "Please try again."}`
         );
       }
+      const { access_token, user, message } = responseData;
 
+      sessionStorage.setItem("authToken", access_token);
+      dispatch(addUser(user));
+      sessionStorage.setItem("message", message || "Driver created successful!");
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("status", "driver created!");
       // Successfully verified, redirect to the dashboard
       navigate("/dashboard");
     } catch (err) {
