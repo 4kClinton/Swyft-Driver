@@ -4,7 +4,7 @@ import GoOnlineButton from "../Components/GoOnlineButton.jsx";
 import { FaMoneyBillWave, FaChartLine, FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Alert from "../Components/Alert";
-
+import OrderPopup from "../Components/OrderPopup";
 
 const Dash = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +46,11 @@ const Dash = () => {
             <FaMoneyBillWave size={24} className="card-icon" />
             <h3>Earnings</h3>
             <p>{data.earnings}</p>
+          </div>
+        </Link>
+        <Link to="/order" className="card-link">
+          <div className="card">
+           Order
           </div>
         </Link>
         {/* <div className="card">

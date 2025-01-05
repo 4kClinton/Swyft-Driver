@@ -19,7 +19,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://swyft-server-t7f5.onrender.com/login",
+        "https://swyft-backend-client-eta.vercel.app/login",
         {
           method: "POST",
           headers: {

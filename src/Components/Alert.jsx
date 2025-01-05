@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import soundFile from "../assets/this-one.wav";
+import "../Styles/Alert.css"
 
 const Alert = () => {
   const audioRef = useRef(null);
@@ -24,24 +25,19 @@ const Alert = () => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div style={{ textAlign: "center" }}>
       <button
+        className="Alert"
         onClick={toggleSound}
         style={{
-          backgroundColor: "#2191FB",
-          color: "#FFF",
-          border: "none",
-          borderRadius: "50%",
-          width: "80px",
-          height: "80px",
-          fontSize: "12px",
-          fontWeight: "bold",
-          cursor: "pointer",
+          backgroundColor: isPlaying ? "#2AC352" : "#404040",
+          border: isPlaying ? "none" : "none",
           animation: isPlaying ? "vibrate 0.3s infinite" : "none",
         }}
       >
         Incoming Order
       </button>
+      
       <audio ref={audioRef} src={soundFile} preload="auto" />
       <style>
         {`
