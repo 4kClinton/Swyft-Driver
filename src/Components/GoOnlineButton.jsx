@@ -34,7 +34,7 @@ const GoOnlineButton = () => {
 
             try {
               const response = await fetch(
-                `https://swyft-server-t7f5.onrender.com/online/${uniqueId}`,
+                `https://swyft-backend-client-eta.vercel.app/online/${uniqueId}`,
                 {
                   method: "PUT",
                   headers: {
@@ -73,7 +73,7 @@ const GoOnlineButton = () => {
       // Driver going offline
       try {
         const response = await fetch(
-          `https://swyft-server-t7f5.onrender.com/online/${uniqueId}`,
+          `https://swyft-backend-client-eta.vercel.app/online/${uniqueId}`,
           {
             method: "PUT",
             headers: {

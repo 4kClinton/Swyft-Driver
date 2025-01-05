@@ -12,16 +12,51 @@ import Verification from "./Components/Verification";
 import GoOnlineButton from "./Components/GoOnlineButton"
 import Earnings from "./Components/Earnings";
 import "./App.css";
+import { SocketProvider } from "./contexts/SocketContext";
+import { useDispatch } from "react-redux";
+import { addUser } from "./Redux/Reducers/UserSlice";
 
 function App() {
   const [count, setCount] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
   const [isOnline, setIsOnline] = useState(false);
   const [data, setData] = useState(null); // State for data
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("authToken");
+    console.log(token);
+   
+    if (token) {
+      fetch("https://swyft-backend-client-eta.vercel.app/check_session", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          
+          if (!response.ok) {
+            throw new Error("Failed to verify token");
+          }
+          return response.json();
+        })
+
+        .then((userData) => {
+        
+
+          dispatch(addUser(userData));
+        })
+        .catch((error) => {
+          console.error("Token verification failed:", error);
+        });
+    }
+  }, [dispatch]);
+
 
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
-    fetch("http://localhost:3000/orders/totalPrice")
+    fetch("https://swyft-backend-client-eta.vercel.app/orders/totalPrice")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -48,6 +83,7 @@ function App() {
   }
 
   return (
+    <SocketProvider>
     <Router>
       <div className="app">
        
@@ -104,6 +140,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </SocketProvider>
   );
 }
 
