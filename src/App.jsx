@@ -30,7 +30,7 @@ function App() {
     console.log(token);
    
     if (token) {
-      fetch("https://swyft-backend-client-eta.vercel.app/check_session", {
+      fetch("https://swyft-backend-client-ac1s.onrender.com/check_session", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,7 +57,7 @@ function App() {
 
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
-    fetch("https://swyft-backend-client-eta.vercel.app/orders/totalPrice")
+    fetch("https://swyft-backend-client-ac1s.onrender.com/orders/totalPrice")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
