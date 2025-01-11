@@ -12,9 +12,14 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     // Establish the socket connection once when the app loads
-    const socketConnection = io('https://swyft-backend-client-eta.vercel.app/');
+    const socketConnection = io('https://swyft-backend-client-ac1s.onrender.com/', {
+      transports: ['websocket'], // Ensure WebSocket transport is used
+      reconnectionAttempts: 5, // Retry connection 5 times
+      timeout: 20000, // 20 seconds timeout
+    });
     socketConnection.on('connect', () => {
-      console.log("connected to socket server");
+      console.log("connected to socket server driver");
+      
       
       const userType = 'driver'; 
       const userId = user.id;    

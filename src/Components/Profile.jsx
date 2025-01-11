@@ -18,7 +18,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const response = await fetch(
-          "https://swyft-backend-client-eta.vercel.app/user/profile",
+          "https://swyft-backend-client-ac1s.onrender.com/user/profile",
           {
             method: "GET",
             headers: {
