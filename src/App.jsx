@@ -52,7 +52,10 @@ function App() {
 
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
+
     fetch("https://swyft-backend-client-ac1s.onrender.com/orders/total_cost")
+
+  
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
