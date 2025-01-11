@@ -108,12 +108,12 @@ const GoOnlineButton = () => {
   return (
     <div style={{ width: "100%", padding: "5px" }}>
       <Toaster
-      className="online-toast"
+        className="online-toast"
         style={{
-          position:"absolute",
+          position: "absolute",
           top: "10vh",
           marginTop: "20px",
-          inset:"50px"
+          inset: "50px",
         }}
       />
       <Button

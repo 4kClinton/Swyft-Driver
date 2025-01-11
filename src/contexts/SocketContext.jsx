@@ -1,6 +1,6 @@
-import { createContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
+import { createContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { io } from "socket.io-client";
 
 // Create a Context to store WebSocket connection
 const SocketContext = createContext(null);
@@ -12,6 +12,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     // Establish the socket connection once when the app loads
+
     const socketConnection = io('https://swyft-backend-client-ac1s.onrender.com/', {
       transports: ['websocket'], // Ensure WebSocket transport is used
       reconnectionAttempts: 5, // Retry connection 5 times
@@ -25,6 +26,7 @@ export const SocketProvider = ({ children }) => {
       const userId = user.id;    
       socketConnection.emit('register_user', { userType, userId });
       });
+
     setSocket(socketConnection);
 
     // Clean up on unmount
@@ -34,11 +36,9 @@ export const SocketProvider = ({ children }) => {
   }, [user.id]);
 
   return (
-    <SocketContext.Provider value={socket}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );
 };
-export {SocketContext}
+export { SocketContext };
 
 // Custom hook to use socket in other components
