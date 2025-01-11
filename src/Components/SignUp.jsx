@@ -92,7 +92,7 @@ const SignUp = () => {
         <span className="message">Or sign up with</span>
         <span className="line"></span>
       </div>
-      <div className="social-icons">
+      {/* <div className="social-icons">
         <button className="icon">
           <Google />
         </button>
@@ -102,7 +102,7 @@ const SignUp = () => {
         <button className="icon">
           <GitHub />
         </button>
-      </div>
+      </div> */}
       <div className="signup">
         <span>Already have an account? </span>
         <Link href="/">Log in</Link>

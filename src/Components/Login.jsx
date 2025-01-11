@@ -22,8 +22,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-
-        "https://swyft-backend-client-eta.vercel.app/driver/login",
+        "https://swyft-backend-client-ac1s.onrender.com/driver/login",
 
         {
           method: "POST",
@@ -37,10 +36,10 @@ const Login = () => {
 
       if (response.ok) {
         // Assuming the server sends a token on successful login
-        
-        const {access_token, user, message} = data;
+
+        const { access_token, user, message } = data;
         console.log(data);
-        
+
         sessionStorage.setItem("message", message || "Login successful!");
         sessionStorage.setItem("authToken", access_token);
         dispatch(addUser(user));
@@ -100,7 +99,9 @@ const Login = () => {
         >
           Create account
         </Button>
-        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+
+
+        {/* <Typography variant="body2" align="center" sx={{ mt: 2 }}>
           Or log in with
         </Typography>
         <Box
@@ -133,7 +134,9 @@ const Login = () => {
             fullWidth
             sx={{ ml: 1 }}
           />
-        </Box>
+        </Box> */}
+
+
       </Box>
     </div>
   );

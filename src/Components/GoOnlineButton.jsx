@@ -34,7 +34,7 @@ const GoOnlineButton = () => {
 
             try {
               const response = await fetch(
-                `https://swyft-backend-client-eta.vercel.app/online/${uniqueId}`,
+                `https://swyft-backend-client-ac1s.onrender.com/online/${uniqueId}`,
                 {
                   method: "PUT",
                   headers: {
@@ -73,7 +73,7 @@ const GoOnlineButton = () => {
       // Driver going offline
       try {
         const response = await fetch(
-          `https://swyft-backend-client-eta.vercel.app/online/${uniqueId}`,
+          `https://swyft-backend-client-ac1s.onrender.com/online/${uniqueId}`,
           {
             method: "PUT",
             headers: {
@@ -108,12 +108,12 @@ const GoOnlineButton = () => {
   return (
     <div style={{ width: "100%", padding: "5px" }}>
       <Toaster
-      className="online-toast"
+        className="online-toast"
         style={{
-          position:"absolute",
+          position: "absolute",
           top: "10vh",
           marginTop: "20px",
-          inset:"50px"
+          inset: "50px",
         }}
       />
       <Button

@@ -1,10 +1,11 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Box } from "@mui/material";
 import SecurityIcon from "@mui/icons-material/Security";
 import "../Styles/Login.css";
 import { addUser } from "../Redux/Reducers/UserSlice";
 import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid"; // Import the UUID library
 
 const Verification = () => {
   const navigate = useNavigate();
@@ -14,8 +15,8 @@ const Verification = () => {
   const storedData = JSON.parse(sessionStorage.getItem("signupData")) || {};
   const { name, phoneNumber, email, password } = storedData;
 
-  // Retrieve uniqueId from sessionStorage or generate if not present
-
+  // Generate a unique ID when the component mounts
+  const [id] = useState(() => uuidv4());
   const [carType, setCarType] = useState("");
   const [licenseNumber, setLicenseNumber] = useState("");
   const [idNumber, setIdNumber] = useState("");
@@ -37,14 +38,14 @@ const Verification = () => {
 
     try {
       const response = await fetch(
-        "https://swyft-backend-client-eta.vercel.app/driver/signup",
+        "https://swyft-backend-client-ac1s.onrender.com/driver/signup",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-           
+            id,
             name,
             phone: phoneNumber,
             email,
@@ -59,7 +60,7 @@ const Verification = () => {
 
       // Log the request body for debugging
       console.log({
-        
+        id,
         name,
         phone: phoneNumber,
         email,
@@ -84,9 +85,12 @@ const Verification = () => {
 
       sessionStorage.setItem("authToken", access_token);
       dispatch(addUser(user));
-      sessionStorage.setItem("message", message || "Driver created successful!");
+      sessionStorage.setItem(
+        "message",
+        message || "Driver created successfully!"
+      );
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("status", "driver created!");
+      localStorage.setItem("status", "Driver created!");
       // Successfully verified, redirect to the dashboard
       navigate("/dashboard");
     } catch (err) {

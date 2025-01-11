@@ -9,9 +9,9 @@ import Profile from "./Components/Profile";
 import Login from "./Components/Login";
 import Signup from "./Components/SignUp";
 import Verification from "./Components/Verification";
-import GoOnlineButton from "./Components/GoOnlineButton"
+import GoOnlineButton from "./Components/GoOnlineButton";
 import Earnings from "./Components/Earnings";
-import OrderMap from "./Components/ReceivedOrder"
+import OrderMap from "./Components/ReceivedOrder";
 import "./App.css";
 import { SocketProvider } from "./contexts/SocketContext";
 import { useDispatch } from "react-redux";
@@ -24,19 +24,17 @@ function App() {
   const [data, setData] = useState(null); // State for data
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     const token = sessionStorage.getItem("authToken");
     console.log(token);
-   
+
     if (token) {
-      fetch("https://swyft-backend-client-eta.vercel.app/check_session", {
+      fetch("https://swyft-backend-client-ac1s.onrender.com/check_session", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => {
-          
           if (!response.ok) {
             throw new Error("Failed to verify token");
           }
@@ -44,8 +42,6 @@ function App() {
         })
 
         .then((userData) => {
-        
-
           dispatch(addUser(userData));
         })
         .catch((error) => {
@@ -54,10 +50,9 @@ function App() {
     }
   }, [dispatch]);
 
-
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
-    fetch("https://swyft-backend-client-eta.vercel.app/orders/totalPrice")
+    fetch("https://swyft-backend-client-ac1s.onrender.com/orders/total_cost")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -85,65 +80,61 @@ function App() {
 
   return (
     <SocketProvider>
-    <Router>
-      <div className="app">
-       
-        <Routes>
-          <Route
-            path="/"
-            element={<Login onLogin={() => setIsLoggedIn(true)} />}
-          />
-          <Route
-          
-            path="/dashboard"
-            element={
-              <>
-                {/* <Dash /> */}
-                <Map />
-                <BottomNav value={count} onChange={setCount} />
-                <GoOnlineButton />
-              </>
-            }
-          />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/verification" element={<Verification />} />
-          <Route
-            path="/order"
-            element={<OrderMap/>} />
-          <Route
-            path="/rides"
-            element={
-              <>
-                <RidesHistory />
-                <BottomNav value={count} onChange={setCount} />
-              </>
-            }
-          />
-          <Route
-            path="/notifications"
-            element={
-              <>
-                <Notifications />
-                <BottomNav value={count} onChange={setCount} />
-              </>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <>
-                <Profile />
-                <BottomNav value={count} onChange={setCount} />
-              </>
-            }
-          />
-          <Route
-            path="/earnings"
-            element={<Earnings totalCost={data.earnings} />}
-          />
-        </Routes>
-      </div>
-    </Router>
+      <Router>
+        <div className="app">
+          <Routes>
+            <Route
+              path="/"
+              element={<Login onLogin={() => setIsLoggedIn(true)} />}
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <>
+                  {/* <Dash /> */}
+                  <Map />
+                  <BottomNav value={count} onChange={setCount} />
+                  <GoOnlineButton />
+                </>
+              }
+            />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/verification" element={<Verification />} />
+            <Route path="/order" element={<OrderMap />} />
+            <Route
+              path="/rides"
+              element={
+                <>
+                  <RidesHistory />
+                  <BottomNav value={count} onChange={setCount} />
+                </>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <>
+                  <Notifications />
+                  <BottomNav value={count} onChange={setCount} />
+                </>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <>
+                  <Profile />
+                  <BottomNav value={count} onChange={setCount} />
+                </>
+              }
+            />
+            <Route
+              path="/earnings"
+              element={<Earnings totalCost={data.earnings} />}
+            />
+          </Routes>
+        </div>
+      </Router>
     </SocketProvider>
   );
 }

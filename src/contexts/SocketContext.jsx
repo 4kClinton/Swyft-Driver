@@ -1,6 +1,6 @@
-import { createContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
+import { createContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { io } from "socket.io-client";
 
 // Create a Context to store WebSocket connection
 const SocketContext = createContext(null);
@@ -12,14 +12,16 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     // Establish the socket connection once when the app loads
-    const socketConnection = io('https://swyft-backend-client-eta.vercel.app/');
-    socketConnection.on('connect', () => {
+    const socketConnection = io(
+      "https://swyft-backend-client-ac1s.onrender.com/"
+    );
+    socketConnection.on("connect", () => {
       console.log("connected to socket server");
-      
-      const userType = 'driver'; 
-      const userId = user.id;    
-      socketConnection.emit('register_user', { userType, userId });
-      });
+
+      const userType = "driver";
+      const userId = user.id;
+      socketConnection.emit("register_user", { userType, userId });
+    });
     setSocket(socketConnection);
 
     // Clean up on unmount
@@ -29,11 +31,9 @@ export const SocketProvider = ({ children }) => {
   }, [user.id]);
 
   return (
-    <SocketContext.Provider value={socket}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );
 };
-export {SocketContext}
+export { SocketContext };
 
 // Custom hook to use socket in other components
