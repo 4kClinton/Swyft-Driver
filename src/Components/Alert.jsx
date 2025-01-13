@@ -28,7 +28,7 @@ const Alert = () => {
           audioRef.current.currentTime = 0; // Reset sound
           dispatch(alertOff())
           dispatch(declineOrder());
-          fetch("http://127.0.0.1:5000/order-response",
+          fetch("https://swyft-backend-client-nine.vercel.app/order-response",
             {
               method: "POST",
               headers: {
@@ -58,7 +58,7 @@ const Alert = () => {
          
          
         }
-        fetch("http://127.0.0.1:5000/order-response",
+        fetch("https://swyft-backend-client-nine.vercel.app/order-response",
           {
             method: "POST",
             headers: {
@@ -69,7 +69,7 @@ const Alert = () => {
             body: JSON.stringify({ order_id: currentOrder.id, accepted: true }),
           }
         )
-        fetch(`http://127.0.0.1:5000/customer/${currentOrder.customer_id}`,{
+        fetch(`https://swyft-backend-client-nine.vercel.app/customer/${currentOrder.customer_id}`,{
           method: 'GET',
           headers: {
             'Content-Type': 'application',

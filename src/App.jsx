@@ -57,7 +57,7 @@ function App() {
     
 
     if (token) {
-      fetch("http://127.0.0.1:5000/check_session", {
+      fetch("https://swyft-backend-client-nine.vercel.app/check_session", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -81,7 +81,7 @@ function App() {
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
 
-    fetch("http://127.0.0.1:5000/orders/total_cost")
+    fetch("https://swyft-backend-client-nine.vercel.app/orders/total_cost")
 
   
       .then((response) => {
