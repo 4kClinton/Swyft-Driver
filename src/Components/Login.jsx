@@ -23,7 +23,7 @@ const Login = () => {
     try {
       const response = await fetch(
 
-        "https://swyft-backend-client-ac1s.onrender.com/driver/login",
+        "https://swyft-backend-client-nine.vercel.app/driver/login",
 
         {
           method: "POST",
@@ -39,8 +39,7 @@ const Login = () => {
         // Assuming the server sends a token on successful login
 
         const { access_token, user, message } = data;
-        console.log(data);
-
+      
         sessionStorage.setItem("message", message || "Login successful!");
         sessionStorage.setItem("authToken", access_token);
         dispatch(addUser(user));

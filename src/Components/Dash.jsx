@@ -5,7 +5,7 @@ import { FaMoneyBillWave, FaChartLine, FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Alert from "../Components/Alert";
 
-import { useSocket } from "../hooks/useSocket.js";
+
 import { useSelector } from "react-redux";
 
 
@@ -15,33 +15,10 @@ import OrderPopup from "../Components/OrderPopup";
 
 const Dash = () => {
       const user = useSelector((state) => state.user.value);
-      const socket = useSocket()
+     
       const [orderDetails, setOrderDetails] = useState(null);
     
-      useEffect(() => {
-        socket.on('new_order', (data) => {
-          const { order_details, driver_id } = data;
-      
-          if (driver_id === user.id) {  // Check if the order is for this driver
-            setOrderDetails(order_details);
-            console.log("New order placed for this driver:", order_details);
-            // Display a confirm dialog to the driver
-            const acceptOrder = window.confirm(`New order received! Details: ${JSON.stringify(order_details)}\nDo you want to accept this order?`);
-      
-            // Emit the driver's response to the server
-            socket.emit('order_response', {
-              orderId: order_details.id,
-              driver: user,
-              accepted: acceptOrder
-            });
-          }
-        });
-      
-        // Cleanup the listener when the component is unmounted
-        return () => {
-          socket.off('new_order'); // Clean up the event listener when the component unmounts
-        };
-      }, [socket, user]);
+    
       
   const [isOpen, setIsOpen] = useState(false);
   const dashRef = useRef(null);
