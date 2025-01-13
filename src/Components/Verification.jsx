@@ -38,7 +38,7 @@ const Verification = () => {
 
     try {
       const response = await fetch(
-        "https://swyft-backend-client-ac1s.onrender.com/driver/signup",
+        "http://127.0.0.1:5000/driver/signup",
         {
           method: "POST",
           headers: {

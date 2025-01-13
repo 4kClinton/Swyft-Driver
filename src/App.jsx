@@ -13,23 +13,51 @@ import GoOnlineButton from "./Components/GoOnlineButton";
 import Earnings from "./Components/Earnings";
 import OrderMap from "./Components/ReceivedOrder";
 import "./App.css";
-import { SocketProvider } from "./contexts/SocketContext";
-import { useDispatch } from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "./Redux/Reducers/UserSlice";
+import { supabase } from "./supabase";
+import { alertOn } from "./Redux/Reducers/alertSlice";
+import { saveOrder } from "./Redux/Reducers/CurrentOrderSlice";
+
 
 function App() {
   const [count, setCount] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
-  const [isOnline, setIsOnline] = useState(false);
+
+  const driver = useSelector((state) => state.user.value);
   const [data, setData] = useState(null); // State for data
   const dispatch = useDispatch();
+ 
+  
+    useEffect(() => {
+      // Subscribe to changes in the 'orders' table
+      const ordersChannel = supabase
+        .channel('orders')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (payload) => {
+          if (payload?.new?.driver_id === driver.id) {
+            dispatch(saveOrder(payload.new));
+            dispatch(alertOn());
+          }
+        })
+        .subscribe();
 
+      // Cleanup the subscription on component unmount
+      return () => {
+        if (ordersChannel) {
+          supabase.removeChannel(ordersChannel)
+            .then(() => console.log('Channel successfully removed'))
+            .catch((error) => console.error('Error removing channel:', error));
+        }
+      };
+    }, [driver.id, dispatch]);
+
+ 
   useEffect(() => {
     const token = sessionStorage.getItem("authToken");
-    console.log(token);
+    
 
     if (token) {
-      fetch("https://swyft-backend-client-ac1s.onrender.com/check_session", {
+      fetch("http://127.0.0.1:5000/check_session", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,7 +81,7 @@ function App() {
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
 
-    fetch("https://swyft-backend-client-ac1s.onrender.com/orders/total_cost")
+    fetch("http://127.0.0.1:5000/orders/total_cost")
 
   
       .then((response) => {
@@ -74,7 +102,7 @@ function App() {
 
   const handleToggleStatus = (status) => {
     setIsOnline(status);
-    console.log("Driver status changed:", status ? "Online" : "Offline");
+    
   };
 
   if (data === null) {
@@ -82,7 +110,7 @@ function App() {
   }
 
   return (
-    <SocketProvider>
+  
       <Router>
         <div className="app">
           <Routes>
@@ -138,7 +166,7 @@ function App() {
           </Routes>
         </div>
       </Router>
-    </SocketProvider>
+ 
   );
 }
 

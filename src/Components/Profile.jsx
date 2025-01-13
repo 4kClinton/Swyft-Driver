@@ -18,7 +18,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const response = await fetch(
-          "https://swyft-backend-client-ac1s.onrender.com/user/profile",
+          "http://127.0.0.1:5000/user/profile",
           {
             method: "GET",
             headers: {
