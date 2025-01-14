@@ -9,6 +9,7 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import BottomNav from "./BottomNav.jsx";
 
+
 const Profile = () => {
   const [profile, setProfile] = useState(null); // Profile data
   const [loading, setLoading] = useState(true); // Loading state
