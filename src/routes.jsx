@@ -18,6 +18,7 @@ const routes = [
             {path:"/dashboard", element:<Map/>},
             {path:"/signup", element:<Signup/>},
             {path:"/verification", element:<Verification/>},
+            {path:"/deliveryDetails",element:<RidesHistory/>},
             {path:"/order", element:<OrderMap/>},
             {path:"/rides", element:<RidesHistory/>},
             {path:"/notifications", element:<Notifications/>},
