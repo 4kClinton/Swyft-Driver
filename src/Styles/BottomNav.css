@@ -1,32 +1,32 @@
 /* Updated external CSS for BottomNav component */
 .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 60px;
-    background-color: #212121;
-    color: #ffffff;
-    z-index: 6000;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+  background-color: #212121;
+  color: #ffffff;
+  z-index: 6000;
 }
-.BottomNavigation{
-    height:60px;
-    /* background-color: #212121; */
+.BottomNavigation {
+  height: 60px;
+  /* background-color: #212121; */
 }
 
 .bottom-nav svg {
-    color: #FFA500;
-    font-size: 28px;
+  color: #ffa500;
+  font-size: 28px;
 }
 
 .bottom-nav .MuiBottomNavigationAction-root {
-    color: #FFA500;
+  color: #ffa500;
 }
-label{
-    color: #ffffff;
+label {
+  color: #ffffff;
 }
-.css-k3djb5-MuiBottomNavigation-root{
-    height:60px;
+.css-k3djb5-MuiBottomNavigation-root {
+  height: 60px;
 }

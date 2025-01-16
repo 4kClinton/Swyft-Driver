@@ -1,17 +1,19 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Typography, Box, Link } from "@mui/material";
-import { Google, Twitter, GitHub } from "@mui/icons-material";
-import "../Styles/Login.css";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Typography, Link } from '@mui/material';
+
+import '../Styles/Login.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
+
+  //eslint-disable-next-line
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = (event) => {
@@ -19,16 +21,16 @@ const SignUp = () => {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError('Passwords do not match.');
       return;
     }
 
     // Temporarily store data in sessionStorage
     const formData = { name, email, phoneNumber, password };
-    sessionStorage.setItem("signupData", JSON.stringify(formData));
+    sessionStorage.setItem('signupData', JSON.stringify(formData));
 
     // Navigate to verification page
-    navigate("/verification");
+    navigate('/verification');
   };
 
   return (
@@ -84,7 +86,7 @@ const SignUp = () => {
           />
         </div>
         <button type="submit" className="sign" disabled={loading}>
-          {loading ? "Signing up..." : "Sign Up"}
+          {loading ? 'Signing up...' : 'Sign Up'}
         </button>
       </form>
       <div className="social-message">

@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   GoogleMap,
   useLoadScript,
   DirectionsRenderer,
-} from "@react-google-maps/api";
-import CircularProgress from "@mui/material/CircularProgress"; // For loader
-import GoOnlineButton from "./GoOnlineButton";
-import "../Styles/Map.css";
+} from '@react-google-maps/api';
+import CircularProgress from '@mui/material/CircularProgress'; // For loader
 
-import Dash from "./Dash"; // Import the Dash component
+import '../Styles/Map.css';
+
+import Dash from './Dash'; // Import the Dash component
+import GoOnlineButton from './GoOnlineButton';
 
 const Map = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Load API key from .env
-    libraries: ["places"],
+    libraries: ['places'],
   });
 
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState(0); // Initial state for distance
-  const [duration, setDuration] = useState("");
+
+  //eslint-disable-next-line
+  const [duration, setDuration] = useState('');
   const [destination, setDestination] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
 
@@ -36,14 +39,14 @@ const Map = () => {
             setDestination(userLocation); // Optional: set as initial destination
           },
           (error) => {
-            console.error("Error obtaining location:", error);
+            console.error('Error obtaining location:', error);
             alert(
-              "Unable to retrieve your location. Please check your settings."
+              'Unable to retrieve your location. Please check your settings.'
             );
           }
         );
       } else {
-        alert("Geolocation is not supported by this browser.");
+        alert('Geolocation is not supported by this browser.');
       }
     };
 
@@ -55,6 +58,8 @@ const Map = () => {
     if (isLoaded && currentLocation && destination) {
       calculateRoute();
     }
+
+    //eslint-disable-next-line
   }, [isLoaded, currentLocation, destination]);
 
   const calculateRoute = async () => {
@@ -82,15 +87,15 @@ const Map = () => {
 
       const distanceElement = distanceMatrixResult.rows[0].elements[0];
 
-      if (distanceElement && distanceElement.status === "OK") {
+      if (distanceElement && distanceElement.status === 'OK') {
         const calculatedDistance = distanceElement.distance.value / 1000; // Convert to kilometers
         setDistance(calculatedDistance); // Set the distance
         setDuration(distanceElement.duration.text); // Set the duration
       } else {
-        console.error("Distance calculation failed:", distanceElement);
+        console.error('Distance calculation failed:', distanceElement);
       }
     } catch (error) {
-      console.error("Error fetching directions or distance matrix:", error);
+      console.error('Error fetching directions or distance matrix:', error);
     }
   };
 
@@ -103,31 +108,34 @@ const Map = () => {
   }
 
   return (
-    <div className="map-container">
-      <GoogleMap
-        mapContainerClassName="google-map"
-        center={
-          destination || currentLocation || { lat: -1.286389, lng: 36.817223 }
-        }
-        zoom={12}
-      >
-        {directionsResponse && (
-          <DirectionsRenderer directions={directionsResponse} />
-        )}
-      </GoogleMap>
+    <>
+      <GoOnlineButton />
+      <div className="map-container">
+        <GoogleMap
+          mapContainerClassName="google-map"
+          center={
+            destination || currentLocation || { lat: -1.286389, lng: 36.817223 }
+          }
+          zoom={12}
+        >
+          {directionsResponse && (
+            <DirectionsRenderer directions={directionsResponse} />
+          )}
+        </GoogleMap>
 
-      {/* Display distance in a user-friendly format */}
-      {/* <div className="distance-info">
+        {/* Display distance in a user-friendly format */}
+        {/* <div className="distance-info">
         {distance > 0 ? `${distance.toFixed(2)} km` : "Calculating distance..."}
       </div> */}
 
-      {/* Pass distance, userLocation, and destination as props to the Dash component */}
-      <Dash
-        distance={Number(distance)}
-        userLocation={currentLocation}
-        destination={destination}
-      />
-    </div>
+        {/* Pass distance, userLocation, and destination as props to the Dash component */}
+        <Dash
+          distance={Number(distance)}
+          userLocation={currentLocation}
+          destination={destination}
+        />
+      </div>
+    </>
   );
 };
 

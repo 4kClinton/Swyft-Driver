@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Typography, Box, Link } from "@mui/material";
-import { Google, Twitter, GitHub } from "@mui/icons-material";
-import CircularProgress from "@mui/material/CircularProgress"; // For loader
-import "../Styles/Login.css";
-import { addUser } from "../Redux/Reducers/UserSlice";
-import { useDispatch } from "react-redux";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Typography, Box, Link } from '@mui/material';
+
+import CircularProgress from '@mui/material/CircularProgress'; // For loader
+import '../Styles/Login.css';
+import { addUser } from '../Redux/Reducers/UserSlice';
+import { useDispatch } from 'react-redux';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -22,13 +22,12 @@ const Login = () => {
 
     try {
       const response = await fetch(
-
-        "https://swyft-backend-client-nine.vercel.app/driver/login",
+        'https://swyft-backend-client-nine.vercel.app/driver/login',
 
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email, password }),
         }
@@ -39,16 +38,16 @@ const Login = () => {
         // Assuming the server sends a token on successful login
 
         const { access_token, user, message } = data;
-      
-        sessionStorage.setItem("message", message || "Login successful!");
-        sessionStorage.setItem("authToken", access_token);
+
+        sessionStorage.setItem('message', message || 'Login successful!');
+        sessionStorage.setItem('authToken', access_token);
         dispatch(addUser(user));
-        navigate("/dashboard"); // Redirect to Dashboard on successful login
+        navigate('/dashboard'); // Redirect to Dashboard on successful login
       } else {
-        setError(data.message || "Login failed. Please try again.");
+        setError(data.message || 'Login failed. Please try again.');
       }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError('An error occurred. Please try again.', err);
     } finally {
       setLoading(false);
     }
@@ -62,7 +61,6 @@ const Login = () => {
         <form onSubmit={logIn}>
           <input
             placeholder="Email or Username"
-            variant="outlined"
             className="login-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -71,7 +69,6 @@ const Login = () => {
           <input
             placeholder="Password"
             type="password"
-            variant="outlined"
             className="login-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -84,22 +81,21 @@ const Login = () => {
             variant="contained"
             type="submit"
             className="login-button"
-            sx={{ mt: 2, backgroundColor: "#18b700", fontWeight: "bold" }}
+            sx={{ mt: 2, backgroundColor: '#18b700', fontWeight: 'bold' }}
             disabled={loading}
           >
-            {loading ? <CircularProgress /> : "Log In"}
+            {loading ? <CircularProgress /> : 'Log In'}
           </Button>
         </form>
         <Button
-          onClick={() => navigate("/signup")}
+          onClick={() => navigate('/signup')}
           variant="text"
           className="create-account"
           align="center"
-          sx={{ mt: 2, color: "#18b700", fontWeight: "bold" }}
+          sx={{ mt: 2, color: '#18b700', fontWeight: 'bold' }}
         >
           Create account
         </Button>
-
 
         {/* <Typography variant="body2" align="center" sx={{ mt: 2 }}>
           Or log in with
@@ -135,8 +131,6 @@ const Login = () => {
             sx={{ ml: 1 }}
           />
         </Box> */}
-
-
       </Box>
     </div>
   );

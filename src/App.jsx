@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom'; // Import useLocation
 
 import BottomNav from './Components/BottomNav';
 
@@ -18,6 +18,8 @@ function App() {
   const driver = useSelector((state) => state.user.value);
   const [data, setData] = useState(null); // State for data
   const dispatch = useDispatch();
+
+  const location = useLocation(); // Get the current location
 
   useEffect(() => {
     // Subscribe to changes in the 'orders' table
@@ -61,7 +63,6 @@ function App() {
           }
           return response.json();
         })
-
         .then((userData) => {
           dispatch(addUser(userData));
           const storedCustomerData = localStorage.getItem('customerData');
@@ -106,7 +107,10 @@ function App() {
   return (
     <div>
       <Outlet />
-      <BottomNav value={count} onChange={setCount} />
+      {/* Conditionally render BottomNav based on current location */}
+      {location.pathname !== '/' && (
+        <BottomNav value={count} onChange={setCount} />
+      )}
     </div>
   );
 }
