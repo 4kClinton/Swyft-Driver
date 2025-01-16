@@ -11,18 +11,42 @@ import DriveEtaIcon from "@mui/icons-material/DriveEta";
 import "../Styles/Rides.css"; // Import the CSS file
 
 const RidesHistory = () => {
-  const mockRides = [
-    { id: 1, destination: "Nairobi CBD", date: "2024-10-01", fare: "Ksh 500" },
-    { id: 2, destination: "Westlands", date: "2024-10-10", fare: "Ksh 750" },
-    { id: 3, destination: "Kilimani", date: "2024-10-15", fare: "Ksh 600" },
-    { id: 4, destination: "Karen", date: "2024-10-20", fare: "Ksh 800" },
-  ];
-
   const [rides, setRides] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setRides(mockRides);
+    const token = sessionStorage.getItem("authToken");
+    fetch("https://swyft-backend-client-nine.vercel.app/rides", {
+      method: "GET",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch rides history");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setRides(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
   }, []);
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography>Error: {error}</Typography>;
+  }
 
   return (
     <div className="rides-history-container">

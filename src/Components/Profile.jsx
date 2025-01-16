@@ -16,15 +16,16 @@ const Profile = () => {
   const [error, setError] = useState(null); // Error state
 
   useEffect(() => {
+    const token = sessionStorage.getItem("authToken");
     const fetchProfile = async () => {
       try {
         const response = await fetch(
-          "https://swyft-backend-client-nine.vercel.app/user/profile",
+          "https://swyft-backend-client-nine.vercel.app/driver/profile",
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Assumes an auth token is stored in localStorage
+              'Authorization': `Bearer ${token}` // Assumes an auth token is stored in localStorage
             },
           }
         );
