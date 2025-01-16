@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import  { useEffect, useRef } from "react";
 import soundFile from "../assets/this-one.wav";
 import "../Styles/Alert.css"
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { alertOff } from "../Redux/Reducers/alertSlice";
 import { declineOrder } from "../Redux/Reducers/CurrentOrderSlice";
+import { saveCustomer } from "../Redux/Reducers/CurrentCustomerSlice";
+import { useNavigate } from "react-router-dom";
 
 
 const Alert = () => {
@@ -14,6 +16,7 @@ const Alert = () => {
   const currentOrder = useSelector((state) => state.currentOrder.value);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   
   useEffect(() => {
     const token = sessionStorage.getItem("authToken");
@@ -81,9 +84,14 @@ const Alert = () => {
           }
           return response.json();
         }).then((customerData) => { 
+          dispatch(saveCustomer(customerData))
+          localStorage.setItem('customerData', JSON.stringify(customerData));
+          localStorage.setItem('currentOrder', JSON.stringify(currentOrder));
           console.log(customerData,currentOrder)
         }
-        )
+        ).then(()=>{
+          navigate("/deliveryDetails")
+        })
 
 
       
