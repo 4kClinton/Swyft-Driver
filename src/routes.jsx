@@ -9,6 +9,7 @@ import RidesHistory from "./Components/Rides"
 import Notifications from "./Components/Notifications"
 import Profile from "./Components/Profile"
 import Earnings from "./Components/Earnings"
+import DeliveryDetails from "./Components/DeliveryDetails"
 
 
 const routes = [
@@ -18,7 +19,7 @@ const routes = [
             {path:"/dashboard", element:<Map/>},
             {path:"/signup", element:<Signup/>},
             {path:"/verification", element:<Verification/>},
-            {path:"/deliveryDetails",element:<RidesHistory/>},
+            {path:"/deliveryDetails",element:<DeliveryDetails/>},
             {path:"/order", element:<OrderMap/>},
             {path:"/rides", element:<RidesHistory/>},
             {path:"/notifications", element:<Notifications/>},
