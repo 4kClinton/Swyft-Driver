@@ -17,6 +17,7 @@ const RidesHistory = () => {
 
   useEffect(() => {
     const token = sessionStorage.getItem("authToken");
+    
     fetch("https://swyft-backend-client-nine.vercel.app/rides", {
       method: "GET",
       headers: {
