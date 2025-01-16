@@ -35,6 +35,7 @@ const Dash = () => {
       if (dashRef.current && !dashRef.current.contains(event.target)) {
         setIsOpen(false);
       }
+      
     };
     if (isOpen) document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
@@ -47,7 +48,7 @@ const Dash = () => {
       <div className="notch" onClick={toggleDash}>
         <div className="notch-indicator"></div>
       </div>
-      {/* <GoOnlineButton onClick={toggleDash} /> */}
+      <GoOnlineButton onClick={toggleDash} />
       <h2 className="catch" onClick={toggleDash}>
         Your Performance Overview
       </h2>

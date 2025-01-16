@@ -1,22 +1,16 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Map from './Components/Map';
+import { Outlet } from 'react-router-dom';
+
 import BottomNav from './Components/BottomNav';
-import RidesHistory from './Components/Rides';
-import Notifications from './Components/Notifications';
-import Profile from './Components/Profile';
-import Login from './Components/Login';
-import Signup from './Components/SignUp';
-import Verification from './Components/Verification';
-import GoOnlineButton from './Components/GoOnlineButton';
-import Earnings from './Components/Earnings';
-import OrderMap from './Components/ReceivedOrder';
+
 import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from './Redux/Reducers/UserSlice';
 import { supabase } from './supabase';
 import { alertOn } from './Redux/Reducers/alertSlice';
 import { saveOrder } from './Redux/Reducers/CurrentOrderSlice';
+
+import { saveCustomer } from './Redux/Reducers/CurrentCustomerSlice';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -70,6 +64,14 @@ function App() {
 
         .then((userData) => {
           dispatch(addUser(userData));
+          const storedCustomerData = localStorage.getItem('customerData');
+          const storedOrderData = localStorage.getItem('currentOrder');
+
+          if (storedCustomerData && storedOrderData) {
+            // If found, dispatch it to Redux
+            dispatch(saveCustomer(JSON.parse(storedCustomerData)));
+            dispatch(saveOrder(JSON.parse(storedOrderData)));
+          }
         })
         .catch((error) => {
           console.error('Token verification failed:', error);
@@ -102,58 +104,10 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="app">
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route
-            path="/dashboard"
-            element={
-              <>
-                {/* <Dash /> */}
-                <Map />
-                <BottomNav value={count} onChange={setCount} />
-                <GoOnlineButton />
-              </>
-            }
-          />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/verification" element={<Verification />} />
-          <Route path="/order" element={<OrderMap />} />
-          <Route
-            path="/rides"
-            element={
-              <>
-                <RidesHistory />
-                <BottomNav value={count} onChange={setCount} />
-              </>
-            }
-          />
-          <Route
-            path="/notifications"
-            element={
-              <>
-                <Notifications />
-                <BottomNav value={count} onChange={setCount} />
-              </>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <>
-                <Profile />
-                <BottomNav value={count} onChange={setCount} />
-              </>
-            }
-          />
-          <Route
-            path="/earnings"
-            element={<Earnings totalCost={data.earnings} />}
-          />
-        </Routes>
-      </div>
-    </Router>
+    <div>
+      <Outlet />
+      <BottomNav value={count} onChange={setCount} />
+    </div>
   );
 }
 
