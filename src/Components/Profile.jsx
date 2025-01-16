@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Typography,
   Card,
   CardContent,
   Avatar,
   CircularProgress,
-} from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import BottomNav from "./BottomNav.jsx";
-
+} from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null); // Profile data
@@ -16,22 +14,22 @@ const Profile = () => {
   const [error, setError] = useState(null); // Error state
 
   useEffect(() => {
-    const token = sessionStorage.getItem("authToken");
+    const token = sessionStorage.getItem('authToken');
     const fetchProfile = async () => {
       try {
         const response = await fetch(
-          "https://swyft-backend-client-nine.vercel.app/driver/profile",
+          'https://swyft-backend-client-nine.vercel.app/driver/profile',
           {
-            method: "GET",
+            method: 'GET',
             headers: {
-              "Content-Type": "application/json",
-              'Authorization': `Bearer ${token}` // Assumes an auth token is stored in localStorage
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`, // Assumes an auth token is stored in localStorage
             },
           }
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch profile data");
+          throw new Error('Failed to fetch profile data');
         }
 
         const data = await response.json();
@@ -50,10 +48,10 @@ const Profile = () => {
     return (
       <div
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
         }}
       >
         <CircularProgress />
@@ -65,10 +63,10 @@ const Profile = () => {
     return (
       <div
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
         }}
       >
         <Typography color="error">{error}</Typography>
@@ -77,16 +75,16 @@ const Profile = () => {
   }
 
   return (
-    <div style={{ padding: "16px", display: "flex", justifyContent: "center" }}>
-      <Card style={{ maxWidth: 400, width: "100%" }}>
+    <div style={{ padding: '16px', display: 'flex', justifyContent: 'center' }}>
+      <Card style={{ maxWidth: 400, width: '100%' }}>
         <CardContent
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Avatar style={{ marginBottom: "16px", backgroundColor: "#FFA500" }}>
+          <Avatar style={{ marginBottom: '16px', backgroundColor: '#FFA500' }}>
             <PersonIcon />
           </Avatar>
           <Typography variant="h5">{profile.name}</Typography>

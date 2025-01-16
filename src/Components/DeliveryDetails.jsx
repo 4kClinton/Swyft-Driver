@@ -6,15 +6,13 @@ import { useLoadScript } from '@react-google-maps/api';
 export default function DeliveryDetails() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Load API key from .env
-    libraries: ["places"],
+    libraries: ['places'],
   });
 
   const customer = useSelector((state) => state.currentCustomer.value);
   const order = useSelector((state) => state.currentOrder.value);
   const [customerAddress, setCustomerAddress] = useState('');
   const [destination, setDestination] = useState('');
-  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
-
 
   useEffect(() => {
     if (isLoaded) {
@@ -22,8 +20,6 @@ export default function DeliveryDetails() {
     }
     // eslint-disable-next-line
   }, [isLoaded, order.id]);
-
-
 
   const handleGetCustomerLocation = () => {
     if (order.id && window.google && window.google.maps) {
@@ -57,8 +53,6 @@ export default function DeliveryDetails() {
       console.error('Google Maps API is not available.');
     }
   };
-
-
 
   if (!customer?.id) return null;
 

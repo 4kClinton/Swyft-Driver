@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   List,
   ListItem,
@@ -6,9 +6,9 @@ import {
   ListItemIcon,
   Typography,
   Divider,
-} from "@mui/material";
-import DriveEtaIcon from "@mui/icons-material/DriveEta";
-import "../Styles/Rides.css"; // Import the CSS file
+} from '@mui/material';
+import DriveEtaIcon from '@mui/icons-material/DriveEta';
+import '../Styles/Rides.css'; // Import the CSS file
 
 const RidesHistory = () => {
   const [rides, setRides] = useState([]);
@@ -16,18 +16,18 @@ const RidesHistory = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("authToken");
-    
-    fetch("https://swyft-backend-client-nine.vercel.app/rides", {
-      method: "GET",
+    const token = sessionStorage.getItem('authToken');
+
+    fetch('https://swyft-backend-client-nine.vercel.app/rides', {
+      method: 'GET',
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to fetch rides history");
+          throw new Error('Failed to fetch rides history');
         }
         return response.json();
       })

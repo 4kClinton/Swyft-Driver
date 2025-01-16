@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../Styles/Earnings.css";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../Styles/Earnings.css';
 
+//eslint-disable-next-line
 const Earnings = ({ totalCost }) => {
   const navigate = useNavigate();
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [error, setError] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [error, setError] = useState('');
 
   const commission = (totalCost * 0.25).toFixed(2);
 
@@ -15,29 +16,29 @@ const Earnings = ({ totalCost }) => {
 
   const handleMpesaPayment = async () => {
     if (!phoneNumber.match(/^07\d{8}$/)) {
-      setError("Please enter a valid phone number starting with 07.");
+      setError('Please enter a valid phone number starting with 07.');
       return;
     }
 
-    setError(""); // Clear any existing errors
+    setError(''); // Clear any existing errors
 
     try {
       // Simulate triggering Mpesa API
-      const response = await fetch("/api/mpesa/pay", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/mpesa/pay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phoneNumber, amount: commission }),
       });
 
       if (!response.ok) {
-        throw new Error("Payment failed. Please try again.");
+        throw new Error('Payment failed. Please try again.');
       }
 
       alert(
-        "Payment initiated successfully. Please complete the payment on your phone."
+        'Payment initiated successfully. Please complete the payment on your phone.'
       );
     } catch (error) {
-      alert(error.message || "An error occurred during payment.");
+      alert(error.message || 'An error occurred during payment.');
     }
   };
 
@@ -45,11 +46,11 @@ const Earnings = ({ totalCost }) => {
     <div className="earnings-container">
       <h1 className="earnings-heading">Earnings Overview</h1>
       <p className="earnings-text">
-        Total Cost:{" "}
+        Total Cost: {/* eslint-disable-next-line */}
         <span className="earnings-highlight">Ksh{totalCost.toFixed(2)}</span>
       </p>
       <p className="earnings-text">
-        Commission to Swyft (25%):{" "}
+        Commission to Swyft (25%):{' '}
         <span className="earnings-highlight">Ksh{commission}</span>
       </p>
 

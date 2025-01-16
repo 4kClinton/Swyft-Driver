@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import "../Styles/OrderPopup.css"; 
+import { useState, useEffect, useRef } from 'react';
+import '../Styles/OrderPopup.css';
 
+//eslint-disable-next-line
 const OrderPopup = ({ onAccept, onTimeout }) => {
   const [remainingTime, setRemainingTime] = useState(8); // 8-second timer
   const audioRef = useRef(null); // Reference to the audio element
@@ -9,7 +10,7 @@ const OrderPopup = ({ onAccept, onTimeout }) => {
     // Play alarm sound when the popup appears
     if (audioRef.current) {
       audioRef.current.play().catch((error) => {
-        console.error("Failed to play audio:", error);
+        console.error('Failed to play audio:', error);
       });
     }
 
@@ -30,6 +31,8 @@ const OrderPopup = ({ onAccept, onTimeout }) => {
       clearInterval(timer);
       if (audioRef.current) {
         audioRef.current.pause();
+
+        //eslint-disable-next-line
         audioRef.current.currentTime = 0; // Reset audio playback
       }
     };
@@ -45,7 +48,7 @@ const OrderPopup = ({ onAccept, onTimeout }) => {
       <div className="order-popup">
         <h3>New Order!</h3>
         <p>Time remaining: {remainingTime}s</p>
-        <button onClick={handleAccept} style={{ marginRight: "10px" }}>
+        <button onClick={handleAccept} style={{ marginRight: '10px' }}>
           Accept Order
         </button>
         <button onClick={() => setRemainingTime(0)}>Decline</button>

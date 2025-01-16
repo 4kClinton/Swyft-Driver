@@ -1,122 +1,123 @@
 :root {
-    --primary-color: #212121;
-    /* Dark background */
-    --secondary-color: #2AC352;
-    /* Lime green */
-    --text-color: #FFFFFF;
-    /* White text */
-    --input-background: #282828;
-    /* Input field background */
-    --border-radius: 20px;
-    /* Rounded corners */
+  --primary-color: #212121;
+  /* Dark background */
+  --secondary-color: #2ac352;
+  /* Lime green */
+  --text-color: #ffffff;
+  /* White text */
+  --input-background: #282828;
+  /* Input field background */
+  --border-radius: 20px;
+  /* Rounded corners */
 }
 
 /* Dashboard Container */
 .Dash {
-    font-family: 'Montserrat', sans-serif;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 90.3%;
-    max-height: 600px;
-    height: 500px;
-    background-color: var(--primary-color);
-    border-top-left-radius: var(--border-radius);
-    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2),
-            0px 4px 6px rgba(0, 0, 0, 0.1);
-    border-top-right-radius: var(--border-radius);
-    transition: transform 0.3s ease;
-    transform: translateY(50%);
-    z-index: 3000;
-    overflow-y: scroll;
-    padding: 20px;
-    display: grid;
-    gap: 10px;
-    align-items: center;
-        margin-bottom: 6vh;
+  font-family: 'Montserrat', sans-serif;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 90.3%;
+  max-height: 600px;
+  height: 500px;
+  background-color: var(--primary-color);
+  border-top-left-radius: var(--border-radius);
+  box-shadow:
+    0px 10px 15px rgba(0, 0, 0, 0.2),
+    0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-top-right-radius: var(--border-radius);
+  transition: transform 0.3s ease;
+  transform: translateY(50%);
+  z-index: 3000;
+  overflow-y: scroll;
+  padding: 20px;
+  display: grid;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 6vh;
 }
 
 .Dash.open {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 /* Notch */
 .notch {
-    width: 50px;
-    height: 5px;
-    background-color: var(--secondary-color);
-    border-radius: 10px;
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    cursor: pointer;
+  width: 50px;
+  height: 5px;
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
 }
 
 /* Title */
 .catch {
-    color: var(--text-color);
-    text-align: center;
-    margin: 10px 0;
+  color: var(--text-color);
+  text-align: center;
+  margin: 10px 0;
 }
 
 /* Dash Content - Cards Layout */
 .dash-content {
-display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    /* padding: 10px; */
-    max-width: 100%;
-    margin-left: 1.6vh;
-    box-sizing: border-box;
-    justify-items: center;
-    align-items: start;
-    width: 90%;
-    /* margin: 0 auto; */
-    justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  /* padding: 10px; */
+  max-width: 100%;
+  margin-left: 1.6vh;
+  box-sizing: border-box;
+  justify-items: center;
+  align-items: start;
+  width: 90%;
+  /* margin: 0 auto; */
+  justify-content: center;
 }
 
 /* Card Styles */
 .card {
-background-color: #404040;
-    /* Card background */
-    border-radius: 15px;
-    /* Rounded corners */
-    padding: 10px;
-    /* Space inside the card */
-    display: flex;
-    flex-direction: column;
-    /* Stack items vertically */
-    align-items: center;
-    /* Center items horizontally */
-    justify-content: center;
-    /* Center items vertically */
-    text-align: center;
-    /* Center text */
-    width: 20vh;
-    /* Responsive card width */
-    box-sizing: border-box;
-    /* Includes padding in total width */
+  background-color: #404040;
+  /* Card background */
+  border-radius: 15px;
+  /* Rounded corners */
+  padding: 10px;
+  /* Space inside the card */
+  display: flex;
+  flex-direction: column;
+  /* Stack items vertically */
+  align-items: center;
+  /* Center items horizontally */
+  justify-content: center;
+  /* Center items vertically */
+  text-align: center;
+  /* Center text */
+  width: 20vh;
+  /* Responsive card width */
+  box-sizing: border-box;
+  /* Includes padding in total width */
 }
 
 .card:hover {
-    background-color: rgba(42, 195, 82, 0.2);
-    /* Subtle lime green hover effect */
-    transform: translateY(-5px);
+  background-color: rgba(42, 195, 82, 0.2);
+  /* Subtle lime green hover effect */
+  transform: translateY(-5px);
 }
 
 .card-icon {
-    color: var(--secondary-color);
-    margin-bottom: 10px;
+  color: var(--secondary-color);
+  margin-bottom: 10px;
 }
 
 .card h3 {
-    /* margin: 0.5em 0; */
-    color: var(--text-color);
+  /* margin: 0.5em 0; */
+  color: var(--text-color);
 }
 
 .card p {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: var(--text-color);
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--text-color);
 }
