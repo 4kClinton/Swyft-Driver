@@ -46,8 +46,11 @@ const Earnings = ({ totalCost }) => {
     <div className="earnings-container">
       <h1 className="earnings-heading">Earnings Overview</h1>
       <p className="earnings-text">
-        Total Cost: {/* eslint-disable-next-line */}
-        <span className="earnings-highlight">Ksh{totalCost.toFixed(2)}</span>
+        Total Cost: {}
+        <span className="earnings-highlight">
+          {/* eslint-disable-next-line */}
+          Ksh{totalCost & totalCost.toFixed(2)}
+        </span>
       </p>
       <p className="earnings-text">
         Commission to Swyft (25%):{' '}

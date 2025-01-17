@@ -5,19 +5,12 @@ import '../Styles/GoOnline.css';
 import { useSelector } from 'react-redux';
 const GoOnlineButton = () => {
   const driver = useSelector((state) => state.user.value);
-  const [isOnline, setIsOnline] = useState(() => {
-    // Retrieve the online status from localStorage
-    const savedStatus = localStorage.getItem('isOnline');
-    return savedStatus === 'true'; // Convert string back to boolean
-  });
+  const [isOnline, setIsOnline] = useState(false);
   console.log(isOnline);
 
-  // Get uniqueId from sessionStorage
-
   useEffect(() => {
-    // Save the online status to localStorage whenever it changes
-    localStorage.setItem('isOnline', isOnline.toString());
-  }, [isOnline]);
+    setIsOnline(driver?.online);
+  }, [driver?.online]);
 
   const handleToggle = async () => {
     const newStatus = !isOnline;
