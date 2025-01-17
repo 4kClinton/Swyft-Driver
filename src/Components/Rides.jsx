@@ -58,28 +58,29 @@ const RidesHistory = () => {
           paddingBottom: 0,
         }}
       >
-        {rides.map((ride) => (
-          <React.Fragment key={ride.id}>
-            <ListItem className="rides-history-list-item">
-              <ListItemIcon>
-                <DriveEtaIcon className="rides-history-icon" />
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                  <Typography className="rides-history-primary">
-                    {ride.destination}
-                  </Typography>
-                }
-                secondary={
-                  <Typography className="rides-history-secondary">
-                    Date: {ride.date} | Fare: {ride.fare}
-                  </Typography>
-                }
-              />
-            </ListItem>
-            <Divider className="rides-history-divider" />
-          </React.Fragment>
-        ))}
+        {rides[0] &&
+          rides.map((ride) => (
+            <React.Fragment key={ride.id}>
+              <ListItem className="rides-history-list-item">
+                <ListItemIcon>
+                  <DriveEtaIcon className="rides-history-icon" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography className="rides-history-primary">
+                      {ride.destination}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography className="rides-history-secondary">
+                      Date: {ride.date} | Fare: {ride.fare}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <Divider className="rides-history-divider" />
+            </React.Fragment>
+          ))}
       </List>
       {/* Uncomment if BottomNav is needed */}
       {/* <BottomNav /> */}
