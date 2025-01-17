@@ -46,8 +46,9 @@ const Earnings = ({ totalCost }) => {
     <div className="earnings-container">
       <h1 className="earnings-heading">Earnings Overview</h1>
       <p className="earnings-text">
-        Total Cost: {/* eslint-disable-next-line */}
+        Total Cost: {}
         <span className="earnings-highlight">
+          {/* eslint-disable-next-line */}
           Ksh{totalCost & totalCost.toFixed(2)}
         </span>
       </p>
