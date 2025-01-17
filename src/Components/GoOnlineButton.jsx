@@ -5,6 +5,8 @@ import '../Styles/GoOnline.css';
 import { useSelector } from 'react-redux';
 const GoOnlineButton = () => {
   const driver = useSelector((state) => state.user.value);
+  console.log(driver);
+
   const [isOnline, setIsOnline] = useState(() => {
     // Retrieve the online status from localStorage
     const savedStatus = localStorage.getItem('isOnline');
