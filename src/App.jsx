@@ -108,7 +108,7 @@ function App() {
     <div>
       <Outlet />
       {/* Conditionally render BottomNav based on current location */}
-      {location.pathname !== '/' && (
+      {location.pathname !== '/' && location.pathname !== '/signup' && (
         <BottomNav value={count} onChange={setCount} />
       )}
     </div>
