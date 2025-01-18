@@ -22,7 +22,6 @@ const Earnings = () => {
       })
       .then((data) => {
         // Ensure numerical data is converted to numbers
-        data.outstanding_balance = Number(data.outstanding_balance);
         data.total_payments_made = Number(data.total_payments_made);
         data.total_unpaid_earnings = Number(data.total_unpaid_earnings);
         data.commission = Number(data.commission);
@@ -42,7 +41,7 @@ const Earnings = () => {
     return <div>Error: {earningsData.error}</div>; // Display an error message
   }
 
-  const { outstanding_balance, total_payments_made, total_unpaid_earnings, commission } = earningsData;
+  const { total_payments_made, total_unpaid_earnings, commission } = earningsData;
 
   const handleGoBack = () => {
     navigate(-1); // Navigate one step back in the history stack
@@ -77,10 +76,6 @@ const Earnings = () => {
   return (
     <div className="earnings-container">
       <h1 className="earnings-heading">Earnings Overview</h1>
-      <p className="earnings-text">
-        Outstanding Balance:{" "}
-        <span className="earnings-highlight">Ksh{outstanding_balance.toFixed(2)}</span>
-      </p>
       <p className="earnings-text">
         Total Payments Made:{" "}
         <span className="earnings-highlight">Ksh{total_payments_made.toFixed(2)}</span>
