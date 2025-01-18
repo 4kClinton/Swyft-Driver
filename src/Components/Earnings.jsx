@@ -48,31 +48,39 @@ const Earnings = () => {
   };
 
   const handleMpesaPayment = async () => {
-    if (!phoneNumber.match(/^07\d{8}$/)) {
-      setError("Please enter a valid phone number starting with 07.");
+    // Ensure phone number is in international format
+    const formattedPhoneNumber = phoneNumber.replace(/^0/, "254"); 
+  
+    if (!formattedPhoneNumber.match(/^2547\d{8}$/)) {
+      setError("Please enter a valid phone number starting with 2547.");
       return;
     }
-
+  
     setError(""); // Clear any existing errors
-
+  
     try {
-      // Simulate triggering Mpesa API
-      const response = await fetch("/api/mpesa/pay", {
+      const token = sessionStorage.getItem("authToken");  // Assuming the token is stored in session storage
+  
+      const response = await fetch("https://swyft-backend-client-nine.vercel.app/process-payment", {  // Adjusted endpoint to match the backend
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber, amount: total_unpaid_earnings - commission }),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,  // Include the JWT token in the headers
+        },
+        body: JSON.stringify({ Amount: commission, phoneNumber: formattedPhoneNumber }), // Ensure the payload keys match the backend requirements
       });
-
+  
       if (!response.ok) {
         throw new Error("Payment failed. Please try again.");
       }
-
+  
       alert("Payment initiated successfully. Please complete the payment on your phone.");
     } catch (error) {
       alert(error.message || "An error occurred during payment.");
     }
   };
-
+  
+  
   return (
     <div className="earnings-container">
       <h1 className="earnings-heading">Earnings Overview</h1>
