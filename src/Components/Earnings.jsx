@@ -20,7 +20,14 @@ const Earnings = () => {
         }
         return response.json();
       })
-      .then((data) => setEarningsData(data))
+      .then((data) => {
+        // Ensure numerical data is converted to numbers
+        data.outstanding_balance = Number(data.outstanding_balance);
+        data.total_payments_made = Number(data.total_payments_made);
+        data.total_unpaid_earnings = Number(data.total_unpaid_earnings);
+        data.commission = Number(data.commission);
+        setEarningsData(data);
+      })
       .catch((error) => {
         console.error("Error fetching data:", error);
         setEarningsData({ error: error.message }); // Set an error state
@@ -35,7 +42,7 @@ const Earnings = () => {
     return <div>Error: {earningsData.error}</div>; // Display an error message
   }
 
-  const { outstanding_balance, total_payments_made, total_unpaid_earnings } = earningsData;
+  const { outstanding_balance, total_payments_made, total_unpaid_earnings, commission } = earningsData;
 
   const handleGoBack = () => {
     navigate(-1); // Navigate one step back in the history stack
@@ -54,7 +61,7 @@ const Earnings = () => {
       const response = await fetch("/api/mpesa/pay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber, amount: total_unpaid_earnings }),
+        body: JSON.stringify({ phoneNumber, amount: total_unpaid_earnings - commission }),
       });
 
       if (!response.ok) {
@@ -72,15 +79,19 @@ const Earnings = () => {
       <h1 className="earnings-heading">Earnings Overview</h1>
       <p className="earnings-text">
         Outstanding Balance:{" "}
-        <span className="earnings-highlight">Ksh{outstanding_balance}</span>
+        <span className="earnings-highlight">Ksh{outstanding_balance.toFixed(2)}</span>
       </p>
       <p className="earnings-text">
         Total Payments Made:{" "}
-        <span className="earnings-highlight">Ksh{total_payments_made}</span>
+        <span className="earnings-highlight">Ksh{total_payments_made.toFixed(2)}</span>
       </p>
       <p className="earnings-text">
         Total Unpaid Earnings:{" "}
-        <span className="earnings-highlight">Ksh{total_unpaid_earnings}</span>
+        <span className="earnings-highlight">Ksh{total_unpaid_earnings.toFixed(2)}</span>
+      </p>
+      <p className="earnings-text">
+        Commission (25%):{" "}
+        <span className="earnings-highlight">Ksh{commission.toFixed(2)}</span>
       </p>
 
       <div className="phone-input-container">
