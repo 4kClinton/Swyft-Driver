@@ -84,29 +84,36 @@ function App() {
             }
           }
         })
-        .then(() => {
-          fetch('https://swyft-backend-client-nine.vercel.app/orders', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error('Failed to fetch rides history');
-              }
-              return response.json();
-            })
-            .then((data) => {
-              dispatch(saveOrders(data));
-            });
-        })
+
         .catch((error) => {
           console.error('Token verification failed:', error);
         });
     }
-  }, [dispatch]);
+    //eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('authToken');
+    if (token) {
+      fetch('https://swyft-backend-client-nine.vercel.app/orders', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch rides history');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          dispatch(saveOrders(data));
+        });
+    }
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
