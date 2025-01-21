@@ -10,7 +10,8 @@
 .card {
   width: 100%;
   max-width: 24rem;
-  background-color: white;
+  background-color: #3a3a3a;
+  color: white;
   border-radius: 0.5rem;
   border: 1px solid #00d46a;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -47,14 +48,14 @@
 .username {
   font-size: 1.125rem;
   font-weight: 500;
-  color: black;
+  color: white;
 }
 
 .route {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: black;
+  color: white;
   margin-bottom: 0.75rem;
 }
 
@@ -79,13 +80,13 @@
 }
 
 .price {
-  color: black;
+  color: white;
   font-weight: 500;
 }
 
 .loaders,
 .commission {
-  color: black;
+  color: white;
   font-size: 0.875rem;
 }
 

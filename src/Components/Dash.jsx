@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import '../Styles/Dash.css';
 
-import { FaMoneyBillWave, FaStar } from 'react-icons/fa';
+import { FaMoneyBillWave, FaStar, FaCar, FaLifeRing } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import Alert from '../Components/Alert';
+
+import { useSelector } from 'react-redux';
 
 const Dash = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dashRef = useRef(null);
+  const currentCustomer = useSelector((state) => state.currentCustomer.value);
+
+  const user = useSelector((state) => state.user.value);
 
   // Simulated data for the cards
   const data = {
@@ -39,7 +43,6 @@ const Dash = () => {
       </h2>
 
       <div className="dash-content">
-        <Alert />
         <Link to="/earnings" className="card-link">
           <div className="card">
             <FaMoneyBillWave size={24} className="card-icon" />
@@ -47,8 +50,12 @@ const Dash = () => {
             <p>{data.earnings}</p>
           </div>
         </Link>
-        <Link to="/order" className="card-link">
-          <div className="card">Order</div>
+        <Link to="/deliveryDetails" className="card-link">
+          <div className="card">
+            <FaCar size={24} className="card-icon" />
+            <h3>Current Order</h3>
+            <p>{currentCustomer.id ? currentCustomer.name : 'No orders'}</p>
+          </div>
         </Link>
         {/* <div className="card">
           <FaChartLine size={24} className="card-icon" />
@@ -58,8 +65,16 @@ const Dash = () => {
         <div className="card">
           <FaStar size={24} className="card-icon" />
           <h3>Ratings</h3>
-          <p>{data.ratings}</p>
+          <p>{user.ratings && user.ratings}</p>
         </div>
+
+        <Link to="/support" className="card-link">
+          <div className="card">
+            <FaLifeRing size={24} className="card-icon" />
+
+            <p>Contact support for help</p>
+          </div>
+        </Link>
       </div>
     </div>
   );

@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import styles from '../Styles/deliveryDetails.module.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLoadScript } from '@react-google-maps/api';
+import { useNavigate } from 'react-router-dom';
+import { removeOrder, saveOrder } from '../Redux/Reducers/CurrentOrderSlice';
+import { removeCustomer } from '../Redux/Reducers/CurrentCustomerSlice';
 
 export default function DeliveryDetails() {
+  const dispatch = useDispatch();
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Load API key from .env
     libraries: ['places'],
@@ -13,6 +17,9 @@ export default function DeliveryDetails() {
   const order = useSelector((state) => state.currentOrder.value);
   const [customerAddress, setCustomerAddress] = useState('');
   const [destination, setDestination] = useState('');
+  const [buttonText, setButtonText] = useState('Arrived at Customer Location');
+  const [orderStatus, setOrderStatus] = useState('on_the_way'); // Order status can be "on_the_way", "arrived_at_customer", "on_the_way_to_destination", "completed"
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isLoaded) {
@@ -23,8 +30,6 @@ export default function DeliveryDetails() {
 
   const handleGetCustomerLocation = () => {
     if (order.id && window.google && window.google.maps) {
-      console.log(order);
-
       const geocoder = new window.google.maps.Geocoder();
       const latlng = {
         lat: order.user_lat,
@@ -42,6 +47,7 @@ export default function DeliveryDetails() {
           console.error('Error retrieving address:', status);
         }
       });
+
       geocoder.geocode({ location: newDestination }, (results, status) => {
         if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
           setDestination(results[0].formatted_address);
@@ -51,6 +57,110 @@ export default function DeliveryDetails() {
       });
     } else {
       console.error('Google Maps API is not available.');
+    }
+  };
+
+  const handleArrivedAtCustomer = async () => {
+    setOrderStatus('arrived_at_customer');
+    setButtonText('Go to Destination');
+    const token = sessionStorage.getItem('authToken');
+
+    try {
+      // Update the order status to 'arrived_at_customer' via fetch
+      const response = await fetch(
+        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: 'arrived_at_customer' }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to update order status');
+      }
+
+      const data = await response.json();
+      dispatch(saveOrder(data?.order));
+
+      localStorage.setItem('currentOrder', JSON.stringify(data?.order));
+      console.log('Order status updated:', data);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Error updating order status');
+    }
+  };
+
+  const handleGoToDestination = async () => {
+    setOrderStatus('on_the_way_to_destination');
+    setButtonText('Complete Ride');
+    const token = sessionStorage.getItem('authToken');
+
+    try {
+      const response = await fetch(
+        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: 'on_the_way_to_destination' }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to update order status');
+      }
+
+      const data = await response.json();
+      dispatch(saveOrder(data?.order));
+
+      localStorage.setItem('currentOrder', JSON.stringify(data?.order));
+      console.log('Order status updated:', data);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Error updating order status');
+    }
+  };
+
+  const handleCompleteRide = async () => {
+    setOrderStatus('completed');
+    setButtonText('Ride Completed');
+    const token = sessionStorage.getItem('authToken');
+
+    try {
+      const response = await fetch(
+        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: 'completed' }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to update order status');
+      }
+
+      const data = await response.json();
+      console.log('Order status updated:', data);
+
+      localStorage.removeItem('currentOrder');
+      localStorage.removeItem('customerData');
+      dispatch(removeOrder());
+      dispatch(removeCustomer());
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Error updating order status');
     }
   };
 
@@ -102,24 +212,38 @@ export default function DeliveryDetails() {
             <div className={styles.price}>Ksh {order.total_cost}</div>
           </div>
 
-          <div className={styles.loaders}>{order.loaders}</div>
+          <div className={styles.loaders}>Loaders: {order.loaders}</div>
 
           <div className={styles.separator}></div>
 
           <div className={styles.commission}>
-            Commission : <span className={styles.price}>Ksh 345</span>
+            Commission: <span className={styles.price}>Ksh 345</span>
           </div>
         </div>
+
         <div className={styles['card-footer']}>
           <button className={`${styles.button} ${styles['button-secondary']}`}>
             <a href="tel:0722812732">0722812732</a>
           </button>
 
-          <button className={`${styles.button} ${styles['button-primary']}`}>
-            Go To Client
+          <button
+            className={`${styles.button} ${styles['button-primary']}`}
+            onClick={() => navigate('/dashboard')}
+          >
+            Go To Map
           </button>
-          <button className={`${styles.button} ${styles['button-secondary']}`}>
-            Continue to Destination
+
+          <button
+            className={`${styles.button} ${styles['button-primary']}`}
+            onClick={
+              orderStatus === 'on_the_way'
+                ? handleArrivedAtCustomer
+                : orderStatus === 'arrived_at_customer'
+                  ? handleGoToDestination
+                  : handleCompleteRide
+            }
+          >
+            {buttonText}
           </button>
         </div>
       </div>
