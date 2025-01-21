@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 const GoOnlineButton = () => {
   const driver = useSelector((state) => state.user.value);
   const [isOnline, setIsOnline] = useState(false);
-  console.log(isOnline);
 
   useEffect(() => {
     setIsOnline(driver?.online);

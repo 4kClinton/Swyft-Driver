@@ -11,6 +11,8 @@ import { alertOn } from './Redux/Reducers/alertSlice';
 import { saveOrder } from './Redux/Reducers/CurrentOrderSlice';
 
 import { saveCustomer } from './Redux/Reducers/CurrentCustomerSlice';
+import { saveOrders } from './Redux/Reducers/ordersHistorySlice';
+import Alert from './Components/Alert';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -31,6 +33,7 @@ function App() {
         (payload) => {
           if (payload?.new?.driver_id === driver.id) {
             dispatch(saveOrder(payload.new));
+
             dispatch(alertOn());
           }
         }
@@ -66,13 +69,38 @@ function App() {
         .then((userData) => {
           dispatch(addUser(userData));
           const storedCustomerData = localStorage.getItem('customerData');
+
           const storedOrderData = localStorage.getItem('currentOrder');
 
           if (storedCustomerData && storedOrderData) {
-            // If found, dispatch it to Redux
-            dispatch(saveCustomer(JSON.parse(storedCustomerData)));
-            dispatch(saveOrder(JSON.parse(storedOrderData)));
+            const order = JSON.parse(storedOrderData);
+            if (
+              order.status !== 'completed' &&
+              order.status !== 'cancelled' &&
+              order.status !== 'Pending'
+            ) {
+              dispatch(saveCustomer(JSON.parse(storedCustomerData)));
+              dispatch(saveOrder(order));
+            }
           }
+        })
+        .then(() => {
+          fetch('https://swyft-backend-client-nine.vercel.app/orders', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Failed to fetch rides history');
+              }
+              return response.json();
+            })
+            .then((data) => {
+              dispatch(saveOrders(data));
+            });
         })
         .catch((error) => {
           console.error('Token verification failed:', error);
@@ -106,6 +134,7 @@ function App() {
 
   return (
     <div>
+      <Alert />
       <Outlet />
       {/* Conditionally render BottomNav based on current location */}
       {location.pathname !== '/' && location.pathname !== '/signup' && (

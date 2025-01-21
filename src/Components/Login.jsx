@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box, Link } from '@mui/material';
 
 import CircularProgress from '@mui/material/CircularProgress'; // For loader
 import '../Styles/Login.css';
 import { addUser } from '../Redux/Reducers/UserSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,6 +14,14 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+
+  useEffect(() => {
+    if (user.id) {
+      navigate('/dashboard');
+    }
+    //eslint-disable-next-line
+  }, [user]);
 
   const logIn = async (event) => {
     event.preventDefault();
@@ -44,9 +52,11 @@ const Login = () => {
         dispatch(addUser(user));
         navigate('/dashboard'); // Redirect to Dashboard on successful login
       } else {
-        setError(data.message || 'Login failed. Please try again.');
+        setError(data.error || 'Login failed. Please try again.');
       }
     } catch (err) {
+      console.log(err);
+
       setError('An error occurred. Please try again.', err);
     } finally {
       setLoading(false);
@@ -58,7 +68,7 @@ const Login = () => {
       <Box className="login-container">
         <header className="login-header">Log in to Swyft</header>
         {error && <Typography color="error">{error}</Typography>}
-        <form onSubmit={logIn}>
+        <form onSubmit={logIn} className="login-form">
           <input
             placeholder="Email or Username"
             className="login-input"

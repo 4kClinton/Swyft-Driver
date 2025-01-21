@@ -14,8 +14,11 @@ const currentOrder = createSlice({
     declineOrder(state) {
       state.value = {};
     },
+    removeOrder(state) {
+      state.value = {};
+    }
   },
 });
 
-export const { saveOrder, declineOrder } = currentOrder.actions;
+export const { saveOrder, declineOrder,removeOrder } = currentOrder.actions;
 export default currentOrder.reducer;
