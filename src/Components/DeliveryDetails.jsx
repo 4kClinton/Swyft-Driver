@@ -73,7 +73,6 @@ export default function DeliveryDetails() {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ status: 'arrived_at_customer' }),
