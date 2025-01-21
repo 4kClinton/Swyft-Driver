@@ -94,7 +94,10 @@ const Alert = () => {
           })
         );
         localStorage.setItem('customerData', JSON.stringify(customerData));
-        localStorage.setItem('currentOrder', JSON.stringify(currentOrder));
+        localStorage.setItem(
+          'currentOrder',
+          JSON.stringify({ ...currentOrder, status: 'Accepted' })
+        );
       })
       .then(() => {
         navigate('/deliveryDetails');
