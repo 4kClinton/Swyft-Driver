@@ -10,15 +10,25 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
-  const [profile, setProfile] = useState(user.id ? user : {});
+  const [profile, setProfile] = useState({
+    name: user.name || '',
+    first_name: user.first_name || '',
+    last_name: user.last_name || '',
+    email: user.email || '',
+    phone: user.phone || '',
+    avatar: user.avatar || '',
+  });
 
   useEffect(() => {
     if (user.id) {
       setProfile(user);
     }
   }, [user]);
+  console.log(profile);
 
   const handleSave = async () => {
+    console.log(profile);
+
     const token = sessionStorage.getItem('authToken');
     setIsEditing(false);
     try {

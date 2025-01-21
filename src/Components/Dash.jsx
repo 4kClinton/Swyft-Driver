@@ -64,8 +64,8 @@ const Dash = () => {
         </div> */}
         <div className="card">
           <FaStar size={24} className="card-icon" />
-          <h3>Ratings</h3>
-          <p>{user.ratings && user.ratings}</p>
+          <h3>Rating</h3>
+          <p>{user.rating && user.rating.toFixed(1)}</p>
         </div>
 
         <Link to="/support" className="card-link">

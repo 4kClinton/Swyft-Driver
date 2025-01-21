@@ -14,6 +14,8 @@ export default function RidesHistory() {
   const [addressesLoaded, setAddressesLoaded] = useState(false);
   const [selectedRide, setSelectedRide] = useState(null); // State to track selected ride for the modal
   const ordersHistory = useSelector((state) => state.ordersHistory.value);
+  console.log(ordersHistory);
+
   const getStatusLabel = (status) => {
     switch (status) {
       case 'arrived_at_customer':
@@ -26,12 +28,14 @@ export default function RidesHistory() {
             On the Way to Destination
           </span>
         );
+      case 'Accepted':
+        return <span className={styles.statusAccepted}>Accepted</span>;
       case 'completed':
         return <span className={styles.statusCompleted}>Ride Completed</span>;
-      case 'pending':
+      case 'Pending':
         return <span className={styles.statusPending}>Pending</span>;
-      case 'canceled':
-        return <span className={styles.statusCanceled}>Canceled</span>;
+      case 'cancelled':
+        return <span className={styles.statusCanceled}>Cancelled</span>;
       default:
         return <span className={styles.statusUnknown}>Unknown Status</span>;
     }
@@ -107,6 +111,10 @@ export default function RidesHistory() {
           };
         })
       );
+      // Sort rides by created_at in descending order (latest first)
+      ridesWithAddresses.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
       setRides(ridesWithAddresses);
       setAddressesLoaded(true);
       setLoading(false);
@@ -153,25 +161,21 @@ export default function RidesHistory() {
         >
           Moves History
         </h1>
+        <span
+          style={{
+            color: user?.commissionStatus === 'cleared' ? 'green' : 'red',
+            marginLeft: '10px',
+            fontSize: '1rem',
+          }}
+        >
+          {user?.commissionStatus === 'cleared' ? 'Cleared' : 'Commission Due'}
+        </span>
       </header>
 
       <main>
         {Object.keys(groupedRides).map((date) => (
           <section key={date} className={styles.day_section}>
-            <h2 className={styles.h2}>
-              {date}
-              <span
-                style={{
-                  color: user?.commissionStatus === 'cleared' ? 'green' : 'red',
-                  marginLeft: '10px',
-                  fontSize: '1rem',
-                }}
-              >
-                {user?.commissionStatus === 'cleared'
-                  ? 'Cleared'
-                  : 'Commission Due'}
-              </span>
-            </h2>
+            <h2 className={styles.h2}>{date}</h2>
             {groupedRides[date].map((ride, index) => (
               <div
                 key={index}

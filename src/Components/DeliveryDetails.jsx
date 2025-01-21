@@ -18,8 +18,39 @@ export default function DeliveryDetails() {
   const [customerAddress, setCustomerAddress] = useState('');
   const [destination, setDestination] = useState('');
   const [buttonText, setButtonText] = useState('Arrived at Customer Location');
-  const [orderStatus, setOrderStatus] = useState('on_the_way'); // Order status can be "on_the_way", "arrived_at_customer", "on_the_way_to_destination", "completed"
+  const [orderStatus, setOrderStatus] = useState('on_the_way');
   const navigate = useNavigate();
+  console.log(order);
+
+  useEffect(() => {
+    // Update orderStatus state with the current order status
+    if (order && order.status) {
+      setOrderStatus(order.status);
+
+      // Update the button text based on the order status
+      switch (order.status) {
+        case 'Accepted':
+          setButtonText('Arrived at Customer Location');
+          break;
+        case 'arrived_at_customer':
+          setButtonText('Go to Destination');
+          break;
+        case 'on_the_way_to_destination':
+          setButtonText('Complete Ride');
+          break;
+        case 'completed':
+          setButtonText('Ride Completed');
+          break;
+        case 'cancelled':
+          setButtonText('Order Cancelled');
+          break;
+        default:
+          setButtonText('Update Status');
+          break;
+      }
+    }
+  }, [order]);
+  console.log(order.status);
 
   useEffect(() => {
     if (isLoaded) {
@@ -235,7 +266,7 @@ export default function DeliveryDetails() {
           <button
             className={`${styles.button} ${styles['button-primary']}`}
             onClick={
-              orderStatus === 'on_the_way'
+              orderStatus === 'Accepted'
                 ? handleArrivedAtCustomer
                 : orderStatus === 'arrived_at_customer'
                   ? handleGoToDestination

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom'; // Import useLocation
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'; // Import useLocation
 
 import BottomNav from './Components/BottomNav';
 
@@ -8,14 +8,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from './Redux/Reducers/UserSlice';
 import { supabase } from './supabase';
 import { alertOn } from './Redux/Reducers/alertSlice';
-import { saveOrder } from './Redux/Reducers/CurrentOrderSlice';
+import { removeOrder, saveOrder } from './Redux/Reducers/CurrentOrderSlice';
 
-import { saveCustomer } from './Redux/Reducers/CurrentCustomerSlice';
+import {
+  removeCustomer,
+  saveCustomer,
+} from './Redux/Reducers/CurrentCustomerSlice';
 import { saveOrders } from './Redux/Reducers/ordersHistorySlice';
 import Alert from './Components/Alert';
 
 function App() {
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
   const driver = useSelector((state) => state.user.value);
   const [data, setData] = useState(null); // State for data
@@ -38,6 +42,24 @@ function App() {
           }
         }
       )
+
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders' },
+        (payload) => {
+          if (payload?.new?.driver_id === driver.id) {
+            const updatedStatus = payload?.new?.status;
+            if (updatedStatus === 'cancelled') {
+              alert('Order has been cancelled');
+              localStorage.removeItem('currentOrder');
+              localStorage.removeItem('customerData');
+              dispatch(removeOrder());
+              dispatch(removeCustomer());
+              navigate('/dashboard');
+            }
+          }
+        }
+      )
       .subscribe();
 
     // Cleanup the subscription on component unmount
@@ -49,6 +71,7 @@ function App() {
           .catch((error) => console.error('Error removing channel:', error));
       }
     };
+    //eslint-disable-next-line
   }, [driver.id, dispatch]);
 
   useEffect(() => {
@@ -71,6 +94,7 @@ function App() {
           const storedCustomerData = localStorage.getItem('customerData');
 
           const storedOrderData = localStorage.getItem('currentOrder');
+          console.log(storedOrderData);
 
           if (storedCustomerData && storedOrderData) {
             const order = JSON.parse(storedOrderData);
