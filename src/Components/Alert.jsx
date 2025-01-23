@@ -5,7 +5,10 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { alertOff } from '../Redux/Reducers/alertSlice';
 import { declineOrder } from '../Redux/Reducers/CurrentOrderSlice';
-import { saveCustomer } from '../Redux/Reducers/CurrentCustomerSlice';
+import {
+  saveCustomer,
+  saveDestination,
+} from '../Redux/Reducers/CurrentCustomerSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Alert = () => {
@@ -84,9 +87,17 @@ const Alert = () => {
       })
       .then((customerData) => {
         dispatch(saveCustomer(customerData));
+        dispatch(
+          saveDestination({
+            lat: currentOrder.user_lat,
+            lng: currentOrder.user_lng,
+          })
+        );
         localStorage.setItem('customerData', JSON.stringify(customerData));
-        localStorage.setItem('currentOrder', JSON.stringify(currentOrder));
-        console.log(customerData, currentOrder);
+        localStorage.setItem(
+          'currentOrder',
+          JSON.stringify({ ...currentOrder, status: 'Accepted' })
+        );
       })
       .then(() => {
         navigate('/deliveryDetails');

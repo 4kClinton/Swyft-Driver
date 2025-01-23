@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom'; // Import useLocation
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'; // Import useLocation
 
 import BottomNav from './Components/BottomNav';
 
@@ -8,12 +8,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from './Redux/Reducers/UserSlice';
 import { supabase } from './supabase';
 import { alertOn } from './Redux/Reducers/alertSlice';
-import { saveOrder } from './Redux/Reducers/CurrentOrderSlice';
+import { removeOrder, saveOrder } from './Redux/Reducers/CurrentOrderSlice';
 
-import { saveCustomer } from './Redux/Reducers/CurrentCustomerSlice';
+import {
+  removeCustomer,
+  saveCustomer,
+} from './Redux/Reducers/CurrentCustomerSlice';
+import { saveOrders } from './Redux/Reducers/ordersHistorySlice';
+import Alert from './Components/Alert';
 
 function App() {
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
   const driver = useSelector((state) => state.user.value);
   const [data, setData] = useState(null); // State for data
@@ -31,7 +37,26 @@ function App() {
         (payload) => {
           if (payload?.new?.driver_id === driver.id) {
             dispatch(saveOrder(payload.new));
+
             dispatch(alertOn());
+          }
+        }
+      )
+
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders' },
+        (payload) => {
+          if (payload?.new?.driver_id === driver.id) {
+            const updatedStatus = payload?.new?.status;
+            if (updatedStatus === 'cancelled') {
+              alert('Order has been cancelled');
+              localStorage.removeItem('currentOrder');
+              localStorage.removeItem('customerData');
+              dispatch(removeOrder());
+              dispatch(removeCustomer());
+              navigate('/dashboard');
+            }
           }
         }
       )
@@ -46,6 +71,7 @@ function App() {
           .catch((error) => console.error('Error removing channel:', error));
       }
     };
+    //eslint-disable-next-line
   }, [driver.id, dispatch]);
 
   useEffect(() => {
@@ -66,19 +92,52 @@ function App() {
         .then((userData) => {
           dispatch(addUser(userData));
           const storedCustomerData = localStorage.getItem('customerData');
+
           const storedOrderData = localStorage.getItem('currentOrder');
+          console.log(storedOrderData);
 
           if (storedCustomerData && storedOrderData) {
-            // If found, dispatch it to Redux
-            dispatch(saveCustomer(JSON.parse(storedCustomerData)));
-            dispatch(saveOrder(JSON.parse(storedOrderData)));
+            const order = JSON.parse(storedOrderData);
+            if (
+              order.status !== 'completed' &&
+              order.status !== 'cancelled' &&
+              order.status !== 'Pending'
+            ) {
+              dispatch(saveCustomer(JSON.parse(storedCustomerData)));
+              dispatch(saveOrder(order));
+            }
           }
         })
+
         .catch((error) => {
           console.error('Token verification failed:', error);
         });
     }
-  }, [dispatch]);
+    //eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('authToken');
+    if (token) {
+      fetch('https://swyft-backend-client-nine.vercel.app/orders', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch rides history');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          dispatch(saveOrders(data));
+        });
+    }
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
@@ -106,6 +165,7 @@ function App() {
 
   return (
     <div>
+      <Alert />
       <Outlet />
       {/* Conditionally render BottomNav based on current location */}
       {location.pathname !== '/' && location.pathname !== '/signup' && (

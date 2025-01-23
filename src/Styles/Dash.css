@@ -79,30 +79,22 @@
 
 /* Card Styles */
 .card {
-  background-color: #404040;
-  /* Card background */
-  border-radius: 15px;
-  /* Rounded corners */
-  padding: 10px;
-  /* Space inside the card */
+  background-color: #404040; /* Card background */
+  border-radius: 15px; /* Rounded corners */
+  padding: 20px; /* Space inside the card */
   display: flex;
-  flex-direction: column;
-  /* Stack items vertically */
-  align-items: center;
-  /* Center items horizontally */
-  justify-content: center;
-  /* Center items vertically */
-  text-align: center;
-  /* Center text */
-  width: 20vh;
-  /* Responsive card width */
-  box-sizing: border-box;
-  /* Includes padding in total width */
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+  justify-content: space-between; /* Ensure consistent spacing */
+  text-align: center; /* Center text */
+  width: 42vw; /* Set to 100% for responsiveness */
+  max-width: 250px; /* Ensure cards don't grow too wide */
+  height: 200px; /* Fixed height for uniform size */
+  box-sizing: border-box; /* Includes padding in total width */
 }
 
 .card:hover {
-  background-color: rgba(42, 195, 82, 0.2);
-  /* Subtle lime green hover effect */
+  background-color: rgba(42, 195, 82, 0.2); /* Subtle lime green hover effect */
   transform: translateY(-5px);
 }
 
@@ -112,12 +104,13 @@
 }
 
 .card h3 {
-  /* margin: 0.5em 0; */
   color: var(--text-color);
+  margin-bottom: 10px;
 }
 
 .card p {
   font-size: 1.2em;
   font-weight: bold;
   color: var(--text-color);
+  flex-grow: 1; /* Ensures the text doesn't push the card height */
 }
