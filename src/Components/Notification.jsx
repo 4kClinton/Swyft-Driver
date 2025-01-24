@@ -3,30 +3,37 @@ import { messaging } from "../../firebase"; // Import the messaging instance fro
 import { getToken, onMessage } from "firebase/messaging"; // Explicitly import the required functions
 
 const Notification = () => {
+  const vapid_key = import.meta.env.VITE_VAPID_KEY;
+
   useEffect(() => {
     const requestPermission = async () => {
       try {
         // Check if the Notification API is available
         if ("Notification" in window) {
+          console.log("IN");
           console.log("Requesting notification permission");
 
-          // Request permission
-          const permission = await Notification.requestPermission();
+          // Use the new Notification.permission API
+          if (Notification.permission === "default") {
+            console.log("Prompting for permission");
+            const permission = await navigator.permissions.query({ name: "notifications" });
+            console.log("Notification permission status: ", permission.state);
 
-          console.log("Notification permission status: ", permission);
+            if (permission.state === "granted") {
+              console.log("Notification permission granted.");
 
-          if (permission === "granted") {
-            console.log("Notification permission granted.");
-
-            // Get the FCM token
-            const token = await getToken(messaging, { vapidKey: import.meta.env.VAPID_KEY }); // Replace with your actual VAPID key
-            if (token) {
-              console.log("FCM Token: ", token);
+              // Get the FCM token
+              const token = await getToken(messaging, { vapidKey: vapid_key });
+              if (token) {
+                console.log("FCM Token: ", token);
+              } else {
+                console.error("No token received.");
+              }
             } else {
-              console.error("No token received.");
+              console.error("Notification permission denied.");
             }
           } else {
-            console.error("Notification permission denied.");
+            console.log("Notification permission already set to: ", Notification.permission);
           }
         } else {
           console.error("Notification API is not supported by this browser.");
