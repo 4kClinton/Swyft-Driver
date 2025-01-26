@@ -28,25 +28,24 @@ const Login = () => {
     setLoading(true);
     setError(null);
 
+    // Convert email to lowercase
+    const sanitizedEmail = email.trim().toLowerCase();
+
     try {
       const response = await fetch(
-        'https://swyft-backend-client-nine.vercel.app/driver/login',
-
+        'https://swyft-backend-client-nine.vercel.app//driver/login',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email: sanitizedEmail, password }),
         }
       );
       const data = await response.json();
 
       if (response.ok) {
-        // Assuming the server sends a token on successful login
-
         const { access_token, user, message } = data;
-
         sessionStorage.setItem('message', message || 'Login successful!');
         sessionStorage.setItem('authToken', access_token);
         dispatch(addUser(user));
@@ -56,8 +55,7 @@ const Login = () => {
       }
     } catch (err) {
       console.log(err);
-
-      setError('An error occurred. Please try again.', err);
+      setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -71,6 +69,7 @@ const Login = () => {
         <form onSubmit={logIn} className="login-form">
           <input
             placeholder="Email or Username"
+            type="email"
             className="login-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

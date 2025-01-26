@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 
 const Map = () => {
   const order = useSelector((state) => state.currentOrder.value); // Get current order from Redux
+  const onlineStatus = useSelector((state) => state.goOnline.value); // Get online status from Redux
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Load API key from .env
@@ -49,10 +50,10 @@ const Map = () => {
         alert('Geolocation is not supported by this browser.');
       }
     };
-    if (isLoaded) {
+    if (isLoaded && onlineStatus) {
       getCurrentLocation();
     }
-  }, [isLoaded]);
+  }, [isLoaded, onlineStatus]);
   useEffect(() => {
     // Set customer and destination locations when order data is available
     if (order?.id) {

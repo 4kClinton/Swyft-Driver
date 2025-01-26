@@ -4,7 +4,7 @@ import '../Styles/Alert.css';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { alertOff } from '../Redux/Reducers/alertSlice';
-import { declineOrder } from '../Redux/Reducers/CurrentOrderSlice';
+import { declineOrder, saveOrder } from '../Redux/Reducers/CurrentOrderSlice';
 import {
   saveCustomer,
   saveDestination,
@@ -33,16 +33,23 @@ const Alert = () => {
           audioRef.current.currentTime = 0; // Reset sound
           dispatch(alertOff());
           dispatch(declineOrder());
-          fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              order_id: currentOrder.id,
-              accepted: false,
-            }),
+          fetch(
+            'https://swyft-backend-client-nine.vercel.app//order-response',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                order_id: currentOrder.id,
+                accepted: false,
+              }),
+            }
+          ).then((res) => {
+            res.json().then((data) => {
+              dispatch(saveOrder(data));
+            });
           });
         }, 10000);
 
@@ -61,7 +68,7 @@ const Alert = () => {
       audioRef.current.currentTime = 0; // Reset sound
       dispatch(alertOff());
     }
-    fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
+    fetch('https://swyft-backend-client-nine.vercel.app//order-response', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +77,7 @@ const Alert = () => {
       body: JSON.stringify({ order_id: currentOrder.id, accepted: true }),
     });
     fetch(
-      `https://swyft-backend-client-nine.vercel.app/customer/${currentOrder.customer_id}`,
+      `https://swyft-backend-client-nine.vercel.app//customer/${currentOrder.customer_id}`,
       {
         method: 'GET',
         headers: {
