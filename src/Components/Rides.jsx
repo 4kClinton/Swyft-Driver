@@ -14,7 +14,6 @@ export default function RidesHistory() {
   const [addressesLoaded, setAddressesLoaded] = useState(false);
   const [selectedRide, setSelectedRide] = useState(null); // State to track selected ride for the modal
   const ordersHistory = useSelector((state) => state.ordersHistory.value);
-  console.log(ordersHistory);
 
   const getStatusLabel = (status) => {
     switch (status) {
@@ -89,6 +88,8 @@ export default function RidesHistory() {
         setRides(ordersHistory);
         setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
     //eslint-disable-next-line
   }, [ordersHistory, isLoaded]);
@@ -136,7 +137,10 @@ export default function RidesHistory() {
     });
   };
 
-  if (loading || !addressesLoaded)
+  if (
+    (loading === true && addressesLoaded === false) ||
+    (loading === false && addressesLoaded === true)
+  )
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <CircularProgress className="login-loader" size={34} color="#0000" />
