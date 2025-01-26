@@ -95,7 +95,7 @@ function App() {
     const token = sessionStorage.getItem('authToken');
 
     if (token) {
-      fetch('https://swyft-backend-client-nine.vercel.app//check_session', {
+      fetch('https://swyft-backend-client-nine.vercel.app/check_session', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -135,7 +135,7 @@ function App() {
   useEffect(() => {
     const token = sessionStorage.getItem('authToken');
     if (token) {
-      fetch('https://swyft-backend-client-nine.vercel.app//orders', {
+      fetch('https://swyft-backend-client-nine.vercel.app/orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ function App() {
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
 
-    fetch('https://swyft-backend-client-nine.vercel.app//orders/total_cost')
+    fetch('https://swyft-backend-client-nine.vercel.app/orders/total_cost')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch data');

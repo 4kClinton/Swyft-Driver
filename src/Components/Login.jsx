@@ -33,7 +33,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        'https://swyft-backend-client-nine.vercel.app//driver/login',
+        'https://swyft-backend-client-nine.vercel.app/driver/login',
         {
           method: 'POST',
           headers: {

@@ -33,20 +33,17 @@ const Alert = () => {
           audioRef.current.currentTime = 0; // Reset sound
           dispatch(alertOff());
           dispatch(declineOrder());
-          fetch(
-            'https://swyft-backend-client-nine.vercel.app//order-response',
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                order_id: currentOrder.id,
-                accepted: false,
-              }),
-            }
-          ).then((res) => {
+          fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              order_id: currentOrder.id,
+              accepted: false,
+            }),
+          }).then((res) => {
             res.json().then((data) => {
               dispatch(saveOrder(data));
             });
@@ -68,7 +65,7 @@ const Alert = () => {
       audioRef.current.currentTime = 0; // Reset sound
       dispatch(alertOff());
     }
-    fetch('https://swyft-backend-client-nine.vercel.app//order-response', {
+    fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +74,7 @@ const Alert = () => {
       body: JSON.stringify({ order_id: currentOrder.id, accepted: true }),
     });
     fetch(
-      `https://swyft-backend-client-nine.vercel.app//customer/${currentOrder.customer_id}`,
+      `https://swyft-backend-client-nine.vercel.app/customer/${currentOrder.customer_id}`,
       {
         method: 'GET',
         headers: {

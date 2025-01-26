@@ -98,7 +98,7 @@ export default function DeliveryDetails() {
     try {
       // Update the order status to 'arrived_at_customer' via fetch
       const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app//orders/${order.id}`,
+        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
         {
           method: 'PUT',
           headers: {
@@ -131,7 +131,7 @@ export default function DeliveryDetails() {
 
     try {
       const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app//orders/${order.id}`,
+        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
         {
           method: 'PUT',
           headers: {
@@ -164,7 +164,7 @@ export default function DeliveryDetails() {
 
     try {
       const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app//orders/${order.id}`,
+        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
         {
           method: 'PUT',
           headers: {
