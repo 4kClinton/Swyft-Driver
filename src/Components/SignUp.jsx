@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Link } from '@mui/material';
 
@@ -12,6 +12,40 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
+
+  const inputRefs = {
+    name: React.createRef(),
+    email: React.createRef(),
+    phoneNumber: React.createRef(),
+    password: React.createRef(),
+    confirmPassword: React.createRef(),
+  };
+
+  useEffect(() => {
+    const handleFocus = (e) => {
+      const focusedElement = e.target;
+      focusedElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center', // Adjust to "start" if you want the element at the top
+      });
+    };
+
+    // Attach the focus event listener to each input field
+    Object.values(inputRefs).forEach((inputRef) => {
+      if (inputRef.current) {
+        inputRef.current.addEventListener('focus', handleFocus);
+      }
+    });
+
+    // Cleanup: Remove event listeners when the component unmounts
+    return () => {
+      Object.values(inputRefs).forEach((inputRef) => {
+        if (inputRef.current) {
+          inputRef.current.removeEventListener('focus', handleFocus);
+        }
+      });
+    };
+  }, []);
 
   //eslint-disable-next-line
   const [loading, setLoading] = useState(false);
@@ -40,6 +74,7 @@ const SignUp = () => {
       <form className="form" onSubmit={handleSignUp}>
         <div className="input-group">
           <input
+            ref={inputRefs.name}
             placeholder="Name or Username"
             type="text"
             value={name}
@@ -49,6 +84,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
+            ref={inputRefs.email}
             placeholder="Email"
             type="email"
             value={email}
@@ -58,6 +94,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
+            ref={inputRefs.phoneNumber}
             placeholder="Phone Number"
             pattern="[0-9]{10}"
             title="Please enter a valid 10-digit phone number."
@@ -69,6 +106,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
+            ref={inputRefs.password}
             placeholder="Password"
             type="password"
             value={password}
@@ -78,6 +116,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
+            ref={inputRefs.confirmPassword}
             placeholder="Confirm Password"
             type="password"
             value={confirmPassword}

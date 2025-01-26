@@ -20,7 +20,6 @@ export default function DeliveryDetails() {
   const [buttonText, setButtonText] = useState('Arrived at Customer Location');
   const [orderStatus, setOrderStatus] = useState('on_the_way');
   const navigate = useNavigate();
-  console.log(order);
 
   useEffect(() => {
     // Update orderStatus state with the current order status
@@ -29,9 +28,6 @@ export default function DeliveryDetails() {
 
       // Update the button text based on the order status
       switch (order.status) {
-        case 'Accepted':
-          setButtonText('Arrived at Customer Location');
-          break;
         case 'arrived_at_customer':
           setButtonText('Go to Destination');
           break;
@@ -45,12 +41,15 @@ export default function DeliveryDetails() {
           setButtonText('Order Cancelled');
           break;
         default:
-          setButtonText('Update Status');
+          setButtonText('Arrived at Customer Location');
           break;
       }
     }
   }, [order]);
   console.log(order.status);
+  useEffect(() => {
+    console.log(order);
+  }, [order]);
 
   useEffect(() => {
     if (isLoaded) {
@@ -99,7 +98,7 @@ export default function DeliveryDetails() {
     try {
       // Update the order status to 'arrived_at_customer' via fetch
       const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
+        `https://swyft-backend-client-nine.vercel.app//orders/${order.id}`,
         {
           method: 'PUT',
           headers: {
@@ -132,7 +131,7 @@ export default function DeliveryDetails() {
 
     try {
       const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
+        `https://swyft-backend-client-nine.vercel.app//orders/${order.id}`,
         {
           method: 'PUT',
           headers: {
@@ -165,7 +164,7 @@ export default function DeliveryDetails() {
 
     try {
       const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
+        `https://swyft-backend-client-nine.vercel.app//orders/${order.id}`,
         {
           method: 'PUT',
           headers: {

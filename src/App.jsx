@@ -9,6 +9,8 @@ import { addUser } from './Redux/Reducers/UserSlice';
 import { supabase } from './supabase';
 import { alertOn } from './Redux/Reducers/alertSlice';
 import { removeOrder, saveOrder } from './Redux/Reducers/CurrentOrderSlice';
+import { toast, ToastContainer } from 'react-toastify'; // Import toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
 
 import {
   removeCustomer,
@@ -49,8 +51,23 @@ function App() {
         (payload) => {
           if (payload?.new?.driver_id === driver.id) {
             const updatedStatus = payload?.new?.status;
+            console.log(payload.new);
             if (updatedStatus === 'cancelled') {
-              alert('Order has been cancelled');
+              console.log(updatedStatus);
+
+              toast.error('Order has been cancelled', {
+                position: 'bottom-center',
+                autoClose: 5000, // Set the time it stays visible
+                onClose: () => {
+                  // Optionally navigate or remove items once the toast is acknowledged
+                  localStorage.removeItem('currentOrder');
+                  localStorage.removeItem('customerData');
+                  dispatch(removeOrder());
+                  dispatch(removeCustomer());
+                  navigate('/dashboard');
+                },
+              });
+
               localStorage.removeItem('currentOrder');
               localStorage.removeItem('customerData');
               dispatch(removeOrder());
@@ -78,7 +95,7 @@ function App() {
     const token = sessionStorage.getItem('authToken');
 
     if (token) {
-      fetch('https://swyft-backend-client-nine.vercel.app/check_session', {
+      fetch('https://swyft-backend-client-nine.vercel.app//check_session', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -94,7 +111,6 @@ function App() {
           const storedCustomerData = localStorage.getItem('customerData');
 
           const storedOrderData = localStorage.getItem('currentOrder');
-          console.log(storedOrderData);
 
           if (storedCustomerData && storedOrderData) {
             const order = JSON.parse(storedOrderData);
@@ -119,7 +135,7 @@ function App() {
   useEffect(() => {
     const token = sessionStorage.getItem('authToken');
     if (token) {
-      fetch('https://swyft-backend-client-nine.vercel.app/orders', {
+      fetch('https://swyft-backend-client-nine.vercel.app//orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -137,12 +153,12 @@ function App() {
         });
     }
     //eslint-disable-next-line
-  }, []);
+  }, [driver]);
 
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
 
-    fetch('https://swyft-backend-client-nine.vercel.app/orders/total_cost')
+    fetch('https://swyft-backend-client-nine.vercel.app//orders/total_cost')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch data');
@@ -168,9 +184,12 @@ function App() {
       <Alert />
       <Outlet />
       {/* Conditionally render BottomNav based on current location */}
-      {location.pathname !== '/' && location.pathname !== '/signup' && (
-        <BottomNav value={count} onChange={setCount} />
-      )}
+      {location.pathname !== '/' &&
+        location.pathname !== '/signup' &&
+        location.pathname !== '/verification' && (
+          <BottomNav value={count} onChange={setCount} />
+        )}
+      <ToastContainer />
     </div>
   );
 }
