@@ -74,7 +74,7 @@ const Verification = () => {
 
     try {
       const response = await fetch(
-        'https://swyft-backend-client-nine.vercel.app//driver/signup',
+        'https://swyft-backend-client-nine.vercel.app/driver/signup',
         {
           method: 'POST',
           headers: {

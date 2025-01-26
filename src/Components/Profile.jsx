@@ -33,7 +33,7 @@ export default function Profile() {
     setIsEditing(false);
     try {
       const response = await fetch(
-        'https://swyft-backend-client-nine.vercel.app//driver/profile',
+        'https://swyft-backend-client-nine.vercel.app/driver/profile',
         {
           method: 'PUT',
           headers: {
@@ -60,7 +60,7 @@ export default function Profile() {
   async function handleLogout() {
     try {
       const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app//online/${user.id}`,
+        `https://swyft-backend-client-nine.vercel.app/online/${user.id}`,
         {
           method: 'PUT',
           headers: {

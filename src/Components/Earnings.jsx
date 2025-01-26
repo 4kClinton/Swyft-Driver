@@ -13,7 +13,7 @@ const Earnings = () => {
   useEffect(() => {
     if (!driver.id) return; // Only proceed if driver.id is available
 
-    fetch(`https://swyft-backend-client-nine.vercel.app//earnings/${driver.id}`)
+    fetch(`https://swyft-backend-client-nine.vercel.app/earnings/${driver.id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -63,7 +63,7 @@ const Earnings = () => {
       const token = sessionStorage.getItem('authToken'); // Assuming the token is stored in session storage
 
       const response = await fetch(
-        'https://swyft-backend-client-nine.vercel.app//process-payment',
+        'https://swyft-backend-client-nine.vercel.app/process-payment',
         {
           // Adjusted endpoint to match the backend
           method: 'POST',
