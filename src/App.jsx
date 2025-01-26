@@ -16,7 +16,7 @@ import {
   removeCustomer,
   saveCustomer,
 } from './Redux/Reducers/CurrentCustomerSlice';
-import { saveOrders } from './Redux/Reducers/ordersHistorySlice';
+import { clearOrders, saveOrders } from './Redux/Reducers/ordersHistorySlice';
 import Alert from './Components/Alert';
 
 function App() {
@@ -149,7 +149,13 @@ function App() {
           return response.json();
         })
         .then((data) => {
-          dispatch(saveOrders(data));
+          console.log(data?.message);
+
+          if (data?.message === 'No orders found') {
+            dispatch(clearOrders());
+          } else {
+            dispatch(saveOrders(data));
+          }
         });
     }
     //eslint-disable-next-line
