@@ -56,9 +56,9 @@ const Earnings = () => {
       setError('Please enter a valid phone number starting with 2547.');
       return;
     }
-
-    setError(''); // Clear any existing errors
-
+  
+    setError(""); // Clear any existing errors
+  
     try {
       const token = sessionStorage.getItem('authToken'); // Assuming the token is stored in session storage
 
@@ -79,17 +79,16 @@ const Earnings = () => {
       );
 
       if (!response.ok) {
-        throw new Error('Payment failed. Please try again.');
+        throw new Error("Payment failed. Please try again.");
       }
-
-      alert(
-        'Payment initiated successfully. Please complete the payment on your phone.'
-      );
+  
+      alert("Payment initiated successfully. Please complete the payment on your phone.");
     } catch (error) {
-      alert(error.message || 'An error occurred during payment.');
+      alert(error.message || "An error occurred during payment.");
     }
   };
-
+  
+  
   return (
     <div className="earnings-container">
       <h1 className="earnings-heading">Earnings Overview</h1>

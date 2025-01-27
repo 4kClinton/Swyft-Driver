@@ -10,6 +10,7 @@ import Profile from './Components/Profile';
 import Earnings from './Components/Earnings';
 import DeliveryDetails from './Components/DeliveryDetails';
 import Support from './Components/Support';
+import Notification from './Components/Notification';
 
 const routes = [
   {
@@ -27,6 +28,7 @@ const routes = [
       { path: '/profile', element: <Profile /> },
       { path: '/earnings', element: <Earnings /> },
       { path: '/support', element: <Support /> },
+      { path: '/notification', element: <Notification /> },
     ],
   },
 ];
