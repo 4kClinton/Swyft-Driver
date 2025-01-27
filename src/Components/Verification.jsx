@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -24,6 +24,41 @@ const Verification = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Create refs for each input field
+  const inputRefs = {
+    carType: React.createRef(),
+    licenseNumber: React.createRef(),
+    idNumber: React.createRef(),
+    licensePlate: React.createRef(),
+  };
+
+  useEffect(() => {
+    const handleFocus = (e) => {
+      const focusedElement = e.target;
+      focusedElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center', // Adjust to "start" if you want the element at the top
+      });
+    };
+
+    // Attach the focus event listener to each input field
+    Object.values(inputRefs).forEach((inputRef) => {
+      if (inputRef.current) {
+        inputRef.current.addEventListener('focus', handleFocus);
+      }
+    });
+
+    // Cleanup the event listeners when the component unmounts
+    return () => {
+      Object.values(inputRefs).forEach((inputRef) => {
+        if (inputRef.current) {
+          inputRef.current.removeEventListener('focus', handleFocus);
+        }
+      });
+    };
+    // eslint-disable-next-line
+  }, []);
+
   useEffect(() => {
     if (!name) {
       // Redirect to signup if no data is in sessionStorage
@@ -35,6 +70,7 @@ const Verification = () => {
     event.preventDefault();
     setLoading(true);
     setError(null);
+    const sanitizedEmail = email.trim().toLowerCase();
 
     try {
       const response = await fetch(
@@ -48,7 +84,7 @@ const Verification = () => {
             id,
             name,
             phone: phoneNumber,
-            email,
+            email: sanitizedEmail,
             carType,
             password,
             licenseNumber,
@@ -58,27 +94,11 @@ const Verification = () => {
         }
       );
 
-      // Log the request body for debugging
-      console.log({
-        id,
-        name,
-        phone: phoneNumber,
-        email,
-        carType,
-        password,
-        licenseNumber,
-        idNumber,
-        licensePlate,
-      });
-
-      // Check response
       const responseData = await response.json();
-
-      console.log(responseData); // Log the response from the server
 
       if (!response.ok) {
         throw new Error(
-          `Verification failed: ${responseData.message || 'Please try again.'}`
+          `Verification failed: ${responseData.error || 'Please try again.'}`
         );
       }
       const { access_token, user, message } = responseData;
@@ -91,7 +111,6 @@ const Verification = () => {
       );
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('status', 'Driver created!');
-      // Successfully verified, redirect to the dashboard
       navigate('/dashboard');
     } catch (err) {
       console.error('An error occurred during verification:', err);
@@ -120,6 +139,7 @@ const Verification = () => {
               <div className="car-type-select">
                 <select
                   id="carType"
+                  ref={inputRefs.carType}
                   value={carType}
                   onChange={(e) => setCarType(e.target.value)}
                   required
@@ -137,6 +157,7 @@ const Verification = () => {
             </div>
 
             <input
+              ref={inputRefs.licenseNumber}
               placeholder="Driving License Number"
               className="login-input"
               value={licenseNumber}
@@ -146,6 +167,7 @@ const Verification = () => {
           </div>
           <div className="input-group">
             <input
+              ref={inputRefs.idNumber}
               placeholder="ID Number"
               className="login-input"
               value={idNumber}
@@ -155,6 +177,7 @@ const Verification = () => {
           </div>
           <div className="input-group">
             <input
+              ref={inputRefs.licensePlate}
               placeholder="License Plate Number"
               className="login-input"
               value={licensePlate}
@@ -170,6 +193,15 @@ const Verification = () => {
             disabled={loading}
           >
             {loading ? 'Verifying...' : 'Verify'}
+          </Button>
+          <Button
+            variant="contained"
+            type="button"
+            className="verify-button"
+            sx={{ mt: 2, backgroundColor: '#18b700', fontWeight: 'bold' }}
+            onClick={() => navigate('/signup')}
+          >
+            Go back
           </Button>
         </form>
       </Box>

@@ -3,12 +3,22 @@ import { Button } from '@mui/material';
 import toast, { Toaster } from 'react-hot-toast';
 import '../Styles/GoOnline.css';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { userOffline, userOnline } from '../Redux/Reducers/goOnline';
 const GoOnlineButton = () => {
   const driver = useSelector((state) => state.user.value);
   const [isOnline, setIsOnline] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setIsOnline(driver?.online);
+    if (driver?.online) {
+      dispatch(userOnline());
+    } else {
+      dispatch(userOffline());
+    }
+
+    //eslint-disable-next-line
   }, [driver?.online]);
 
   const handleToggle = async () => {
@@ -18,6 +28,7 @@ const GoOnlineButton = () => {
     if (newStatus) {
       // Notify the driver they are now online
       toast.success('You are now online!');
+      dispatch(userOnline());
 
       // Driver going online: Get and push location to the JSON server
       if (navigator.geolocation) {
@@ -61,6 +72,7 @@ const GoOnlineButton = () => {
     } else {
       // Notify the driver they are now offline
       toast('You are now offline.');
+      dispatch(userOffline());
 
       // Driver going offline
       try {

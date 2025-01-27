@@ -72,6 +72,9 @@ const Login = () => {
     setLoading(true);
     setError(null);
 
+    // Convert email to lowercase
+    const sanitizedEmail = email.trim().toLowerCase();
+
     try {
       const response = await fetch(
         "https://swyft-backend-client-nine.vercel.app/driver/login",
@@ -80,7 +83,8 @@ const Login = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, password, fcm_token: fcmToken }), // Include fcm_token
+
+          body: JSON.stringify({ email: sanitizedEmail, password, fcm_token:fcmToken }),
         }
       );
 
@@ -88,8 +92,9 @@ const Login = () => {
 
       if (response.ok) {
         const { access_token, user, message } = data;
-        sessionStorage.setItem("message", message || "Login successful!");
-        sessionStorage.setItem("authToken", access_token);
+
+        sessionStorage.setItem('message', message || 'Login successful!');
+        sessionStorage.setItem('authToken', access_token);
         dispatch(addUser(user));
         navigate("/dashboard");
       } else {
@@ -111,6 +116,7 @@ const Login = () => {
         <form onSubmit={logIn} className="login-form">
           <input
             placeholder="Email or Username"
+            type="email"
             className="login-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

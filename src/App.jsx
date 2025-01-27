@@ -9,12 +9,14 @@ import { addUser } from './Redux/Reducers/UserSlice';
 import { supabase } from './supabase';
 import { alertOn } from './Redux/Reducers/alertSlice';
 import { removeOrder, saveOrder } from './Redux/Reducers/CurrentOrderSlice';
+import { toast, ToastContainer } from 'react-toastify'; // Import toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
 
 import {
   removeCustomer,
   saveCustomer,
 } from './Redux/Reducers/CurrentCustomerSlice';
-import { saveOrders } from './Redux/Reducers/ordersHistorySlice';
+import { clearOrders, saveOrders } from './Redux/Reducers/ordersHistorySlice';
 import Alert from './Components/Alert';
 
 function App() {
@@ -49,8 +51,23 @@ function App() {
         (payload) => {
           if (payload?.new?.driver_id === driver.id) {
             const updatedStatus = payload?.new?.status;
+            console.log(payload.new);
             if (updatedStatus === 'cancelled') {
-              alert('Order has been cancelled');
+              console.log(updatedStatus);
+
+              toast.error('Order has been cancelled', {
+                position: 'bottom-center',
+                autoClose: 5000, // Set the time it stays visible
+                onClose: () => {
+                  // Optionally navigate or remove items once the toast is acknowledged
+                  localStorage.removeItem('currentOrder');
+                  localStorage.removeItem('customerData');
+                  dispatch(removeOrder());
+                  dispatch(removeCustomer());
+                  navigate('/dashboard');
+                },
+              });
+
               localStorage.removeItem('currentOrder');
               localStorage.removeItem('customerData');
               dispatch(removeOrder());
@@ -94,7 +111,6 @@ function App() {
           const storedCustomerData = localStorage.getItem('customerData');
 
           const storedOrderData = localStorage.getItem('currentOrder');
-          console.log(storedOrderData);
 
           if (storedCustomerData && storedOrderData) {
             const order = JSON.parse(storedOrderData);
@@ -133,11 +149,17 @@ function App() {
           return response.json();
         })
         .then((data) => {
-          dispatch(saveOrders(data));
+          console.log(data?.message);
+
+          if (data?.message === 'No orders found') {
+            dispatch(clearOrders());
+          } else {
+            dispatch(saveOrders(data));
+          }
         });
     }
     //eslint-disable-next-line
-  }, []);
+  }, [driver]);
 
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
@@ -168,9 +190,12 @@ function App() {
       <Alert />
       <Outlet />
       {/* Conditionally render BottomNav based on current location */}
-      {location.pathname !== '/' && location.pathname !== '/signup' && (
-        <BottomNav value={count} onChange={setCount} />
-      )}
+      {location.pathname !== '/' &&
+        location.pathname !== '/signup' &&
+        location.pathname !== '/verification' && (
+          <BottomNav value={count} onChange={setCount} />
+        )}
+      <ToastContainer />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import '../Styles/Alert.css';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { alertOff } from '../Redux/Reducers/alertSlice';
-import { declineOrder } from '../Redux/Reducers/CurrentOrderSlice';
+import { declineOrder, saveOrder } from '../Redux/Reducers/CurrentOrderSlice';
 import {
   saveCustomer,
   saveDestination,
@@ -43,6 +43,10 @@ const Alert = () => {
               order_id: currentOrder.id,
               accepted: false,
             }),
+          }).then((res) => {
+            res.json().then((data) => {
+              dispatch(saveOrder(data));
+            });
           });
         }, 10000);
 

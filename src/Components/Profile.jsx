@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import styles from '../Styles/Profile.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUser } from '../Redux/Reducers/UserSlice';
+import { addUser, deleteUser } from '../Redux/Reducers/UserSlice';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -56,6 +56,36 @@ export default function Profile() {
       setError(err.message);
     }
   };
+
+  async function handleLogout() {
+    try {
+      const response = await fetch(
+        `https://swyft-backend-client-nine.vercel.app/online/${user.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            online: false,
+          }),
+        }
+      );
+      // Check response
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          `update failed: ${responseData.message || 'Please try again.'}`
+        );
+      }
+    } catch (error) {
+      console.error('Network error while updating offline status:', error);
+    }
+    sessionStorage.removeItem('authToken');
+    dispatch(deleteUser());
+    window.location.href = '/';
+  }
 
   return (
     <div className={styles['profile-container']}>
@@ -216,6 +246,7 @@ export default function Profile() {
               className={styles['form-input']}
             />
           </div>
+          <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
     </div>
