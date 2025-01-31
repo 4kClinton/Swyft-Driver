@@ -125,7 +125,7 @@ function App() {
                   {/* <Dash /> */}
                   <Map />
                   <BottomNav value={count} onChange={setCount} />
-                  <GoOnlineButton />
+                
                 </>
               }
             />

@@ -47,7 +47,7 @@ const Dash = () => {
       <div className="notch" onClick={toggleDash}>
         <div className="notch-indicator"></div>
       </div>
-      {/* <GoOnlineButton onClick={toggleDash} /> */}
+      <GoOnlineButton onClick={toggleDash} />
       <h2 className="catch" onClick={toggleDash}>
         Your Performance Overview
       </h2>

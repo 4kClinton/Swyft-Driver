@@ -58,6 +58,8 @@
     color: var(--text-color);
     text-align: center;
     margin: 10px 0;
+        margin-top: 6vh;
+
 }
 
 /* Dash Content - Cards Layout */
