@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Box, Link } from "@mui/material";
-import { Google, Twitter, GitHub } from "@mui/icons-material";
-import CircularProgress from "@mui/material/CircularProgress"; // For loader
-import "../Styles/Login.css";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useDispatch, useSelector } from "react-redux";
+import { messaging } from "../../firebase"; // Ensure you import Firebase messaging setup
+import { getToken, onMessage } from "firebase/messaging";
 import { addUser } from "../Redux/Reducers/UserSlice";
-import { useDispatch } from "react-redux";
+import "../Styles/Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,41 +14,94 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fcmToken, setFcmToken] = useState(""); // State for storing FCM token
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+  const vapid_key = import.meta.env.VITE_VAPID_KEY;
+
+  useEffect(() => {
+    if (user.id) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
+  // Request Notification Permissions and Retrieve FCM Token
+  useEffect(() => {
+    const requestNotificationPermission = async () => {
+      try {
+        if (!("Notification" in window)) {
+          console.error("Notification API is not supported by this browser.");
+          return;
+        }
+
+        const permissionResult = await Notification.requestPermission();
+        if (permissionResult === "granted") {
+          const token = await getToken(messaging, {
+            vapidKey: vapid_key, // Replace with your VAPID key
+          });
+          if (token) {
+            console.log("FCM Token:", token);
+            setFcmToken(token);
+          } else {
+            console.error("Failed to retrieve FCM Token.");
+          }
+        } else {
+          console.error("Notification permission denied.");
+        }
+      } catch (error) {
+        console.error("Error requesting notification permission or retrieving token:", error);
+      }
+    };
+
+    requestNotificationPermission();
+
+    // Listen for incoming foreground messages
+    const unsubscribe = onMessage(messaging, (payload) => {
+      console.log("Message received in the foreground:", payload);
+    });
+
+    // Cleanup listener on unmount
+    return () => {
+      console.log("Cleaning up FCM listener");
+      unsubscribe();
+    };
+  }, []);
 
   const logIn = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
 
+    // Convert email to lowercase
+    const sanitizedEmail = email.trim().toLowerCase();
+
     try {
       const response = await fetch(
-
         "https://swyft-backend-client-nine.vercel.app/driver/login",
-
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, password }),
+
+          body: JSON.stringify({ email: sanitizedEmail, password, fcm_token:fcmToken }),
         }
       );
+
       const data = await response.json();
 
       if (response.ok) {
-        // Assuming the server sends a token on successful login
-
         const { access_token, user, message } = data;
-      
-        sessionStorage.setItem("message", message || "Login successful!");
-        sessionStorage.setItem("authToken", access_token);
+
+        sessionStorage.setItem('message', message || 'Login successful!');
+        sessionStorage.setItem('authToken', access_token);
         dispatch(addUser(user));
-        navigate("/dashboard"); // Redirect to Dashboard on successful login
+        navigate("/dashboard");
       } else {
-        setError(data.message || "Login failed. Please try again.");
+        setError(data.error || "Login failed. Please try again.");
       }
     } catch (err) {
+      console.error(err);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -59,10 +113,10 @@ const Login = () => {
       <Box className="login-container">
         <header className="login-header">Log in to Swyft</header>
         {error && <Typography color="error">{error}</Typography>}
-        <form onSubmit={logIn}>
+        <form onSubmit={logIn} className="login-form">
           <input
             placeholder="Email or Username"
-            variant="outlined"
+            type="email"
             className="login-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -71,7 +125,6 @@ const Login = () => {
           <input
             placeholder="Password"
             type="password"
-            variant="outlined"
             className="login-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -87,7 +140,7 @@ const Login = () => {
             sx={{ mt: 2, backgroundColor: "#18b700", fontWeight: "bold" }}
             disabled={loading}
           >
-            {loading ? <CircularProgress /> : "Log In"}
+            {loading ? <CircularProgress size={24} /> : "Log In"}
           </Button>
         </form>
         <Button
@@ -99,44 +152,6 @@ const Login = () => {
         >
           Create account
         </Button>
-
-
-        {/* <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-          Or log in with
-        </Typography>
-        <Box
-          className="socials-container"
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "10px",
-            mt: 2,
-          }}
-        >
-          <Button
-            className="social-icon"
-            color="primary"
-            startIcon={<Google />}
-            fullWidth
-            sx={{ mr: 1 }}
-          />
-          <Button
-            className="social-icon"
-            color="primary"
-            startIcon={<Twitter />}
-            fullWidth
-            sx={{ mx: 1 }}
-          />
-          <Button
-            className="social-icon"
-            color="primary"
-            startIcon={<GitHub />}
-            fullWidth
-            sx={{ ml: 1 }}
-          />
-        </Box> */}
-
-
       </Box>
     </div>
   );

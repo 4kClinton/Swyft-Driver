@@ -1,17 +1,53 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Typography, Box, Link } from "@mui/material";
-import { Google, Twitter, GitHub } from "@mui/icons-material";
-import "../Styles/Login.css";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Typography, Link } from '@mui/material';
+
+import '../Styles/Login.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
+
+  const inputRefs = {
+    name: React.createRef(),
+    email: React.createRef(),
+    phoneNumber: React.createRef(),
+    password: React.createRef(),
+    confirmPassword: React.createRef(),
+  };
+
+  useEffect(() => {
+    const handleFocus = (e) => {
+      const focusedElement = e.target;
+      focusedElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center', // Adjust to "start" if you want the element at the top
+      });
+    };
+
+    // Attach the focus event listener to each input field
+    Object.values(inputRefs).forEach((inputRef) => {
+      if (inputRef.current) {
+        inputRef.current.addEventListener('focus', handleFocus);
+      }
+    });
+
+    // Cleanup: Remove event listeners when the component unmounts
+    return () => {
+      Object.values(inputRefs).forEach((inputRef) => {
+        if (inputRef.current) {
+          inputRef.current.removeEventListener('focus', handleFocus);
+        }
+      });
+    };
+  }, []);
+
+  //eslint-disable-next-line
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = (event) => {
@@ -19,16 +55,16 @@ const SignUp = () => {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError('Passwords do not match.');
       return;
     }
 
     // Temporarily store data in sessionStorage
     const formData = { name, email, phoneNumber, password };
-    sessionStorage.setItem("signupData", JSON.stringify(formData));
+    sessionStorage.setItem('signupData', JSON.stringify(formData));
 
     // Navigate to verification page
-    navigate("/verification");
+    navigate('/verification');
   };
 
   return (
@@ -38,6 +74,7 @@ const SignUp = () => {
       <form className="form" onSubmit={handleSignUp}>
         <div className="input-group">
           <input
+            ref={inputRefs.name}
             placeholder="Name or Username"
             type="text"
             value={name}
@@ -47,6 +84,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
+            ref={inputRefs.email}
             placeholder="Email"
             type="email"
             value={email}
@@ -56,6 +94,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
+            ref={inputRefs.phoneNumber}
             placeholder="Phone Number"
             pattern="[0-9]{10}"
             title="Please enter a valid 10-digit phone number."
@@ -67,6 +106,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
+            ref={inputRefs.password}
             placeholder="Password"
             type="password"
             value={password}
@@ -76,6 +116,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
+            ref={inputRefs.confirmPassword}
             placeholder="Confirm Password"
             type="password"
             value={confirmPassword}
@@ -84,7 +125,7 @@ const SignUp = () => {
           />
         </div>
         <button type="submit" className="sign" disabled={loading}>
-          {loading ? "Signing up..." : "Sign Up"}
+          {loading ? 'Signing up...' : 'Sign Up'}
         </button>
       </form>
       <div className="social-message">

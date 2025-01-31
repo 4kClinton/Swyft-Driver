@@ -1,82 +1,69 @@
 /* General container styling */
 .rides-history-container {
-    padding: 16px;
-    background-color: #ffffff;
-    /* White background */
-    min-height: 100vh;
-    font-family: "Arial", sans-serif;
-    border-radius: 20px;
-    display: flex;
-    /* align-items: center; */
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+ 
+  background-color: #242424; /* Matches the app background */
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+  border-radius: 20px;
+  display: flex;
+  min-width: 99vw;
+  justify-content: center;
 }
 
 /* Typography styling */
-.css-b7dj7n-MuiList-root{
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        position: relative;
-        padding-top: 8px;
-         top:10vh;
-}
-.css-1pa41sv-MuiList-root{
-top: 10vh;
-    height: fit-content;
-}
 .rides-history-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #00d46a;
-    text-align: center;
-    margin-bottom: 24px;
-    position:absolute;
-    top: 6vh;
+  font-size: 24px;
+  font-weight: bold;
+  color: #00d46a;
+  text-align: center;
+  margin-bottom: 24px;
+ 
+  top: 3vh;
 }
 
 /* List styling */
 .rides-history-list {
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f9f9f9;
-    /* Light gray background for the list */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+  border-radius: 8px;
+  min-height: 80vh;
+  width: 100%;
+  
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Slight shadow for depth */
 }
 
 /* Individual ListItem styling */
 .rides-history-list-item {
-    padding: 16px;
-    transition: background-color 0.3s ease;
+  padding: 16px;
+  transition: background-color 0.3s ease;
+  background-color: #2c2c2c; /* Slightly lighter than the list background */
 }
 
 .rides-history-list-item:hover {
-    background-color: #e6f8ee;
-    /* Slight green tint on hover */
+  background-color: #3a3a3a; /* Darker hover effect */
 }
 
 /* Icon styling */
 .rides-history-icon {
-    color: #00d46a;
-    font-size: 32px;
-    /* Larger size for emphasis */
+  color: #00d46a;
+  font-size: 32px; /* Larger size for emphasis */
 }
 
 /* Divider styling */
 .rides-history-divider {
-    background-color: #e0e0e0;
-    /* Neutral gray */
+  background-color: #3e3e3e; /* Darker gray for subtle separation */
 }
 
 /* Text styling */
 .rides-history-primary {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333333;
-    /* Dark gray for contrast */
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff; /* White for strong contrast */
 }
 
 .rides-history-secondary {
-    font-size: 14px;
-    color: #666666;
-    /* Medium gray for secondary text */
+  font-size: 14px;
+  color: #cccccc; /* Light gray for secondary text */
 }

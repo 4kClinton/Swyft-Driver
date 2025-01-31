@@ -1,12 +1,11 @@
-.btn-online{
-    position: absolute;
-    /* top:10px; */
-    z-index : 10000;
-    
+.btn-online {
+  position: absolute;
+  /* top:10px; */
+  z-index: 10000;
 }
-.online-toast{
-        position: fixed;
-            z-index: 9999;
-            inset: 50px;
-            pointer-events: none;
+.online-toast {
+  position: fixed;
+  z-index: 9999;
+  inset: 50px;
+  pointer-events: none;
 }
