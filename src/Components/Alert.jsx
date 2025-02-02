@@ -22,7 +22,7 @@ const Alert = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authTokendr2');
     if (alert) {
       if (audioRef.current) {
         audioRef.current.loop = true; // Enable looping
@@ -59,7 +59,7 @@ const Alert = () => {
   }, [alertValue, currentOrder.id]);
 
   const AcceptOrder = () => {
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authTokendr2');
 
     if (audioRef.current) {
       audioRef.current.pause();

@@ -61,7 +61,7 @@ const Earnings = () => {
     setError(''); // Clear any existing errors
 
     try {
-      const token = Cookies.get('authToken'); // Assuming the token is stored in session storage
+      const token = Cookies.get('authTokendr2'); // Assuming the token is stored in session storage
 
       const response = await fetch(
         'https://swyft-backend-client-nine.vercel.app/process-payment',

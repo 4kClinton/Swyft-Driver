@@ -94,7 +94,7 @@ export default function DeliveryDetails() {
   const handleArrivedAtCustomer = async () => {
     setOrderStatus('arrived_at_customer');
     setButtonText('Go to Destination');
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authTokendr2');
 
     try {
       // Update the order status to 'arrived_at_customer' via fetch
@@ -128,7 +128,7 @@ export default function DeliveryDetails() {
   const handleGoToDestination = async () => {
     setOrderStatus('on_the_way_to_destination');
     setButtonText('Complete Ride');
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authTokendr2');
 
     try {
       const response = await fetch(
@@ -161,7 +161,7 @@ export default function DeliveryDetails() {
   const handleCompleteRide = async () => {
     setOrderStatus('completed');
     setButtonText('Ride Completed');
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authTokendr2');
 
     try {
       const response = await fetch(

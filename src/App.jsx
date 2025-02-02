@@ -93,7 +93,7 @@ function App() {
   }, [driver.id, dispatch]);
 
   useEffect(() => {
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authTokendr2');
     if (token) {
       fetch('https://swyft-backend-client-nine.vercel.app/check_session', {
         headers: {
@@ -133,7 +133,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authTokendr2');
     if (token) {
       fetch('https://swyft-backend-client-nine.vercel.app/orders', {
         method: 'GET',

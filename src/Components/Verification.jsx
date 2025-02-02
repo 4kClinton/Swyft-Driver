@@ -104,7 +104,7 @@ const Verification = () => {
       }
       const { access_token, user, message } = responseData;
 
-      Cookies.set('authToken', access_token, {
+      Cookies.set('authTokendr2', access_token, {
         expires: 7,
         secure: true,
         sameSite: 'Strict',

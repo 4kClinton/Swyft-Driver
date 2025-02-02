@@ -103,7 +103,7 @@ const Login = () => {
 
         Cookies.set('message', message || 'Login successful!'), { expires: 7 };
 
-        Cookies.set('authToken', access_token, {
+        Cookies.set('authTokendr2', access_token, {
           expires: 7,
           secure: true,
           sameSite: 'Strict',

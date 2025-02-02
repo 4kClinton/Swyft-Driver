@@ -30,7 +30,7 @@ export default function Profile() {
   const handleSave = async () => {
     console.log(profile);
 
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authTokendr2');
     setIsEditing(false);
     try {
       const response = await fetch(
@@ -83,7 +83,7 @@ export default function Profile() {
     } catch (error) {
       console.error('Network error while updating offline status:', error);
     }
-    Cookies.remove('authToken');
+    Cookies.remove('authTokendr2');
     dispatch(deleteUser());
     window.location.href = '/';
   }
