@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import styles from '../Styles/Profile.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser, deleteUser } from '../Redux/Reducers/UserSlice';
+import Cookies from 'js-cookie';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -29,7 +30,7 @@ export default function Profile() {
   const handleSave = async () => {
     console.log(profile);
 
-    const token = sessionStorage.getItem('authToken');
+    const token = Cookies.get('authTokendr2');
     setIsEditing(false);
     try {
       const response = await fetch(
@@ -82,7 +83,7 @@ export default function Profile() {
     } catch (error) {
       console.error('Network error while updating offline status:', error);
     }
-    sessionStorage.removeItem('authToken');
+    Cookies.remove('authTokendr2');
     dispatch(deleteUser());
     window.location.href = '/';
   }
