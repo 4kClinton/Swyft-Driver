@@ -23,6 +23,7 @@
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "firebase": "^11.2.0",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.473.0",
     "postcss": "^8.5.1",
     "prop-types": "^15.8.1",

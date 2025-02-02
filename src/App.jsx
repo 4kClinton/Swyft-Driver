@@ -18,6 +18,7 @@ import {
 } from './Redux/Reducers/CurrentCustomerSlice';
 import { clearOrders, saveOrders } from './Redux/Reducers/ordersHistorySlice';
 import Alert from './Components/Alert';
+import Cookies from 'js-cookie';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -60,16 +61,16 @@ function App() {
                 autoClose: 5000, // Set the time it stays visible
                 onClose: () => {
                   // Optionally navigate or remove items once the toast is acknowledged
-                  localStorage.removeItem('currentOrder');
-                  localStorage.removeItem('customerData');
+                  Cookies.remove('currentOrder');
+                  Cookies.remove('customerData');
                   dispatch(removeOrder());
                   dispatch(removeCustomer());
                   navigate('/dashboard');
                 },
               });
 
-              localStorage.removeItem('currentOrder');
-              localStorage.removeItem('customerData');
+              Cookies.remove('currentOrder');
+              Cookies.remove('customerData');
               dispatch(removeOrder());
               dispatch(removeCustomer());
               navigate('/dashboard');
@@ -92,8 +93,7 @@ function App() {
   }, [driver.id, dispatch]);
 
   useEffect(() => {
-    const token = sessionStorage.getItem('authToken');
-
+    const token = Cookies.get('authToken');
     if (token) {
       fetch('https://swyft-backend-client-nine.vercel.app/check_session', {
         headers: {
@@ -133,7 +133,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const token = sessionStorage.getItem('authToken');
+    const token = Cookies.get('authToken');
     if (token) {
       fetch('https://swyft-backend-client-nine.vercel.app/orders', {
         method: 'GET',

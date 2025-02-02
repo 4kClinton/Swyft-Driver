@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Link } from '@mui/material';
+import Cookies from 'js-cookie';
 
 import '../Styles/Login.css';
 
@@ -59,9 +60,9 @@ const SignUp = () => {
       return;
     }
 
-    // Temporarily store data in sessionStorage
+    // Temporarily store data in Cookies
     const formData = { name, email, phoneNumber, password };
-    sessionStorage.setItem('signupData', JSON.stringify(formData));
+    Cookies.set('signupData', JSON.stringify(formData), { expires: 7 });
 
     // Navigate to verification page
     navigate('/verification');

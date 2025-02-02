@@ -6,13 +6,14 @@ import '../Styles/Login.css';
 import { addUser } from '../Redux/Reducers/UserSlice';
 import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid'; // Import the UUID library
+import Cookies from 'js-cookie';
 
 const Verification = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Retrieve data from sessionStorage
-  const storedData = JSON.parse(sessionStorage.getItem('signupData')) || {};
+  const storedData = JSON.parse(Cookies.get('signupData')) || {};
   const { name, phoneNumber, email, password } = storedData;
 
   // Generate a unique ID when the component mounts
@@ -103,12 +104,19 @@ const Verification = () => {
       }
       const { access_token, user, message } = responseData;
 
-      sessionStorage.setItem('authToken', access_token);
+      Cookies.set('authToken', access_token, {
+        expires: 7,
+        secure: true,
+        sameSite: 'Strict',
+      }); // Set cookie with options
       dispatch(addUser(user));
-      sessionStorage.setItem(
+      Cookies.set(
         'message',
-        message || 'Driver created successfully!'
+        'message',
+        message || 'Driver created successfully!',
+        { expires: 7 }
       );
+
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('status', 'Driver created!');
       navigate('/dashboard');
