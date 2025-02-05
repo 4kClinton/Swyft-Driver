@@ -11,12 +11,13 @@ import {
 } from '../Redux/Reducers/CurrentCustomerSlice';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { removeIncomingOrder } from '../Redux/Reducers/incomingOrderSlice';
 
 const Alert = () => {
   const audioRef = useRef(null);
 
   const alertValue = useSelector((state) => state.alert.value);
-  const currentOrder = useSelector((state) => state.currentOrder.value);
+  const incomingOrder = useSelector((state) => state.incomingOrder.value);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,20 +35,16 @@ const Alert = () => {
           audioRef.current.currentTime = 0; // Reset sound
           dispatch(alertOff());
           dispatch(declineOrder());
-          fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
+          fetch('http://127.0.0.1:5000/order-response', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-              order_id: currentOrder.id,
+              order_id: incomingOrder.id,
               accepted: false,
             }),
-          }).then((res) => {
-            res.json().then((data) => {
-              dispatch(saveOrder(data));
-            });
           });
         }, 10000);
 
@@ -56,7 +53,7 @@ const Alert = () => {
       }
     }
     //eslint-disable-next-line
-  }, [alertValue, currentOrder.id]);
+  }, [alertValue, incomingOrder.id]);
 
   const AcceptOrder = () => {
     const token = Cookies.get('authTokendr2');
@@ -66,24 +63,21 @@ const Alert = () => {
       audioRef.current.currentTime = 0; // Reset sound
       dispatch(alertOff());
     }
-    fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
+    fetch('http://127.0.0.1:5000/order-response', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ order_id: currentOrder.id, accepted: true }),
+      body: JSON.stringify({ order_id: incomingOrder.id, accepted: true }),
     });
-    fetch(
-      `https://swyft-backend-client-nine.vercel.app/customer/${currentOrder.customer_id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application',
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`http://127.0.0.1:5000/customer/${incomingOrder.customer_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application',
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch customer data');
@@ -94,17 +88,19 @@ const Alert = () => {
         dispatch(saveCustomer(customerData));
         dispatch(
           saveDestination({
-            lat: currentOrder.user_lat,
-            lng: currentOrder.user_lng,
+            lat: incomingOrder.user_lat,
+            lng: incomingOrder.user_lng,
           })
         );
-        localStorage.setItem('customerData', JSON.stringify(customerData));
-        localStorage.setItem(
+        Cookies.set('customerData', JSON.stringify(customerData));
+        Cookies.set(
           'currentOrder',
-          JSON.stringify({ ...currentOrder, status: 'Accepted' })
+          JSON.stringify({ ...incomingOrder, status: 'Accepted' })
         );
+        dispatch(saveOrder({ ...incomingOrder, status: 'Accepted' }));
       })
       .then(() => {
+        dispatch(removeIncomingOrder());
         navigate('/deliveryDetails');
       });
   };

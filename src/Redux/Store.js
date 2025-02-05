@@ -5,6 +5,7 @@ import currentOrderReducer from './Reducers/CurrentOrderSlice';
 import currentCustomerReducer from './Reducers/CurrentCustomerSlice';
 import ordersHistoryReducer from "./Reducers/ordersHistorySlice"
 import goOnlineReducer from "./Reducers/goOnline"
+import incomingOrderReducer from "./Reducers/incomingOrderSlice"
 
 
 export const store = configureStore({
@@ -14,6 +15,7 @@ export const store = configureStore({
     currentOrder: currentOrderReducer,
     currentCustomer: currentCustomerReducer,
     ordersHistory:ordersHistoryReducer,
-    goOnline:goOnlineReducer
+    goOnline:goOnlineReducer,
+    incomingOrder:incomingOrderReducer,
   },
 });
