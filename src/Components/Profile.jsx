@@ -33,14 +33,17 @@ export default function Profile() {
     const token = Cookies.get('authTokendr2');
     setIsEditing(false);
     try {
-      const response = await fetch('http://127.0.0.1:5000/driver/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(profile),
-      });
+      const response = await fetch(
+        'https://swyft-backend-client-nine.vercel.app/driver/profile',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(profile),
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to save changes');
@@ -57,15 +60,18 @@ export default function Profile() {
 
   async function handleLogout() {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/online/${user.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          online: false,
-        }),
-      });
+      const response = await fetch(
+        `https://swyft-backend-client-nine.vercel.app/online/${user.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            online: false,
+          }),
+        }
+      );
       // Check response
       const responseData = await response.json();
 

@@ -74,23 +74,26 @@ const Verification = () => {
     const sanitizedEmail = email.trim().toLowerCase();
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/driver/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id,
-          name,
-          phone: phoneNumber,
-          email: sanitizedEmail,
-          carType,
-          password,
-          licenseNumber,
-          idNumber,
-          licensePlate,
-        }),
-      });
+      const response = await fetch(
+        'https://swyft-backend-client-nine.vercel.app/driver/signup',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id,
+            name,
+            phone: phoneNumber,
+            email: sanitizedEmail,
+            carType,
+            password,
+            licenseNumber,
+            idNumber,
+            licensePlate,
+          }),
+        }
+      );
 
       const responseData = await response.json();
 
