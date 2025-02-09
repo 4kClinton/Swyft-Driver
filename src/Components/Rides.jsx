@@ -84,8 +84,6 @@ export default function RidesHistory() {
     if (ordersHistory.length > 0) {
       if (isLoaded) {
         fetchAddresses(ordersHistory);
-
-        console.log('Here');
       }
     } else {
       setLoading(false);
