@@ -25,7 +25,7 @@ const Login = () => {
     if (user.id) {
       navigate('/dashboard');
     }
-  }, [user, navigate]);
+  }, [user]);
 
   const logIn = async (event) => {
     event.preventDefault();
