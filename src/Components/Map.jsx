@@ -10,6 +10,7 @@ import '../Styles/Map.css';
 import Dash from './Dash'; // Import the Dash component
 import GoOnlineButton from './GoOnlineButton';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Map = () => {
   const order = useSelector((state) => state.currentOrder.value); // Get current order from Redux
@@ -26,6 +27,13 @@ const Map = () => {
   const [destination, setDestination] = useState(null);
   const [customerLocation, setCustomerLocation] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
+  const user = useSelector((state) => state.user.value);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user.id) {
+      navigate('/');
+    }
+  }, []);
 
   useEffect(() => {
     // Get user's current location

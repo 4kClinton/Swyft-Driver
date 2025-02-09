@@ -7,8 +7,9 @@ import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from './Redux/Reducers/UserSlice';
 import { supabase } from './supabase';
-import { getToken, onMessage } from 'firebase/messaging';
-import { messaging } from '../firebase.js';
+import 'firebase/messaging';
+
+import { messaging } from './firebase/firebase.js';
 import { alertOn } from './Redux/Reducers/alertSlice';
 import { removeOrder, saveOrder } from './Redux/Reducers/CurrentOrderSlice';
 import { toast, ToastContainer } from 'react-toastify'; // Import toastify
@@ -25,6 +26,7 @@ import {
   addIncomingOrder,
   removeIncomingOrder,
 } from './Redux/Reducers/incomingOrderSlice.js';
+import Message from './Components/Message.jsx';
 
 function App() {
   const updateFcmTokenOnBackend = async (token) => {
@@ -47,60 +49,57 @@ function App() {
     }
   };
 
+  const { VITE_FCM_VAPID_KEY } = import.meta.env;
+
   async function registerServiceWorker() {
     try {
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.register(
           '/firebase-messaging-sw.js'
-        ); // Correct path
-        console.log('Service worker registered:', registration);
+        );
+        console.log('✅ Service worker registered:', registration);
 
-        const token = await getToken(messaging, {
-          vapidKey: import.meta.env.VITE_FCM_VAPID_KEY,
+        const token = await messaging.getToken(messaging, {
+          vapidKey: VITE_FCM_VAPID_KEY,
         });
+
         if (token) {
-          console.log('FCM Token: ', token);
-          Cookies.set('fcmToken', token); // Store the token in a cookie
-          await updateFcmTokenOnBackend(token); // Update backend with the token
+          console.log('🔥 FCM Token:', token);
+          Cookies.set('fcmToken', token);
+          await updateFcmTokenOnBackend(token);
         } else {
-          console.error('No FCM token received');
+          console.warn('⚠️ No FCM token received. Notifications may not work.');
         }
       } else {
-        console.log('Service workers not supported.');
+        console.warn('🚫 Service workers are not supported in this browser.');
       }
     } catch (error) {
-      console.error('Error registering service worker:', error);
+      console.error('❌ Error registering service worker:', error);
+    }
+  }
+
+  async function requestNotificationPermission() {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        console.log('🔔 Notification permission granted.');
+        await registerServiceWorker();
+      } else {
+        console.warn('🚫 Notification permission denied.');
+      }
+    } catch (error) {
+      console.error('❌ Error requesting notification permission:', error);
     }
   }
 
   useEffect(() => {
-    const requestNotificationPermission = async () => {
-      // Always try to get the token, even if permission is granted
-      try {
-        // Request permission only if it hasn't been granted yet
-        if (Notification.permission !== 'granted') {
-          const permission = await Notification.requestPermission();
-          if (permission !== 'granted') {
-            console.log('Notification permission denied');
-            return; // Exit if permission is denied
-          }
-        }
-
-        registerServiceWorker();
-      } catch (error) {
-        console.error('Error requesting notification permission: ', error);
-      }
-    };
-
-    // Call the function to request permission and handle token update
     requestNotificationPermission();
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, []);
 
   useEffect(() => {
     // Listen for foreground notifications
-    onMessage(messaging, (payload) => {
-      console.log('Message received: ', payload);
-      toast.success(payload.notification.title);
+    messaging.onMessage(messaging, (payload) => {
+      toast(<Message notification={payload.notification} />);
     });
   }, []);
 

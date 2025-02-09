@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box, Link } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useDispatch, useSelector } from 'react-redux';
-import { messaging } from '../../firebase'; // Ensure you import Firebase messaging setup
-import { getToken, onMessage } from 'firebase/messaging';
+import { messaging } from '../firebase/firebase';
+import 'firebase/messaging';
+
 import { addUser } from '../Redux/Reducers/UserSlice';
 import '../Styles/Login.css';
 import Cookies from 'js-cookie';
@@ -37,7 +38,7 @@ const Login = () => {
 
         const permissionResult = await Notification.requestPermission();
         if (permissionResult === 'granted') {
-          const token = await getToken(messaging, {
+          const token = await messaging.getToken(messaging, {
             vapidKey: vapid_key, // Replace with your VAPID key
           });
           if (token) {
@@ -60,7 +61,7 @@ const Login = () => {
     requestNotificationPermission();
 
     // Listen for incoming foreground messages
-    const unsubscribe = onMessage(messaging, (payload) => {
+    const unsubscribe = messaging.onMessage(messaging, (payload) => {
       console.log('Message received in the foreground:', payload);
     });
 

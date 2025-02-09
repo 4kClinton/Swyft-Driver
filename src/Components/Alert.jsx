@@ -46,7 +46,7 @@ const Alert = () => {
               accepted: false,
             }),
           });
-        }, 10000);
+        }, 15000);
 
         // Cleanup the timer when the component unmounts or alert changes
         return () => clearTimeout(timer);
