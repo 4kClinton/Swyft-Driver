@@ -1,7 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/messaging";
+import { initializeApp } from "firebase/app";
+import { getMessaging, onMessage } from "firebase/messaging";
 
-// Firebase Config values imported from .env file
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API,
   authDomain: import.meta.env.VITE_AUTHDOMAIN,
@@ -12,12 +11,12 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase (Only if it hasn't been initialized before)
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
 
-// Messaging Service
-export const messaging = firebase.messaging();
+// Listen for foreground messages
+onMessage(messaging, (payload) => {
+  console.log("Message received in foreground:", payload);
+});
 
-export default firebase;
+export { messaging };

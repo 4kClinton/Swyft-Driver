@@ -14,7 +14,7 @@ import { alertOn } from './Redux/Reducers/alertSlice';
 import { removeOrder, saveOrder } from './Redux/Reducers/CurrentOrderSlice';
 import { toast, ToastContainer } from 'react-toastify'; // Import toastify
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
-
+import { getToken, onMessage } from 'firebase/messaging';
 import {
   removeCustomer,
   saveCustomer,
@@ -30,26 +30,32 @@ import Message from './Components/Message.jsx';
 
 function App() {
   const updateFcmTokenOnBackend = async (token) => {
-    const response = await fetch(
-      'https://swyft-backend-client-nine.vercel.app/update-fcm-token',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get('authTokendr2')}`,
-        },
-        body: JSON.stringify({
-          fcm_token: token,
-        }),
-      }
-    );
+    console.log(Cookies.get('authTokendr2'));
 
-    if (!response.ok) {
-      console.error('Failed to send FCM token to backend');
+    try {
+      const response = await fetch(
+        'https://swyft-backend-client-nine.vercel.app/update-fcm-token',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${Cookies.get('authTokendr2')}`,
+          },
+          body: JSON.stringify({ fcm_token: token }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to send FCM token to backend');
+      }
+
+      console.log('✅ FCM token updated on backend');
+    } catch (error) {
+      console.error('❌ Error updating FCM token on backend:', error);
     }
   };
 
-  const { VITE_FCM_VAPID_KEY } = import.meta.env;
+  const VITE_FCM_VAPID_KEY = import.meta.env.VITE_FCM_VAPID_KEY;
 
   async function registerServiceWorker() {
     try {
@@ -59,8 +65,9 @@ function App() {
         );
         console.log('✅ Service worker registered:', registration);
 
-        const token = await messaging.getToken(messaging, {
+        const token = await getToken(messaging, {
           vapidKey: VITE_FCM_VAPID_KEY,
+          serviceWorkerRegistration: registration, // Firebase 11+ requires explicit registration
         });
 
         if (token) {
@@ -97,10 +104,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Listen for foreground notifications
-    messaging.onMessage(messaging, (payload) => {
+    const unsubscribe = onMessage(messaging, (payload) => {
+      console.log('📩 Foreground Notification Received:', payload);
       toast(<Message notification={payload.notification} />);
     });
+
+    return () => unsubscribe(); // Cleanup listener on unmount
   }, []);
 
   const [count, setCount] = useState(0);
