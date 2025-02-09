@@ -117,8 +117,9 @@ const Verification = () => {
         { expires: 7 }
       );
 
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('status', 'Driver created!');
+      Cookies.set('user', JSON.stringify(user), { expires: 7 });
+      Cookies.set('status', 'Driver created!', { expires: 7 });
+
       navigate('/dashboard');
     } catch (err) {
       console.error('An error occurred during verification:', err);

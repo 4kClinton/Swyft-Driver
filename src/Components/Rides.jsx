@@ -115,6 +115,7 @@ export default function RidesHistory() {
       );
       setRides(ridesWithAddresses);
       setAddressesLoaded(true);
+
       setLoading(false);
     } catch (error) {
       setError('Error loading addresses', error);

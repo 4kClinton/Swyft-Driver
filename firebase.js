@@ -10,6 +10,7 @@ const messagingSenderId = import.meta.env.VITE_MESSAGINGSENDERID;
 const appId = import.meta.env.VITE_APP_ID;
 const measurementId = import.meta.env.VITE_MEASUREMENT_ID;
 
+
 // Firebase configuration object
 const firebaseConfig = {
     apiKey: apiKey,
@@ -21,11 +22,16 @@ const firebaseConfig = {
     measurementId: measurementId,
 };
 
+
+
+
 // Initialize Firebase app
 const firebaseApp = initializeApp(firebaseConfig);
 
 // Initialize Firebase Cloud Messaging
 export const messaging = getMessaging(firebaseApp);
+
+
 
 // Export the initialized Firebase app
 export default firebaseApp;

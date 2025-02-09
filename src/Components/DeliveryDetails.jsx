@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { removeOrder, saveOrder } from '../Redux/Reducers/CurrentOrderSlice';
 import { removeCustomer } from '../Redux/Reducers/CurrentCustomerSlice';
 import Cookies from 'js-cookie';
+import { removeIncomingOrder } from '../Redux/Reducers/incomingOrderSlice';
 
 export default function DeliveryDetails() {
   const dispatch = useDispatch();
@@ -117,7 +118,6 @@ export default function DeliveryDetails() {
       const data = await response.json();
       dispatch(saveOrder(data?.order));
 
-      localStorage.setItem('currentOrder', JSON.stringify(data?.order));
       console.log('Order status updated:', data);
     } catch (error) {
       console.error('Error updating order status:', error);
@@ -150,7 +150,6 @@ export default function DeliveryDetails() {
       const data = await response.json();
       dispatch(saveOrder(data?.order));
 
-      localStorage.setItem('currentOrder', JSON.stringify(data?.order));
       console.log('Order status updated:', data);
     } catch (error) {
       console.error('Error updating order status:', error);
@@ -183,9 +182,8 @@ export default function DeliveryDetails() {
       const data = await response.json();
       console.log('Order status updated:', data);
 
-      Cookies.remove('currentOrder');
-      Cookies.remove('customerData');
       dispatch(removeOrder());
+      dispatch(removeIncomingOrder());
       dispatch(removeCustomer());
       navigate('/dashboard');
     } catch (error) {
@@ -194,7 +192,7 @@ export default function DeliveryDetails() {
     }
   };
 
-  if (!customer?.id) return null;
+  if (!customer?.id || !customerAddress || !destination) return null;
 
   return (
     <div className={styles.container}>

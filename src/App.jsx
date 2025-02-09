@@ -7,6 +7,8 @@ import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from './Redux/Reducers/UserSlice';
 import { supabase } from './supabase';
+import { getToken, onMessage } from 'firebase/messaging';
+import { messaging } from '../firebase.js';
 import { alertOn } from './Redux/Reducers/alertSlice';
 import { removeOrder, saveOrder } from './Redux/Reducers/CurrentOrderSlice';
 import { toast, ToastContainer } from 'react-toastify'; // Import toastify
@@ -19,8 +21,89 @@ import {
 import { clearOrders, saveOrders } from './Redux/Reducers/ordersHistorySlice';
 import Alert from './Components/Alert';
 import Cookies from 'js-cookie';
+import {
+  addIncomingOrder,
+  removeIncomingOrder,
+} from './Redux/Reducers/incomingOrderSlice.js';
 
 function App() {
+  const updateFcmTokenOnBackend = async (token) => {
+    const response = await fetch(
+      'https://swyft-backend-client-nine.vercel.app/update-fcm-token',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('authTokendr2')}`,
+        },
+        body: JSON.stringify({
+          fcm_token: token,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Failed to send FCM token to backend');
+    }
+  };
+
+  async function registerServiceWorker() {
+    try {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.register(
+          '/firebase-messaging-sw.js'
+        ); // Correct path
+        console.log('Service worker registered:', registration);
+
+        const token = await getToken(messaging, {
+          vapidKey: import.meta.env.VITE_FCM_VAPID_KEY,
+        });
+        if (token) {
+          console.log('FCM Token: ', token);
+          Cookies.set('fcmToken', token); // Store the token in a cookie
+          await updateFcmTokenOnBackend(token); // Update backend with the token
+        } else {
+          console.error('No FCM token received');
+        }
+      } else {
+        console.log('Service workers not supported.');
+      }
+    } catch (error) {
+      console.error('Error registering service worker:', error);
+    }
+  }
+
+  useEffect(() => {
+    const requestNotificationPermission = async () => {
+      // Always try to get the token, even if permission is granted
+      try {
+        // Request permission only if it hasn't been granted yet
+        if (Notification.permission !== 'granted') {
+          const permission = await Notification.requestPermission();
+          if (permission !== 'granted') {
+            console.log('Notification permission denied');
+            return; // Exit if permission is denied
+          }
+        }
+
+        registerServiceWorker();
+      } catch (error) {
+        console.error('Error requesting notification permission: ', error);
+      }
+    };
+
+    // Call the function to request permission and handle token update
+    requestNotificationPermission();
+  }, []); // Empty dependency array ensures this effect runs only once
+
+  useEffect(() => {
+    // Listen for foreground notifications
+    onMessage(messaging, (payload) => {
+      console.log('Message received: ', payload);
+      toast.success(payload.notification.title);
+    });
+  }, []);
+
   const [count, setCount] = useState(0);
   const navigate = useNavigate();
 
@@ -39,7 +122,7 @@ function App() {
         { event: 'INSERT', schema: 'public', table: 'orders' },
         (payload) => {
           if (payload?.new?.driver_id === driver.id) {
-            dispatch(saveOrder(payload.new));
+            dispatch(addIncomingOrder(payload.new));
 
             dispatch(alertOn());
           }
@@ -50,6 +133,9 @@ function App() {
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'orders' },
         (payload) => {
+          console.log(payload);
+          console.log(driver);
+
           if (payload?.new?.driver_id === driver.id) {
             const updatedStatus = payload?.new?.status;
             console.log(payload.new);
@@ -61,17 +147,15 @@ function App() {
                 autoClose: 5000, // Set the time it stays visible
                 onClose: () => {
                   // Optionally navigate or remove items once the toast is acknowledged
-                  Cookies.remove('currentOrder');
-                  Cookies.remove('customerData');
+
                   dispatch(removeOrder());
                   dispatch(removeCustomer());
                   navigate('/dashboard');
                 },
               });
 
-              Cookies.remove('currentOrder');
-              Cookies.remove('customerData');
               dispatch(removeOrder());
+              dispatch(removeIncomingOrder());
               dispatch(removeCustomer());
               navigate('/dashboard');
             }
@@ -108,21 +192,6 @@ function App() {
         })
         .then((userData) => {
           dispatch(addUser(userData));
-          const storedCustomerData = localStorage.getItem('customerData');
-
-          const storedOrderData = localStorage.getItem('currentOrder');
-
-          if (storedCustomerData && storedOrderData) {
-            const order = JSON.parse(storedOrderData);
-            if (
-              order.status !== 'completed' &&
-              order.status !== 'cancelled' &&
-              order.status !== 'Pending'
-            ) {
-              dispatch(saveCustomer(JSON.parse(storedCustomerData)));
-              dispatch(saveOrder(order));
-            }
-          }
         })
 
         .catch((error) => {
@@ -149,12 +218,42 @@ function App() {
           return response.json();
         })
         .then((data) => {
-          console.log(data?.message);
+          console.log(data);
 
           if (data?.message === 'No orders found') {
             dispatch(clearOrders());
           } else {
             dispatch(saveOrders(data));
+
+            const currentOrder = data.filter(
+              (order) =>
+                order.status !== 'completed' &&
+                order.status !== 'cancelled' &&
+                order.status !== 'Pending'
+            );
+
+            dispatch(saveOrder(currentOrder[0]));
+            if (currentOrder.length > 0) {
+              fetch(
+                `https://swyft-backend-client-nine.vercel.app/customer/${currentOrder[0]?.customer_id}`,
+                {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application',
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              )
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error('Failed to fetch customer data');
+                  }
+                  return response.json();
+                })
+                .then((customerData) => {
+                  dispatch(saveCustomer(customerData));
+                });
+            }
           }
         });
     }

@@ -10,6 +10,7 @@ const Dash = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dashRef = useRef(null);
   const currentCustomer = useSelector((state) => state.currentCustomer.value);
+  console.log(currentCustomer);
 
   const user = useSelector((state) => state.user.value);
 
