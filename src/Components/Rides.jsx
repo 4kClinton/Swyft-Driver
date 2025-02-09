@@ -84,9 +84,8 @@ export default function RidesHistory() {
     if (ordersHistory.length > 0) {
       if (isLoaded) {
         fetchAddresses(ordersHistory);
-      } else {
-        setRides(ordersHistory);
-        setLoading(false);
+
+        console.log('Here');
       }
     } else {
       setLoading(false);
@@ -118,6 +117,7 @@ export default function RidesHistory() {
       );
       setRides(ridesWithAddresses);
       setAddressesLoaded(true);
+
       setLoading(false);
     } catch (error) {
       setError('Error loading addresses', error);
@@ -137,10 +137,7 @@ export default function RidesHistory() {
     });
   };
 
-  if (
-    (loading === true && addressesLoaded === false) ||
-    (loading === false && addressesLoaded === true)
-  )
+  if (loading === true && addressesLoaded === false)
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <CircularProgress className="login-loader" size={34} color="#0000" />

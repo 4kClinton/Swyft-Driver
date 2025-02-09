@@ -28,19 +28,16 @@ import {
 
 function App() {
   const updateFcmTokenOnBackend = async (token) => {
-    const response = await fetch(
-      'https://swyft-backend-client-nine.vercel.app/update-fcm-token',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get('authTokendr2')}`,
-        },
-        body: JSON.stringify({
-          fcm_token: token,
-        }),
-      }
-    );
+    const response = await fetch('http://127.0.0.1:5000/update-fcm-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${Cookies.get('authTokendr2')}`,
+      },
+      body: JSON.stringify({
+        fcm_token: token,
+      }),
+    });
 
     if (!response.ok) {
       console.error('Failed to send FCM token to backend');
@@ -182,7 +179,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
     if (token) {
-      fetch('https://swyft-backend-client-nine.vercel.app/check_session', {
+      fetch('http://127.0.0.1:5000/check_session', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -223,7 +220,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
     if (token) {
-      fetch('https://swyft-backend-client-nine.vercel.app/orders', {
+      fetch('http://127.0.0.1:5000/orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -252,7 +249,7 @@ function App() {
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
 
-    fetch('https://swyft-backend-client-nine.vercel.app/orders/total_cost')
+    fetch('http://127.0.0.1:5000/orders/total_cost')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch data');

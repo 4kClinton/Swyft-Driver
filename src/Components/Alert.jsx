@@ -35,7 +35,7 @@ const Alert = () => {
           audioRef.current.currentTime = 0; // Reset sound
           dispatch(alertOff());
           dispatch(declineOrder());
-          fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
+          fetch('http://127.0.0.1:5000/order-response', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const Alert = () => {
       audioRef.current.currentTime = 0; // Reset sound
       dispatch(alertOff());
     }
-    fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
+    fetch('http://127.0.0.1:5000/order-response', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,16 +71,13 @@ const Alert = () => {
       },
       body: JSON.stringify({ order_id: incomingOrder.id, accepted: true }),
     });
-    fetch(
-      `https://swyft-backend-client-nine.vercel.app/customer/${incomingOrder.customer_id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application',
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`http://127.0.0.1:5000/customer/${incomingOrder.customer_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application',
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch customer data');

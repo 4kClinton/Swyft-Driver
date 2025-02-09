@@ -14,7 +14,7 @@ const Earnings = () => {
   useEffect(() => {
     if (!driver.id) return; // Only proceed if driver.id is available
 
-    fetch(`https://swyft-backend-client-nine.vercel.app/earnings/${driver.id}`)
+    fetch(`http://127.0.0.1:5000/earnings/${driver.id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -63,21 +63,18 @@ const Earnings = () => {
     try {
       const token = Cookies.get('authTokendr2'); // Assuming the token is stored in session storage
 
-      const response = await fetch(
-        'https://swyft-backend-client-nine.vercel.app/process-payment',
-        {
-          // Adjusted endpoint to match the backend
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Include the JWT token in the headers
-          },
-          body: JSON.stringify({
-            Amount: commission,
-            phoneNumber: formattedPhoneNumber,
-          }), // Ensure the payload keys match the backend requirements
-        }
-      );
+      const response = await fetch('http://127.0.0.1:5000/process-payment', {
+        // Adjusted endpoint to match the backend
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Include the JWT token in the headers
+        },
+        body: JSON.stringify({
+          Amount: commission,
+          phoneNumber: formattedPhoneNumber,
+        }), // Ensure the payload keys match the backend requirements
+      });
 
       if (!response.ok) {
         throw new Error('Payment failed. Please try again.');

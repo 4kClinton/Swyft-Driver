@@ -99,17 +99,14 @@ export default function DeliveryDetails() {
 
     try {
       // Update the order status to 'arrived_at_customer' via fetch
-      const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: 'arrived_at_customer' }),
-        }
-      );
+      const response = await fetch(`http://127.0.0.1:5000/orders/${order.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: 'arrived_at_customer' }),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to update order status');
@@ -133,17 +130,14 @@ export default function DeliveryDetails() {
     const token = Cookies.get('authTokendr2');
 
     try {
-      const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: 'on_the_way_to_destination' }),
-        }
-      );
+      const response = await fetch(`http://127.0.0.1:5000/orders/${order.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: 'on_the_way_to_destination' }),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to update order status');
@@ -167,17 +161,14 @@ export default function DeliveryDetails() {
     const token = Cookies.get('authTokendr2');
 
     try {
-      const response = await fetch(
-        `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: 'completed' }),
-        }
-      );
+      const response = await fetch(`http://127.0.0.1:5000/orders/${order.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: 'completed' }),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to update order status');
