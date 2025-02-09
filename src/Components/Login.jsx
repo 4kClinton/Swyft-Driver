@@ -22,7 +22,7 @@ const Login = () => {
   const vapid_key = import.meta.env.VITE_VAPID_KEY;
 
   useEffect(() => {
-    if (user.id) {
+    if (user?.id) {
       navigate('/dashboard');
     }
   }, [user]);

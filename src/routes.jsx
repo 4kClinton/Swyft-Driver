@@ -17,8 +17,8 @@ const routes = [
     path: '/',
     element: <App />,
     children: [
-      { path: '/', element: <Login /> },
-      { path: '/dashboard', element: <Map /> },
+      { path: '/dashboard', element: <Login /> },
+      { path: '/', element: <Map /> },
       { path: '/signup', element: <Signup /> },
       { path: '/verification', element: <Verification /> },
       { path: '/deliveryDetails', element: <DeliveryDetails /> },
