@@ -285,9 +285,15 @@ function App() {
 
   return (
     <div>
-      
-     HELLO WORLD
-     
+      <Alert />
+      <Outlet />
+      {/* Conditionally render BottomNav based on current location */}
+      {location.pathname !== '/' &&
+        location.pathname !== '/signup' &&
+        location.pathname !== '/verification' && (
+          <BottomNav value={count} onChange={setCount} />
+        )}
+      <ToastContainer />
     </div>
   );
 }
