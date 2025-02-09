@@ -38,7 +38,7 @@ const GoOnlineButton = () => {
 
             try {
               const response = await fetch(
-                `http://127.0.0.1:5000/online/${driver.id}`,
+                `https://swyft-backend-client-nine.vercel.app/online/${driver.id}`,
                 {
                   method: 'PUT',
                   headers: {
@@ -77,7 +77,7 @@ const GoOnlineButton = () => {
       // Driver going offline
       try {
         const response = await fetch(
-          `http://127.0.0.1:5000/online/${driver.id}`,
+          `https://swyft-backend-client-nine.vercel.app/online/${driver.id}`,
           {
             method: 'PUT',
             headers: {

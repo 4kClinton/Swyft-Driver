@@ -28,16 +28,19 @@ import {
 
 function App() {
   const updateFcmTokenOnBackend = async (token) => {
-    const response = await fetch('http://127.0.0.1:5000/update-fcm-token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${Cookies.get('authTokendr2')}`,
-      },
-      body: JSON.stringify({
-        fcm_token: token,
-      }),
-    });
+    const response = await fetch(
+      'https://swyft-backend-client-nine.vercel.app/update-fcm-token',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('authTokendr2')}`,
+        },
+        body: JSON.stringify({
+          fcm_token: token,
+        }),
+      }
+    );
 
     if (!response.ok) {
       console.error('Failed to send FCM token to backend');
@@ -144,16 +147,13 @@ function App() {
                 autoClose: 5000, // Set the time it stays visible
                 onClose: () => {
                   // Optionally navigate or remove items once the toast is acknowledged
-                  Cookies.remove('currentOrder');
-                  Cookies.remove('customerData');
+
                   dispatch(removeOrder());
                   dispatch(removeCustomer());
                   navigate('/dashboard');
                 },
               });
 
-              Cookies.remove('currentOrder');
-              Cookies.remove('customerData');
               dispatch(removeOrder());
               dispatch(removeIncomingOrder());
               dispatch(removeCustomer());
@@ -179,7 +179,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
     if (token) {
-      fetch('http://127.0.0.1:5000/check_session', {
+      fetch('https://swyft-backend-client-nine.vercel.app/check_session', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -192,22 +192,6 @@ function App() {
         })
         .then((userData) => {
           dispatch(addUser(userData));
-          console.log(userData);
-
-          const storedCustomerData = Cookies.get('customerData');
-          const storedOrderData = Cookies.get('currentOrder');
-
-          if (storedCustomerData && storedOrderData) {
-            const order = JSON.parse(storedOrderData);
-            if (
-              order.status !== 'completed' &&
-              order.status !== 'cancelled' &&
-              order.status !== 'Pending'
-            ) {
-              dispatch(saveCustomer(JSON.parse(storedCustomerData)));
-              dispatch(saveOrder(order));
-            }
-          }
         })
 
         .catch((error) => {
@@ -220,7 +204,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
     if (token) {
-      fetch('http://127.0.0.1:5000/orders', {
+      fetch('https://swyft-backend-client-nine.vercel.app/orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -240,6 +224,36 @@ function App() {
             dispatch(clearOrders());
           } else {
             dispatch(saveOrders(data));
+
+            const currentOrder = data.filter(
+              (order) =>
+                order.status !== 'completed' &&
+                order.status !== 'cancelled' &&
+                order.status !== 'Pending'
+            );
+
+            dispatch(saveOrder(currentOrder[0]));
+            if (currentOrder.length > 0) {
+              fetch(
+                `https://swyft-backend-client-nine.vercel.app/customer/${currentOrder[0]?.customer_id}`,
+                {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application',
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              )
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error('Failed to fetch customer data');
+                  }
+                  return response.json();
+                })
+                .then((customerData) => {
+                  dispatch(saveCustomer(customerData));
+                });
+            }
           }
         });
     }
@@ -249,7 +263,7 @@ function App() {
   useEffect(() => {
     // Fetch totalPrice data from the given endpoint
 
-    fetch('http://127.0.0.1:5000/orders/total_cost')
+    fetch('https://swyft-backend-client-nine.vercel.app/orders/total_cost')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch data');
