@@ -16,7 +16,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [fcmToken, setFcmToken] = useState(''); // State for storing FCM token
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   const vapid_key = import.meta.env.VITE_VAPID_KEY;
@@ -27,51 +27,6 @@ const Login = () => {
     }
   }, [user, navigate]);
 
-  // Request Notification Permissions and Retrieve FCM Token
-  useEffect(() => {
-    const requestNotificationPermission = async () => {
-      try {
-        if (!('Notification' in window)) {
-          console.error('Notification API is not supported by this browser.');
-          return;
-        }
-
-        const permissionResult = await Notification.requestPermission();
-        if (permissionResult === 'granted') {
-          const token = await messaging.getToken(messaging, {
-            vapidKey: vapid_key, // Replace with your VAPID key
-          });
-          if (token) {
-            console.log('FCM Token:', token);
-            setFcmToken(token);
-          } else {
-            console.error('Failed to retrieve FCM Token.');
-          }
-        } else {
-          console.error('Notification permission denied.');
-        }
-      } catch (error) {
-        console.error(
-          'Error requesting notification permission or retrieving token:',
-          error
-        );
-      }
-    };
-
-    requestNotificationPermission();
-
-    // Listen for incoming foreground messages
-    const unsubscribe = messaging.onMessage(messaging, (payload) => {
-      console.log('Message received in the foreground:', payload);
-    });
-
-    // Cleanup listener on unmount
-    return () => {
-      console.log('Cleaning up FCM listener');
-      unsubscribe();
-    };
-  }, []);
-
   const logIn = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -79,6 +34,17 @@ const Login = () => {
 
     // Convert email to lowercase
     const sanitizedEmail = email.trim().toLowerCase();
+    let storedFcmToken = Cookies.get('fcmToken');
+    if (!storedFcmToken) {
+      try {
+        storedFcmToken = await messaging.getToken(messaging, {
+          vapidKey: vapid_key,
+        });
+        Cookies.set('fcmToken', storedFcmToken);
+      } catch (error) {
+        console.error('Failed to get FCM token:', error);
+      }
+    }
 
     try {
       const response = await fetch(
@@ -92,7 +58,7 @@ const Login = () => {
           body: JSON.stringify({
             email: sanitizedEmail,
             password,
-            fcm_token: fcmToken,
+            fcm_token: storedFcmToken,
           }),
         }
       );
