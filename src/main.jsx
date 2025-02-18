@@ -1,12 +1,10 @@
 import './index.css';
 import ReactDOM from 'react-dom/client';
-
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-
 import { store } from './Redux/Store.js';
-
 import { routes } from './routes.jsx';
+import OneSignal from 'onesignal-cordova-plugin';
 
 const router = createBrowserRouter(routes);
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -29,3 +27,18 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+const onesignal_id = import.meta.env.VITE_ONESIGNAL_APP_ID;
+
+// Initialize OneSignal
+OneSignal.setAppId(onesignal_id);
+
+// Ask for permission (only needed once)
+OneSignal.promptForPushNotificationsWithUserResponse((accepted) => {
+  console.log("User accepted notifications: " + accepted);
+});
+
+// Handle incoming notifications
+OneSignal.setNotificationOpenedHandler((event) => {
+  console.log("New order received: ", event);
+});
