@@ -1,0 +1,10 @@
+{
+  "appId": "app.vercel.swyft_driver",
+  "appName": "swyft-driver",
+  "webDir": "dist",
+  "plugins":{
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}
