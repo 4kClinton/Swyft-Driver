@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { store } from './Redux/Store.js';
 import { routes } from './routes.jsx';
+import Cookies from 'js-cookie';
 
 const router = createBrowserRouter(routes);
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -42,18 +43,39 @@ async function requestNotificationPermission() {
   }
 }
 
+// Helper function to convert VAPID public key
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+
 // Function to subscribe for push notifications
 async function subscribeToPush(registration) {
   try {
+    const registration = await navigator.serviceWorker.ready;
+
+    const vapidPublicKey = "BEnXIZVqgwNk9ucbtr5XzyohjtS-tIN7BJFPAqJNgnrm9m_Brj-g2i5b73_Odwg5jEXmPIjTgRXQ8RI2nXD5HWE";
+    const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey)
+
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
+      applicationServerKey
     });
 
     await fetch("https://swyft-backend-client-nine.vercel.app/subscribe", {
       method: "POST",
       body: JSON.stringify(subscription),
-      headers: { "Content-Type": "application/json" }
+      headers: { 
+        "Content-Type": "application/json" ,
+        Authorization:`Bearer ${Cookies.get('authTokendr2')}`,
+      }
     });
 
     console.log("Successfully subscribed for push notifications!");
