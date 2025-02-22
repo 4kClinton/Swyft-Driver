@@ -50,7 +50,7 @@ async function subscribeToPush(registration) {
       applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
     });
 
-    await fetch("http://localhost:5000/subscribe", {
+    await fetch("https://swyft-backend-client-nine.vercel.app/subscribe", {
       method: "POST",
       body: JSON.stringify(subscription),
       headers: { "Content-Type": "application/json" }
