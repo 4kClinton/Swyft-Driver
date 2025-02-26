@@ -30,7 +30,7 @@ const BottomNav = ({ value, onChange }) => {
     >
       <BottomNavigationAction
         label="Home"
-        icon={<HomeIcon sx={{ color: '#2AC352' }} />}
+        icon={<HomeIcon sx={{ color: '#ffa600' }} />}
         component={Link}
         to="/dashboard"
         value="/dashboard"
@@ -42,7 +42,7 @@ const BottomNav = ({ value, onChange }) => {
       />
       <BottomNavigationAction
         label="Rides"
-        icon={<DriveEtaIcon sx={{ color: '#2AC352' }} />}
+        icon={<DriveEtaIcon sx={{ color: '#ffa600' }} />}
         component={Link}
         to="/rides"
         value="/rides"
@@ -54,7 +54,7 @@ const BottomNav = ({ value, onChange }) => {
       />
       <BottomNavigationAction
         label="Notifications"
-        icon={<NotificationsIcon sx={{ color: '#2AC352' }} />}
+        icon={<NotificationsIcon sx={{ color: '#ffa600' }} />}
         component={Link}
         to="/notifications"
         value="/notifications"
@@ -66,7 +66,7 @@ const BottomNav = ({ value, onChange }) => {
       />
       <BottomNavigationAction
         label="Profile"
-        icon={<PersonIcon sx={{ color: '#2AC352' }} />}
+        icon={<PersonIcon sx={{ color: '#ffa600' }} />}
         component={Link}
         to="/profile"
         value="/profile"

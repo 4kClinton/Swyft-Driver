@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import '../Styles/Dash.css';
-
+import GoOnlineButton from "../Components/GoOnlineButton"
 import { FaMoneyBillWave, FaStar, FaCar, FaLifeRing } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-
+import Alert from "./Alert"
 import { useSelector } from 'react-redux';
 
 const Dash = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dashRef = useRef(null);
   const currentCustomer = useSelector((state) => state.currentCustomer.value);
-
+ const [startY, setStartY] = useState(0);
+ const [endY, setEndY] = useState(0);
   const user = useSelector((state) => state.user.value);
 
   // Simulated data for the cards
@@ -19,7 +20,26 @@ const Dash = () => {
     activityScore: '85%',
     ratings: '4.5/5',
   };
+  const handleTouchStart = (e) => {
+    setStartY(e.touches[0].clientY); // Capture the starting Y position
+  };
 
+  const handleTouchMove = (e) => {
+    setEndY(e.touches[0].clientY); // Update the Y position as the user swipes
+  };
+
+  const handleTouchEnd = () => {
+    const swipeDistance = startY - endY; // Calculate swipe distance
+    const threshold = 50; // Minimum swipe distance to trigger action
+
+    if (swipeDistance > threshold) {
+      // Swipe up
+      setIsOpen(true);
+    } else if (swipeDistance < -threshold) {
+      // Swipe down
+      setIsOpen(false);
+    }
+  };
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dashRef.current && !dashRef.current.contains(event.target)) {
@@ -36,6 +56,9 @@ const Dash = () => {
     <div ref={dashRef} className={`Dash ${isOpen ? 'open' : ''}`}>
       <div className="notch" onClick={toggleDash}>
         <div className="notch-indicator"></div>
+      </div>
+      <div>
+        <Alert />
       </div>
       <GoOnlineButton onClick={toggleDash} />
       <h2 className="catch" onClick={toggleDash}>

@@ -1,23 +1,42 @@
 /* In your Alert.css */
 .Alert {
-  position: fixed; /* Fixed position on the screen */
-  top: 20px; /* Adjust the positioning if needed */
+  position: fixed;
+  /* Fixed position on the screen */
+  top: 20px;
+  /* Adjust the positioning if needed */
   left: 50%;
   transform: translateX(-50%);
-  background-color: #2AC352; /* Green background for alert */
+  width: 80%;
+  background-color: #ffa600;
+  /* Green background for alert */
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
-  z-index: 9999; /* Ensure it stays on top of other content */
+  z-index: 9999;
+  /* Ensure it stays on top of other content */
   animation: vibrate 0.3s infinite;
 }
 
 @keyframes vibrate {
-  0% { transform: translate(0px, 0px); }
-  25% { transform: translate(2px, -2px); }
-  50% { transform: translate(-2px, 2px); }
-  75% { transform: translate(2px, 2px); }
-  100% { transform: translate(0px, 0px); }
+  0% {
+    transform: translate(0px, 0px);
+  }
+
+  25% {
+    transform: translate(2px, -2px);
+  }
+
+  50% {
+    transform: translate(-2px, 2px);
+  }
+
+  75% {
+    transform: translate(2px, 2px);
+  }
+
+  100% {
+    transform: translate(0px, 0px);
+  }
 }

@@ -9,6 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress'; // For loader
 import '../Styles/Map.css';
 import Dash from './Dash'; // Import the Dash component
 import GoOnlineButton from './GoOnlineButton';
+import Alert from "./Alert"
 import { useSelector } from 'react-redux';
 
 const Map = () => {
@@ -125,7 +126,8 @@ const Map = () => {
 
   return (
     <>
-      <GoOnlineButton />
+   
+      {/* <GoOnlineButton /> */}
       <div className="map-container">
         <GoogleMap
           mapContainerClassName="google-map"
@@ -172,7 +174,7 @@ const Map = () => {
             <DirectionsRenderer directions={directionsResponse} />
           )}
         </GoogleMap>
-
+ <Alert />
         {/* Display distance in a user-friendly format */}
         {/* <div className="distance-info">
           {distance > 0 ? `${distance.toFixed(2)} km` : "Calculating distance..."}

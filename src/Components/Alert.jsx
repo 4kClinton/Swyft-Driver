@@ -115,7 +115,7 @@ const Alert = () => {
           className="Alert"
           onClick={AcceptOrder}
           style={{
-            backgroundColor: alert ? '#2AC352' : '#404040',
+            backgroundColor: alert ? '#ffa600' : '#404040',
             border: alert ? 'none' : 'none',
             animation: alert ? 'vibrate 0.3s infinite' : 'none',
           }}

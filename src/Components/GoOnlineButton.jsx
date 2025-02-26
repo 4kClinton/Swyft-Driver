@@ -109,14 +109,12 @@ const GoOnlineButton = () => {
   };
 
   return (
-
     <div style={{ width: '80%', padding: '5px' }}>
-
       <Toaster
         className="online-toast"
         style={{
           position: 'absolute',
-          top: '10vh',
+          top: '50vh',
           marginTop: '20px',
           inset: '50px',
         }}
@@ -127,9 +125,9 @@ const GoOnlineButton = () => {
         onClick={handleToggle}
         sx={{
           position: 'absolute',
-          top: '100px',
-          // right: "20px",
-          // backgroundColor: "#2AC352",
+          top: '30px',
+          right: '35px',
+          // backgroundColor: "#ffa600",
           // color: "white",
           // fontSize: "20px",
           border: 'none !important',
@@ -142,7 +140,7 @@ const GoOnlineButton = () => {
           height: '50px',
 
           marginRight: '2px',
-          backgroundColor: isOnline ? '#FF3E3E' : '#2AC352',
+          backgroundColor: isOnline ? '#FF3E3E' : '#ffa600',
           color: 'white',
           fontSize: '25px',
         }}
