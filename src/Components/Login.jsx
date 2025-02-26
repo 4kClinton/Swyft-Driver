@@ -1,71 +1,31 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Typography, Box, Link } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useDispatch, useSelector } from "react-redux";
-import { messaging } from "../../firebase"; // Ensure you import Firebase messaging setup
-import { getToken, onMessage } from "firebase/messaging";
-import { addUser } from "../Redux/Reducers/UserSlice";
-import "../Styles/Login.css";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Typography, Box, Link } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useDispatch, useSelector } from 'react-redux';
+import { messaging } from '../firebase/firebase';
+import 'firebase/messaging';
+
+import { addUser } from '../Redux/Reducers/UserSlice';
+import '../Styles/Login.css';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [fcmToken, setFcmToken] = useState(""); // State for storing FCM token
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   const vapid_key = import.meta.env.VITE_VAPID_KEY;
 
   useEffect(() => {
     if (user.id) {
-      navigate("/dashboard");
+      navigate('/dashboard');
     }
   }, [user, navigate]);
-
-  // Request Notification Permissions and Retrieve FCM Token
-  useEffect(() => {
-    const requestNotificationPermission = async () => {
-      try {
-        if (!("Notification" in window)) {
-          console.error("Notification API is not supported by this browser.");
-          return;
-        }
-
-        const permissionResult = await Notification.requestPermission();
-        if (permissionResult === "granted") {
-          const token = await getToken(messaging, {
-            vapidKey: vapid_key, // Replace with your VAPID key
-          });
-          if (token) {
-            console.log("FCM Token:", token);
-            setFcmToken(token);
-          } else {
-            console.error("Failed to retrieve FCM Token.");
-          }
-        } else {
-          console.error("Notification permission denied.");
-        }
-      } catch (error) {
-        console.error("Error requesting notification permission or retrieving token:", error);
-      }
-    };
-
-    requestNotificationPermission();
-
-    // Listen for incoming foreground messages
-    const unsubscribe = onMessage(messaging, (payload) => {
-      console.log("Message received in the foreground:", payload);
-    });
-
-    // Cleanup listener on unmount
-    return () => {
-      console.log("Cleaning up FCM listener");
-      unsubscribe();
-    };
-  }, []);
 
   const logIn = async (event) => {
     event.preventDefault();
@@ -74,17 +34,32 @@ const Login = () => {
 
     // Convert email to lowercase
     const sanitizedEmail = email.trim().toLowerCase();
+    let storedFcmToken = Cookies.get('fcmToken');
+    if (!storedFcmToken) {
+      try {
+        storedFcmToken = await messaging.getToken(messaging, {
+          vapidKey: vapid_key,
+        });
+        Cookies.set('fcmToken', storedFcmToken);
+      } catch (error) {
+        console.error('Failed to get FCM token:', error);
+      }
+    }
 
     try {
       const response = await fetch(
-        "https://swyft-backend-client-nine.vercel.app/driver/login",
+        'https://swyft-backend-client-nine.vercel.app/driver/login',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
 
-          body: JSON.stringify({ email: sanitizedEmail, password, fcm_token:fcmToken }),
+          body: JSON.stringify({
+            email: sanitizedEmail,
+            password,
+            fcm_token: storedFcmToken,
+          }),
         }
       );
 
@@ -93,16 +68,21 @@ const Login = () => {
       if (response.ok) {
         const { access_token, user, message } = data;
 
-        sessionStorage.setItem('message', message || 'Login successful!');
-        sessionStorage.setItem('authToken', access_token);
+        Cookies.set('message', message || 'Login successful!'), { expires: 7 };
+
+        Cookies.set('authTokendr2', access_token, {
+          expires: 7,
+          secure: true,
+          sameSite: 'Strict',
+        }); // Set cookie with options
         dispatch(addUser(user));
-        navigate("/dashboard");
+        navigate('/dashboard');
       } else {
-        setError(data.error || "Login failed. Please try again.");
+        setError(data.error || 'Login failed. Please try again.');
       }
     } catch (err) {
       console.error(err);
-      setError("An error occurred. Please try again.");
+      setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -137,18 +117,18 @@ const Login = () => {
             variant="contained"
             type="submit"
             className="login-button"
-            sx={{ mt: 2, backgroundColor: "#18b700", fontWeight: "bold" }}
+            sx={{ mt: 2, backgroundColor: '#18b700', fontWeight: 'bold' }}
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} /> : "Log In"}
+            {loading ? <CircularProgress size={24} /> : 'Log In'}
           </Button>
         </form>
         <Button
-          onClick={() => navigate("/signup")}
+          onClick={() => navigate('/signup')}
           variant="text"
           className="create-account"
           align="center"
-          sx={{ mt: 2, color: "#18b700", fontWeight: "bold" }}
+          sx={{ mt: 2, color: '#18b700', fontWeight: 'bold' }}
         >
           Create account
         </Button>

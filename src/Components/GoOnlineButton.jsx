@@ -127,6 +127,8 @@ const GoOnlineButton = () => {
           position: 'absolute',
           top: '30px',
           right: '35px',
+          fontFamily: 'Montserrat',
+          fontWeight: 'bold',
           // backgroundColor: "#ffa600",
           // color: "white",
           // fontSize: "20px",

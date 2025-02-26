@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 import soundFile from '../assets/this-one.wav';
 import '../Styles/Alert.css';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { alertOff } from '../Redux/Reducers/alertSlice';
 import { declineOrder, saveOrder } from '../Redux/Reducers/CurrentOrderSlice';
 import {
@@ -10,71 +10,102 @@ import {
   saveDestination,
 } from '../Redux/Reducers/CurrentCustomerSlice';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import caller from '../assets/swyft-logo2.png';
+import { removeIncomingOrder } from '../Redux/Reducers/incomingOrderSlice';
 
 const Alert = () => {
+  const [loading, setLoading] = useState(false);
   const audioRef = useRef(null);
 
   const alertValue = useSelector((state) => state.alert.value);
-  const currentOrder = useSelector((state) => state.currentOrder.value);
+  const incomingOrder = useSelector((state) => state.incomingOrder.value);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = sessionStorage.getItem('authToken');
-    if (alert) {
-      if (audioRef.current) {
-        audioRef.current.loop = true; // Enable looping
-        audioRef.current.play();
-
-        // Stop playing after 10 seconds and dispatch declineOrder
-        const timer = setTimeout(() => {
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0; // Reset sound
-          dispatch(alertOff());
-          dispatch(declineOrder());
-          fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
+    const token = Cookies.get('authTokendr2');
+    if (alertValue && audioRef.current) {
+      audioRef.current.loop = true;
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: `New Order From ${incomingOrder.customer ? incomingOrder.customer.name : ''}`,
+          artist: 'Swyft Driver',
+          album: 'Incoming Order',
+          artwork: [
+            {
+              src: 'https://example.com/path/to/artwork256x256.jpg',
+              sizes: '256x256',
+              type: 'image/jpeg',
             },
-            body: JSON.stringify({
-              order_id: currentOrder.id,
-              accepted: false,
-            }),
-          }).then((res) => {
-            res.json().then((data) => {
-              dispatch(saveOrder(data));
-            });
-          });
-        }, 10000);
-
-        // Cleanup the timer when the component unmounts or alert changes
-        return () => clearTimeout(timer);
+            {
+              src: 'https://example.com/path/to/artwork512x512.jpg',
+              sizes: '512x512',
+              type: 'image/jpeg',
+            },
+          ],
+        });
+        navigator.mediaSession.setActionHandler('play', () =>
+          audioRef.current.play()
+        );
+        navigator.mediaSession.setActionHandler('pause', () =>
+          audioRef.current.pause()
+        );
       }
+      audioRef.current.play();
+      if (navigator.vibrate) {
+        navigator.vibrate([500, 200, 500, 200, 500]);
+      }
+      const timer = setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+        }
+        if (navigator.vibrate) {
+          navigator.vibrate(0);
+        }
+        dispatch(alertOff());
+        dispatch(declineOrder());
+        fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            order_id: incomingOrder.id,
+            accepted: false,
+          }),
+        });
+      }, 15000);
+      return () => clearTimeout(timer);
     }
-    //eslint-disable-next-line
-  }, [alertValue, currentOrder.id]);
+    // eslint-disable-next-line
+  }, [alertValue, incomingOrder.id]);
 
   const AcceptOrder = () => {
-    const token = sessionStorage.getItem('authToken');
+    setLoading(true);
+    const token = Cookies.get('authTokendr2');
 
     if (audioRef.current) {
       audioRef.current.pause();
-      audioRef.current.currentTime = 0; // Reset sound
-      dispatch(alertOff());
+      audioRef.current.currentTime = 0;
     }
+    if (navigator.vibrate) {
+      navigator.vibrate(0);
+    }
+    dispatch(alertOff());
     fetch('https://swyft-backend-client-nine.vercel.app/order-response', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ order_id: currentOrder.id, accepted: true }),
+      body: JSON.stringify({ order_id: incomingOrder.id, accepted: true }),
     });
     fetch(
-      `https://swyft-backend-client-nine.vercel.app/customer/${currentOrder.customer_id}`,
+      `https://swyft-backend-client-nine.vercel.app/customer/${incomingOrder.customer_id}`,
       {
         method: 'GET',
         headers: {
@@ -93,51 +124,60 @@ const Alert = () => {
         dispatch(saveCustomer(customerData));
         dispatch(
           saveDestination({
-            lat: currentOrder.user_lat,
-            lng: currentOrder.user_lng,
+            lat: incomingOrder.user_lat,
+            lng: incomingOrder.user_lng,
           })
         );
-        localStorage.setItem('customerData', JSON.stringify(customerData));
-        localStorage.setItem(
+        Cookies.set(
           'currentOrder',
-          JSON.stringify({ ...currentOrder, status: 'Accepted' })
+          JSON.stringify({ ...incomingOrder, status: 'Accepted' })
         );
+        dispatch(saveOrder({ ...incomingOrder, status: 'Accepted' }));
       })
       .then(() => {
+        dispatch(removeIncomingOrder());
         navigate('/deliveryDetails');
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
       });
   };
 
-  if (alertValue) {
+  if (loading) {
     return (
-      <div style={{ textAlign: 'center' }}>
-        <button
-          className="Alert"
-          onClick={AcceptOrder}
-          style={{
-            backgroundColor: alert ? '#ffa600' : '#404040',
-            border: alert ? 'none' : 'none',
-            animation: alert ? 'vibrate 0.3s infinite' : 'none',
-          }}
-        >
-          Incoming Order
-        </button>
-
-        <audio ref={audioRef} src={soundFile} preload="auto" />
-        <style>
-          {`
-              @keyframes vibrate {
-                0% { transform: translate(0px, 0px); }
-                25% { transform: translate(2px, -2px); }
-                50% { transform: translate(-2px, 2px); }
-                75% { transform: translate(2px, 2px); }
-                100% { transform: translate(0px, 0px); }
-              }
-            `}
-        </style>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
       </div>
     );
   }
+
+  if (alertValue) {
+    return (
+      <div className="Alert">
+        <img src={caller} alt="Caller" />
+        <div className="text">
+          <div className="name">Incoming Order</div>
+          <div className="call-text">Get Ready...</div>
+        </div>
+        <div className="buttons">
+          <button className="answer" onClick={AcceptOrder}>
+            Answer
+          </button>
+        </div>
+        <audio ref={audioRef} src={soundFile} preload="auto" />
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default Alert;
