@@ -1,10 +1,10 @@
 {
     "name": "Swyft Driver",
     "short_name": "Swyft Driver",
-    "description": "Bulk transportation & moving services",
+    "description": "Logistics & moving services",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
+    "background_color": "#ffa600",
     "theme_color": "#000000",
     "icons": [
       {
