@@ -246,7 +246,9 @@ export default function DeliveryDetails() {
 
           <div className={styles.commission}>
             Commission:{' '}
-            <span className={styles.price}>Ksh {order.total_cost * 0.18}</span>
+            <span className={styles.price}>
+              Ksh {Math.round(order.total_cost - order.loaderCost)}
+            </span>
           </div>
         </div>
 

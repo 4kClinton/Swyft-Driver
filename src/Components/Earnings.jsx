@@ -101,13 +101,13 @@ const Earnings = () => {
         </span>
       </p>
       <p className="earnings-text">
-        Total Unpaid Earnings:{' '}
+        Total Earnings:{' '}
         <span className="earnings-highlight">
           Ksh{total_unpaid_earnings.toFixed(2)}
         </span>
       </p>
       <p className="earnings-text">
-        Commission (25%):{' '}
+        Unpaid Commission (25%):{' '}
         <span className="earnings-highlight">Ksh{commission.toFixed(2)}</span>
       </p>
 

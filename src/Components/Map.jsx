@@ -9,7 +9,6 @@ import CircularProgress from '@mui/material/CircularProgress'; // For loader
 import '../Styles/Map.css';
 import Dash from './Dash'; // Import the Dash component
 
-import Alert from './Alert';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -181,7 +180,7 @@ const Map = () => {
             <DirectionsRenderer directions={directionsResponse} />
           )}
         </GoogleMap>
-        <Alert />
+
         {/* Display distance in a user-friendly format */}
         {/* <div className="distance-info">
           {distance > 0 ? `${distance.toFixed(2)} km` : "Calculating distance..."}

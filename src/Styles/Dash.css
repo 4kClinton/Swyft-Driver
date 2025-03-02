@@ -19,7 +19,7 @@
   left: 0;
   width: 90.3%;
   max-height: 600px;
-  height: 500px;
+  height: 550px;
   background-color: var(--primary-color);
   border-top-left-radius: var(--border-radius);
   box-shadow:
@@ -29,7 +29,7 @@
   transition: transform 0.3s ease;
   transform: translateY(50%);
   z-index: 3000;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   padding: 20px;
   display: grid;
   gap: 10px;

@@ -2,7 +2,7 @@
 .rides-history-container {
   display: flex;
   flex-direction: column;
- 
+  font-family: 'Montserrat';
   background-color: #242424; /* Matches the app background */
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
@@ -19,7 +19,7 @@
   color: #00d46a;
   text-align: center;
   margin-bottom: 24px;
- 
+font-family: 'Montserrat';
   top: 3vh;
 }
 
@@ -29,7 +29,7 @@
   border-radius: 8px;
   min-height: 80vh;
   width: 100%;
-  
+  font-family: 'Montserrat';
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Slight shadow for depth */
 }
@@ -37,6 +37,7 @@
 /* Individual ListItem styling */
 .rides-history-list-item {
   padding: 16px;
+  font-family: 'Montserrat';
   transition: background-color 0.3s ease;
   background-color: #2c2c2c; /* Slightly lighter than the list background */
 }
@@ -58,12 +59,14 @@
 
 /* Text styling */
 .rides-history-primary {
+  font-family: 'Montserrat';
   font-size: 18px;
   font-weight: bold;
   color: #ffffff; /* White for strong contrast */
 }
 
 .rides-history-secondary {
+  font-family: 'Montserrat';
   font-size: 14px;
   color: #cccccc; /* Light gray for secondary text */
 }

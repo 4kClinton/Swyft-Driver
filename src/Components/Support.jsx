@@ -33,7 +33,7 @@ const Support = () => {
         <div className={styles.supportItem}>
           <h3>Phone</h3>
           <p>
-            Call us at: <a href="tel:+254796652112">+254745678902</a>
+            Call us at: <a href="tel:+254796652112">+254796652112</a>
           </p>
         </div>
 

@@ -97,7 +97,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
     if (token) {
-      fetch(' http://127.0.0.1:5000/orders', {
+      fetch(' https://swyft-backend-client-nine.vercel.app/orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

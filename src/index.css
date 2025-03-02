@@ -38,6 +38,7 @@ body {
 }
 
 h1 {
+  font-family: "Montserrat";
   font-size: 3.2em;
   line-height: 1.1;
 }
@@ -61,15 +62,18 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* For tablets and larger devices */
+@media (min-width: 768px) {
+  .container {
+    padding: 20px;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+}
+
+/* For laptops and desktops */
+@media (min-width: 1024px) {
+  .container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 30px;
   }
 }
