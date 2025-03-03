@@ -53,13 +53,10 @@ export default function DeliveryDetails() {
   console.log(order?.status);
   console.log(order);
 
-  useEffect(() => {
-    if (isLoaded && order?.id) {
-      handleGetCustomerLocation();
-    }
-  }, [isLoaded, order?.id]);
   
-
+  if (isLoaded && order?.id) {
+    handleGetCustomerLocation();
+  }
   
   const handleGetCustomerLocation = () => {
     if(!order?.id){
