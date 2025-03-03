@@ -8,11 +8,12 @@ import { removeCustomer } from '../Redux/Reducers/CurrentCustomerSlice';
 import Cookies from 'js-cookie';
 import { removeIncomingOrder } from '../Redux/Reducers/incomingOrderSlice';
 
+const libraries = ['places'];
 export default function DeliveryDetails() {
   const dispatch = useDispatch();
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Load API key from .env
-    libraries: ['places'],
+    libraries,
   });
 
   const customer = useSelector((state) => state.currentCustomer.value);
