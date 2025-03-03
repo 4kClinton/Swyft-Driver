@@ -1,17 +1,13 @@
 /* Map.css */
 .map-container {
-  width: 80vw;
-  height: 40vh;
+  width: 90vw;
+  height: 45vh;
   position: relative;
-  bottom: 10vh;
+  bottom: 15vh;
   border-radius: 15px;
-  box-shadow:
-    0px 10px 15px rgba(0, 0, 0, 0.2),
-    0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2), 0px 4px 6px rgba(0, 0, 0, 0.1);
   background: white;
-  /* Optional: Ensures visibility of the lifted effect */
   overflow: hidden;
-  /* Prevents child elements from spilling over the rounded corners */
 }
 
 .info-box {

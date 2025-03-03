@@ -21,7 +21,7 @@
 .login-container {
   display: flex;
   flex-direction: column;
-  
+
   align-items: center;
   background-color: var(--primary-color);
   /* Uses card background color */
@@ -43,7 +43,7 @@
 }
 
 .login-button {
-  background-color: var(--secondary-color);
+  background-color: #ffa600;
   /* Uses secondary color */
   color: var(--text-color);
   /* Uses text color */
@@ -57,7 +57,7 @@
 }
 
 .login-button:hover {
-  background-color: var(--secondary-color);
+  background-color: #ffa600;
   /* Consistent color on hover */
 }
 
@@ -91,8 +91,8 @@
 
 .login-input::placeholder {
 
-  color:white
-  /* Matches placeholder color with border */
+  color: white
+    /* Matches placeholder color with border */
 }
 
 .socials-container {
@@ -112,7 +112,7 @@
 
 .login-component {
   display: flex;
- 
+
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -131,7 +131,7 @@ svg {
   --text-color: #e0e0e0;
   --input-background: #1e1e1e;
   --card-background: #252525;
-  --highlight-color: #ffd54f;
+  --highlight-color: #ffa600;
   --border-color: #333333;
   --border-radius: 5vh;
   font-family: 'Montserrat', sans-serif;
@@ -144,10 +144,10 @@ svg {
 } */
 
 .form-container {
-  
+
   text-align: center;
- 
- 
+
+
   background-color: var(--primary-color);
   width: 320px;
   margin: auto;
@@ -185,13 +185,13 @@ svg {
 }
 
 .input-group input:focus {
-  border-color: var(--secondary-color);
+  border-color: #ffa600;
 }
 
 .sign {
   display: block;
   width: 100%;
-  background-color: var(--secondary-color);
+  background-color: #ffa600;
   padding: 0.75rem;
   text-align: center;
   color: var(--primary-color);

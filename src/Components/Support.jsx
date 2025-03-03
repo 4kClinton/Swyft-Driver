@@ -26,14 +26,14 @@ const Support = () => {
           <h3>Email</h3>
           <p>
             Send us an email at{' '}
-            <a href="mailto:support@example.com">swyft@gmail.com</a>
+            <a href="mailto:swyft745@gmail.com">swyft745@gmail.com</a>
           </p>
         </div>
 
         <div className={styles.supportItem}>
           <h3>Phone</h3>
           <p>
-            Call us at: <a href="tel:+254745678902">+254745678902</a>
+            Call us at: <a href="tel:+254796652112">+254796652112</a>
           </p>
         </div>
 

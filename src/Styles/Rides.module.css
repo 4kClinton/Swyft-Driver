@@ -60,10 +60,12 @@ h1 {
 }
 
 .day-section {
+  font-family: 'Montserrat';
   margin-bottom: 32px;
 }
 
 h2 {
+  font-family: 'Montserrat';
   font-size: 24px;
   margin-bottom: 16px;
 }
@@ -89,6 +91,7 @@ h2 {
 .ride-time {
   font-size: 14px;
   color: #666;
+  font-family: 'Montserrat';
   margin-bottom: 4px;
 }
 
@@ -97,10 +100,12 @@ h2 {
   margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
+  font-family: 'Montserrat';
   text-overflow: ellipsis;
 }
 
 .ride-price {
+  font-family: 'Montserrat';
   font-size: 14px;
   color: #666;
 }
@@ -109,6 +114,7 @@ h2 {
   background: none;
   border: none;
   padding: 8px;
+  font-family: 'Montserrat';
   cursor: pointer;
   color: #666;
   flex-shrink: 0;
@@ -119,6 +125,7 @@ h2 {
   bottom: 0;
   left: 0;
   right: 0;
+  font-family: 'Montserrat';
   background: white;
   display: flex;
   justify-content: space-around;
@@ -130,6 +137,7 @@ h2 {
   background: none;
   border: none;
   padding: 8px;
+  font-family: 'Montserrat';
   cursor: pointer;
   color: #666;
   display: flex;
@@ -157,7 +165,8 @@ h2 {
 }
 
 .statusCompleted {
-  color: blue;
+  font-family: 'Montserrat';
+  color: #ffa600;
 }
 
 .statusPending {
@@ -165,6 +174,7 @@ h2 {
 }
 
 .statusCanceled {
+  font-family: 'Montserrat';
   color: red;
 }
 

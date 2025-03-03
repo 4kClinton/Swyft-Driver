@@ -13,8 +13,8 @@ import '../Styles/Rides.css'; // Import shared styles
 const Notifications = () => {
   // Mock data for notifications
   const mockNotifications = [
-    { id: 1, message: 'Your ride is on the way!', date: '2024-10-28' },
-    { id: 2, message: 'Fare discount available for you!', date: '2024-10-25' },
+    // { id: 1, message: 'Your ride is on the way!', date: '2024-10-28' },
+    // { id: 2, message: 'Fare discount available for you!', date: '2024-10-25' },
     { id: 3, message: 'New app update available!', date: '2024-10-22' },
     { id: 4, message: 'Check out our new services!', date: '2024-10-18' },
   ];

@@ -1,20 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'; // Import useLocation
-
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import BottomNav from './Components/BottomNav';
-
 import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from './Redux/Reducers/UserSlice';
 import { supabase } from './supabase';
 import 'firebase/messaging';
-
-import { messaging } from './firebase/firebase.js';
 import { alertOn } from './Redux/Reducers/alertSlice';
 import { removeOrder, saveOrder } from './Redux/Reducers/CurrentOrderSlice';
-import { toast, ToastContainer } from 'react-toastify'; // Import toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   removeCustomer,
   saveCustomer,
@@ -26,94 +21,19 @@ import {
   addIncomingOrder,
   removeIncomingOrder,
 } from './Redux/Reducers/incomingOrderSlice.js';
-import Message from './Components/Message.jsx';
+// import Message from './Components/Message.jsx';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Block from '@mui/icons-material/Cancel';
 
 function App() {
-  const updateFcmTokenOnBackend = async (token) => {
-    const response = await fetch(
-      'https://swyft-backend-client-nine.vercel.app/update-fcm-token',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get('authTokendr2')}`,
-        },
-        body: JSON.stringify({
-          fcm_token: token,
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      console.error('Failed to send FCM token to backend');
-    }
-  };
-
-  const { VITE_FCM_VAPID_KEY } = import.meta.env;
-
-  async function registerServiceWorker() {
-    try {
-      if ('serviceWorker' in navigator) {
-        const registration = await navigator.serviceWorker.register(
-          '/firebase-messaging-sw.js'
-        );
-        console.log('✅ Service worker registered:', registration);
-
-        const token = await messaging.getToken(messaging, {
-          vapidKey: VITE_FCM_VAPID_KEY,
-        });
-
-        if (token) {
-          console.log('🔥 FCM Token:', token);
-          Cookies.set('fcmToken', token);
-          await updateFcmTokenOnBackend(token);
-        } else {
-          console.warn('⚠️ No FCM token received. Notifications may not work.');
-        }
-      } else {
-        console.warn('🚫 Service workers are not supported in this browser.');
-      }
-    } catch (error) {
-      console.error('❌ Error registering service worker:', error);
-    }
-  }
-
-  async function requestNotificationPermission() {
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        console.log('🔔 Notification permission granted.');
-        await registerServiceWorker();
-      } else {
-        console.warn('🚫 Notification permission denied.');
-      }
-    } catch (error) {
-      console.error('❌ Error requesting notification permission:', error);
-    }
-  }
-
-  useEffect(() => {
-    requestNotificationPermission();
-  }, []);
-
-  useEffect(() => {
-    // Listen for foreground notifications
-    messaging.onMessage(messaging, (payload) => {
-      toast(<Message notification={payload.notification} />);
-    });
-  }, []);
-
-  const [count, setCount] = useState(0);
   const navigate = useNavigate();
-
   const driver = useSelector((state) => state.user.value);
-  const [data, setData] = useState(null); // State for data
+  const [data, setData] = useState(null);
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
   const dispatch = useDispatch();
-
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
 
   useEffect(() => {
-    // Subscribe to changes in the 'orders' table
     const ordersChannel = supabase
       .channel('orders')
       .on(
@@ -122,48 +42,25 @@ function App() {
         (payload) => {
           if (payload?.new?.driver_id === driver.id) {
             dispatch(addIncomingOrder(payload.new));
-
             dispatch(alertOn());
           }
         }
       )
-
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'orders' },
         (payload) => {
-          console.log(payload);
-          console.log(driver);
-
           if (payload?.new?.driver_id === driver.id) {
             const updatedStatus = payload?.new?.status;
-            console.log(payload.new);
             if (updatedStatus === 'cancelled') {
-              console.log(updatedStatus);
-
-              toast.error('Order has been cancelled', {
-                position: 'bottom-center',
-                autoClose: 5000, // Set the time it stays visible
-                onClose: () => {
-                  // Optionally navigate or remove items once the toast is acknowledged
-
-                  dispatch(removeOrder());
-                  dispatch(removeCustomer());
-                  navigate('/dashboard');
-                },
-              });
-
-              dispatch(removeOrder());
-              dispatch(removeIncomingOrder());
-              dispatch(removeCustomer());
-              navigate('/dashboard');
+              // Instead of using a toast, we now display a popup.
+              setShowCancelPopup(true);
             }
           }
         }
       )
       .subscribe();
 
-    // Cleanup the subscription on component unmount
     return () => {
       if (ordersChannel) {
         supabase
@@ -172,7 +69,6 @@ function App() {
           .catch((error) => console.error('Error removing channel:', error));
       }
     };
-    //eslint-disable-next-line
   }, [driver.id, dispatch]);
 
   useEffect(() => {
@@ -192,18 +88,16 @@ function App() {
         .then((userData) => {
           dispatch(addUser(userData));
         })
-
         .catch((error) => {
           console.error('Token verification failed:', error);
         });
     }
-    //eslint-disable-next-line
-  }, []);
+  });
 
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
     if (token) {
-      fetch('https://swyft-backend-client-nine.vercel.app/orders', {
+      fetch(' https://swyft-backend-client-nine.vercel.app/orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -217,20 +111,16 @@ function App() {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
-
           if (data?.message === 'No orders found') {
             dispatch(clearOrders());
           } else {
             dispatch(saveOrders(data));
-
             const currentOrder = data.filter(
               (order) =>
                 order.status !== 'completed' &&
                 order.status !== 'cancelled' &&
                 order.status !== 'Pending'
             );
-
             dispatch(saveOrder(currentOrder[0]));
             if (currentOrder.length > 0) {
               fetch(
@@ -256,12 +146,9 @@ function App() {
           }
         });
     }
-    //eslint-disable-next-line
   }, [driver]);
 
   useEffect(() => {
-    // Fetch totalPrice data from the given endpoint
-
     fetch('https://swyft-backend-client-nine.vercel.app/orders/total_cost')
       .then((response) => {
         if (!response.ok) {
@@ -270,30 +157,79 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        setData(data); // Set the fetched data to the state
+        setData(data);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
-        // Set dummy data in case of an error
-        setData({ earnings: 2500 }); // Replace with appropriate dummy data as needed
+        setData({ earnings: 2500 });
       });
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, []);
 
   if (data === null) {
-    return <div>Loading...</div>; // Display loading state if data is not yet available
+    return <div>Loading...</div>;
   }
 
   return (
     <div>
       <Alert />
       <Outlet />
-      {/* Conditionally render BottomNav based on current location */}
       {location.pathname !== '/' &&
         location.pathname !== '/signup' &&
-        location.pathname !== '/verification' && (
-          <BottomNav value={count} onChange={setCount} />
-        )}
+        location.pathname !== '/verification' && <BottomNav />}
       <ToastContainer />
+      {showCancelPopup && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 12000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              background: '#fff',
+              width: '300px',
+              height: '300px',
+              display: 'flex',
+              borderRadius: '30px',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              textAlign: 'center',
+            }}
+          >
+            <Block style={{ fontSize: 90, color: 'red' }} />
+            <h2 style={{ color: 'red' }}>Order has been cancelled</h2>
+            <button
+              onClick={() => {
+                setShowCancelPopup(false);
+                dispatch(removeOrder());
+                dispatch(removeIncomingOrder());
+                dispatch(removeCustomer());
+                navigate('/dashboard');
+              }}
+              style={{
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              <CancelIcon />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

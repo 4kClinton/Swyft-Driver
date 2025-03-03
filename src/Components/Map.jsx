@@ -8,7 +8,7 @@ import {
 import CircularProgress from '@mui/material/CircularProgress'; // For loader
 import '../Styles/Map.css';
 import Dash from './Dash'; // Import the Dash component
-import GoOnlineButton from './GoOnlineButton';
+
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ const Map = () => {
     if (!user.id) {
       navigate('/');
     }
-  }, []);
+  });
 
   useEffect(() => {
     // Get user's current location
@@ -133,7 +133,7 @@ const Map = () => {
 
   return (
     <>
-      <GoOnlineButton />
+      {/* <GoOnlineButton /> */}
       <div className="map-container">
         <GoogleMap
           mapContainerClassName="google-map"
