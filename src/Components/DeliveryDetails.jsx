@@ -25,7 +25,8 @@ export default function DeliveryDetails() {
 
   useEffect(() => {
     // Update orderStatus state with the current order status
-    if (order && order.status) {
+    if(!order) return;
+    if (order?.status) {
       setOrderStatus(order.status);
 
       // Update the button text based on the order status
@@ -48,19 +49,26 @@ export default function DeliveryDetails() {
       }
     }
   }, [order]);
-  console.log(order.status);
+  console.log(order?.status);
+  console.log(order);
   useEffect(() => {
+    console.log(order?.status);
     console.log(order);
-  }, [order]);
+  }, [order?.status]);
 
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded && order?.id) {
       handleGetCustomerLocation();
     }
     // eslint-disable-next-line
-  }, [isLoaded, order.id]);
-
+  }, [isLoaded, order?.id]);
+  
   const handleGetCustomerLocation = () => {
+    if(!order?.id){
+      alert("No active order found")
+      return;
+    }
+
     if (order.id && window.google && window.google.maps) {
       const geocoder = new window.google.maps.Geocoder();
       const latlng = {
@@ -93,6 +101,11 @@ export default function DeliveryDetails() {
   };
 
   const handleArrivedAtCustomer = async () => {
+    if(!order?.id){
+      alert("No active order found")
+      return;
+    }
+
     setOrderStatus('arrived_at_customer');
     setButtonText('Go to Destination');
     const token = Cookies.get('authTokendr2');
@@ -192,8 +205,14 @@ export default function DeliveryDetails() {
     }
   };
 
-  if (!customer?.id || !customerAddress || !destination) return null;
-
+  if (!order?.id || !customer?.id || !customerAddress || !destination) {
+    return (
+      <div className={styles.container}>
+        <h2>No active order at the moment</h2>
+      </div>
+    );
+  }
+  
   return (
     <div className={styles.container}>
       <div className={styles.card}>
