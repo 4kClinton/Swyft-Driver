@@ -52,11 +52,6 @@ export default function DeliveryDetails() {
 
   console.log(order?.status);
   console.log(order);
-
-  
-  if (isLoaded && order?.id) {
-    handleGetCustomerLocation();
-  }
   
   const handleGetCustomerLocation = () => {
     if(!order?.id){
@@ -94,6 +89,10 @@ export default function DeliveryDetails() {
       console.error('Google Maps API is not available.');
     }
   };
+
+  if (isLoaded && order?.id) {
+    handleGetCustomerLocation();
+  }
 
   const handleArrivedAtCustomer = async () => {
     if(!order?.id){
