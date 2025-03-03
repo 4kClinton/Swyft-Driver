@@ -49,19 +49,17 @@ export default function DeliveryDetails() {
       }
     }
   }, [order]);
+
   console.log(order?.status);
   console.log(order);
-  useEffect(() => {
-    console.log(order?.status);
-    console.log(order);
-  }, [order?.status]);
 
   useEffect(() => {
     if (isLoaded && order?.id) {
       handleGetCustomerLocation();
     }
-    // eslint-disable-next-line
   }, [isLoaded, order?.id]);
+  
+
   
   const handleGetCustomerLocation = () => {
     if(!order?.id){
