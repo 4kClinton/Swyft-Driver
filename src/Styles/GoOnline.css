@@ -1,11 +1,22 @@
 .btn-online {
+  font-family: "Montserrat";
   position: absolute;
   /* top:10px; */
   z-index: 10000;
 }
 .online-toast {
-  position: fixed;
+  font-family: "Montserrat";
+  position: absolute;
+  top: 8vh;
   z-index: 9999;
   inset: 50px;
   pointer-events: none;
+}
+.go2072408551{
+  font-family: "Montserrat";
+   position: absolute;
+  top: 8vh;
+}
+Button{
+  font-family: "Montserrat";
 }

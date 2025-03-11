@@ -1,3 +1,6 @@
+// Define the libraries array outside the component
+const libraries = ['places'];
+
 import { useState, useEffect } from 'react';
 import {
   GoogleMap,
@@ -5,35 +8,34 @@ import {
   DirectionsRenderer,
   Marker,
 } from '@react-google-maps/api';
-import CircularProgress from '@mui/material/CircularProgress'; // For loader
+import CircularProgress from '@mui/material/CircularProgress';
 import '../Styles/Map.css';
-import Dash from './Dash'; // Import the Dash component
-import GoOnlineButton from './GoOnlineButton';
+import Dash from './Dash';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const Map = () => {
-  const order = useSelector((state) => state.currentOrder.value); // Get current order from Redux
-  const onlineStatus = useSelector((state) => state.goOnline.value); // Get online status from Redux
+  const order = useSelector((state) => state.currentOrder.value);
+  const onlineStatus = useSelector((state) => state.goOnline.value);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Load API key from .env
-    libraries: ['places'],
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries, // use the constant defined outside
   });
 
   const [directionsResponse, setDirectionsResponse] = useState(null);
-  const [distance, setDistance] = useState(0); // Initial state for distance
-  /* const [duration, setDuration] = useState(''); */
+  const [distance, setDistance] = useState(0);
   const [destination, setDestination] = useState(null);
   const [customerLocation, setCustomerLocation] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const user = useSelector((state) => state.user.value);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!user.id) {
       navigate('/');
     }
-  }, []);
+  }, [user, navigate]);
 
   useEffect(() => {
     // Get user's current location
@@ -62,16 +64,17 @@ const Map = () => {
       getCurrentLocation();
     }
   }, [isLoaded, onlineStatus]);
+
   useEffect(() => {
     // Set customer and destination locations when order data is available
     if (order?.id) {
       setCustomerLocation({
-        lat: order.user_lat, // Customer's location lat
-        lng: order.user_lng, // Customer's location lng
+        lat: order.user_lat,
+        lng: order.user_lng,
       });
       setDestination({
-        lat: order.dest_lat, // Customer's destination lat
-        lng: order.dest_lng, // Customer's destination lng
+        lat: order.dest_lat,
+        lng: order.dest_lng,
       });
     }
   }, [order]);
@@ -81,7 +84,7 @@ const Map = () => {
     if (isLoaded && currentLocation && customerLocation && destination) {
       calculateRoute();
     }
-    //eslint-disable-next-line
+    // eslint-disable-next-line
   }, [isLoaded, currentLocation, customerLocation, destination]);
 
   const calculateRoute = async () => {
@@ -94,9 +97,9 @@ const Map = () => {
 
     try {
       const directionsResult = await directionsService.route({
-        origin: currentLocation, // Start from the driver's current location
-        destination: destination, // End at the customer destination
-        waypoints: [{ location: customerLocation, stopover: true }], // Add the customer as a waypoint
+        origin: currentLocation,
+        destination: destination,
+        waypoints: [{ location: customerLocation, stopover: true }],
         travelMode: window.google.maps.TravelMode.DRIVING,
       });
 
@@ -112,9 +115,8 @@ const Map = () => {
       const distanceElement = distanceMatrixResult.rows[0].elements[0];
 
       if (distanceElement && distanceElement.status === 'OK') {
-        const calculatedDistance = distanceElement.distance.value / 1000; // Convert to kilometers
-        setDistance(calculatedDistance); // Set the distance
-        /* setDuration(distanceElement.duration.text); // Set the duration */
+        const calculatedDistance = distanceElement.distance.value / 1000;
+        setDistance(calculatedDistance);
       } else {
         console.error('Distance calculation failed:', distanceElement);
       }
@@ -133,7 +135,6 @@ const Map = () => {
 
   return (
     <>
-      <GoOnlineButton />
       <div className="map-container">
         <GoogleMap
           mapContainerClassName="google-map"
@@ -142,7 +143,6 @@ const Map = () => {
           }
           zoom={12}
         >
-          {/* Mark customer location */}
           {customerLocation && (
             <Marker
               position={customerLocation}
@@ -152,8 +152,6 @@ const Map = () => {
               }}
             />
           )}
-
-          {/* Mark destination location */}
           {destination && (
             <Marker
               position={destination}
@@ -163,8 +161,6 @@ const Map = () => {
               }}
             />
           )}
-
-          {/* Mark driver's current location */}
           {currentLocation && (
             <Marker
               position={currentLocation}
@@ -174,19 +170,10 @@ const Map = () => {
               }}
             />
           )}
-
-          {/* Render directions if available */}
           {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse} />
           )}
         </GoogleMap>
-
-        {/* Display distance in a user-friendly format */}
-        {/* <div className="distance-info">
-          {distance > 0 ? `${distance.toFixed(2)} km` : "Calculating distance..."}
-        </div> */}
-
-        {/* Pass distance, userLocation, and destination as props to the Dash component */}
         <Dash
           distance={Number(distance)}
           userLocation={currentLocation}

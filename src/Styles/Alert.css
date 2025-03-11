@@ -1,23 +1,82 @@
-/* In your Alert.css */
+/* Updated Alert.css */
 .Alert {
-  position: fixed; /* Fixed position on the screen */
-  top: 20px; /* Adjust the positioning if needed */
+  position: fixed;
+  top: 20px;
+  /* Positioning at the bottom */
+  font-family: "Montserrat";
   left: 50%;
   transform: translateX(-50%);
-  background-color: #2AC352; /* Green background for alert */
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  z-index: 9999; /* Ensure it stays on top of other content */
-  animation: vibrate 0.3s infinite;
+  width: 90%;
+  max-width: 400px;
+  background: white;
+  /* White background */
+  color: black;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: Arial, sans-serif;
+  z-index: 12000;
 }
 
-@keyframes vibrate {
-  0% { transform: translate(0px, 0px); }
-  25% { transform: translate(2px, -2px); }
-  50% { transform: translate(-2px, 2px); }
-  75% { transform: translate(2px, 2px); }
-  100% { transform: translate(0px, 0px); }
+/* Profile Image */
+.Alert img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Text Container */
+.Alert .text {
+  font-family: "Montserrat";
+  flex-grow: 1;
+}
+
+.Alert .name {
+  font-family: "Montserrat";
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.Alert .time {
+  font-family: "Montserrat";
+  font-size: 12px;
+  color: gray;
+}
+
+.Alert .call-text {
+  font-family: "Montserrat";
+  font-size: 14px;
+  color: black;
+}
+
+/* Buttons */
+.Alert .buttons {
+  font-family: "Montserrat";
+  display: flex;
+  gap: 10px;
+}
+
+.Alert button {
+  font-family: "Montserrat";
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.Alert .decline {
+  font-family: "Montserrat";
+  background: #e74c3c;
+  color: white;
+}
+
+.Alert .answer {
+  font-family: "Montserrat";
+  background: #2ecc71;
+  color: white;
 }

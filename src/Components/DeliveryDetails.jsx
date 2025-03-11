@@ -245,7 +245,10 @@ export default function DeliveryDetails() {
           <div className={styles.separator}></div>
 
           <div className={styles.commission}>
-            Commission: <span className={styles.price}>Ksh 345</span>
+            Commission:{' '}
+            <span className={styles.price}>
+              Ksh {Math.round(order.total_cost - order.loaderCost)}
+            </span>
           </div>
         </div>
 

@@ -156,7 +156,12 @@ export default function RidesHistory() {
       <header className={styles.header}>
         <h1
           className={styles.h1}
-          style={{ fontSize: '24px', color: '#00d46a', marginTop: '3vh' }}
+          style={{
+            fontSize: '24px',
+            color: '#00d46a',
+            marginTop: '3vh',
+            fontFamily: 'Montserrat',
+          }}
         >
           Moves History
         </h1>
@@ -165,6 +170,7 @@ export default function RidesHistory() {
             color: user?.commissionStatus === 'cleared' ? 'green' : 'red',
             marginLeft: '10px',
             fontSize: '1rem',
+            fontFamily: 'Montserrat',
           }}
         >
           {user?.commissionStatus === 'cleared' ? 'Cleared' : 'Commission Due'}

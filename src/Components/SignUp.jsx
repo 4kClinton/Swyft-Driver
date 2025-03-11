@@ -46,7 +46,7 @@ const SignUp = () => {
         }
       });
     };
-  }, []);
+  });
 
   //eslint-disable-next-line
   const [loading, setLoading] = useState(false);
