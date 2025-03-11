@@ -238,7 +238,8 @@ const Verification = () => {
                   <option value="pickup">Pickup</option>
                   <option value="miniTruck">Mini Truck</option>
                   <option value="lorry">Lorry</option>
-                  <option value="flatbed">Flatbed</option>
+                  <option value="Van">Van</option>
+                  <option value="TukTuk">Tuk Tuk - Pick-Up</option>
                 </select>
               </div>
             </div>
