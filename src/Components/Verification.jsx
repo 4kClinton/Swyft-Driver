@@ -13,7 +13,7 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-// Consider using a bucket name without spaces (e.g., 'driver-kyc-requirements')
+
 const STORAGE_BUCKET = import.meta.env.VITE_SUPABASE_STORAGE_BUCKET;
 
 const Verification = () => {
@@ -238,7 +238,8 @@ const Verification = () => {
                   <option value="pickup">Pickup</option>
                   <option value="miniTruck">Mini Truck</option>
                   <option value="lorry">Lorry</option>
-                  <option value="flatbed">Flatbed</option>
+                  <option value="Van">Van</option>
+                  <option value="TukTuk">Tuk Tuk - Pick-Up</option>
                 </select>
               </div>
             </div>
