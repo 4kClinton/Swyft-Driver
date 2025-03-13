@@ -308,7 +308,7 @@ function App() {
             <Button
               onClick={handleInstallClick}
               sx={{
-                backgroundColor: '#00d46a',
+                backgroundColor: '#ffa600',
                 color: '#fff',
                 border: 'none',
                 textTransform: 'none',

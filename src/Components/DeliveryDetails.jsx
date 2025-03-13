@@ -8,6 +8,9 @@ import { removeCustomer } from '../Redux/Reducers/CurrentCustomerSlice';
 import Cookies from 'js-cookie';
 import { removeIncomingOrder } from '../Redux/Reducers/incomingOrderSlice';
 
+// Import a relevant icon from MUI
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
+
 export default function DeliveryDetails() {
   const dispatch = useDispatch();
   const { isLoaded } = useLoadScript({
@@ -17,18 +20,20 @@ export default function DeliveryDetails() {
 
   const customer = useSelector((state) => state.currentCustomer.value);
   const order = useSelector((state) => state.currentOrder.value);
+
   const [customerAddress, setCustomerAddress] = useState('');
   const [destination, setDestination] = useState('');
   const [buttonText, setButtonText] = useState('Arrived at Customer Location');
   const [orderStatus, setOrderStatus] = useState('on_the_way');
   const navigate = useNavigate();
 
+  /**
+   * Sync local state with the Redux order status.
+   */
   useEffect(() => {
-    // Update orderStatus state with the current order status
-    if (order && order.status) {
+    if (order?.status) {
       setOrderStatus(order.status);
 
-      // Update the button text based on the order status
       switch (order.status) {
         case 'arrived_at_customer':
           setButtonText('Go to Destination');
@@ -44,61 +49,71 @@ export default function DeliveryDetails() {
           break;
         default:
           setButtonText('Arrived at Customer Location');
-          break;
       }
     }
   }, [order]);
-  console.log(order.status);
+
+  // For debugging, safely log the order status
   useEffect(() => {
-    console.log(order);
+    console.log('Order status:', order?.status);
+    console.log('Full order object:', order);
   }, [order]);
 
+  /**
+   * Once Google Maps is loaded, fetch addresses if order is valid.
+   */
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded && order?.id) {
       handleGetCustomerLocation();
     }
     // eslint-disable-next-line
-  }, [isLoaded, order.id]);
+  }, [isLoaded, order?.id]);
 
   const handleGetCustomerLocation = () => {
-    if (order.id && window.google && window.google.maps) {
-      const geocoder = new window.google.maps.Geocoder();
-      const latlng = {
-        lat: order.user_lat,
-        lng: order.user_lng,
-      };
-      const newDestination = {
-        lat: order.dest_lat,
-        lng: order.dest_lng,
-      };
-
-      geocoder.geocode({ location: latlng }, (results, status) => {
-        if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
-          setCustomerAddress(results[0].formatted_address);
-        } else {
-          console.error('Error retrieving address:', status);
-        }
-      });
-
-      geocoder.geocode({ location: newDestination }, (results, status) => {
-        if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
-          setDestination(results[0].formatted_address);
-        } else {
-          console.error('Error retrieving address:', status);
-        }
-      });
-    } else {
-      console.error('Google Maps API is not available.');
+    if (!order?.id || !window.google?.maps) {
+      console.error('Google Maps API is not available or order is invalid.');
+      return;
     }
+
+    const geocoder = new window.google.maps.Geocoder();
+
+    // Customer location
+    const latlng = {
+      lat: order.user_lat,
+      lng: order.user_lng,
+    };
+    // Destination location
+    const newDestination = {
+      lat: order.dest_lat,
+      lng: order.dest_lng,
+    };
+
+    geocoder.geocode({ location: latlng }, (results, status) => {
+      if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
+        setCustomerAddress(results[0].formatted_address);
+      } else {
+        console.error('Error retrieving address:', status);
+      }
+    });
+
+    geocoder.geocode({ location: newDestination }, (results, status) => {
+      if (status === window.google.maps.GeocoderStatus.OK && results[0]) {
+        setDestination(results[0].formatted_address);
+      } else {
+        console.error('Error retrieving address:', status);
+      }
+    });
   };
 
+  /**
+   * Handle updating the order status in the backend and Redux.
+   */
   const handleArrivedAtCustomer = async () => {
     setOrderStatus('arrived_at_customer');
     setButtonText('Go to Destination');
     const token = Cookies.get('authTokendr2');
 
     try {
-      // Update the order status to 'arrived_at_customer' via fetch
       const response = await fetch(
         `https://swyft-backend-client-nine.vercel.app/orders/${order.id}`,
         {
@@ -110,14 +125,11 @@ export default function DeliveryDetails() {
           body: JSON.stringify({ status: 'arrived_at_customer' }),
         }
       );
-
       if (!response.ok) {
         throw new Error('Failed to update order status');
       }
-
       const data = await response.json();
       dispatch(saveOrder(data?.order));
-
       console.log('Order status updated:', data);
     } catch (error) {
       console.error('Error updating order status:', error);
@@ -142,14 +154,11 @@ export default function DeliveryDetails() {
           body: JSON.stringify({ status: 'on_the_way_to_destination' }),
         }
       );
-
       if (!response.ok) {
         throw new Error('Failed to update order status');
       }
-
       const data = await response.json();
       dispatch(saveOrder(data?.order));
-
       console.log('Order status updated:', data);
     } catch (error) {
       console.error('Error updating order status:', error);
@@ -174,17 +183,18 @@ export default function DeliveryDetails() {
           body: JSON.stringify({ status: 'completed' }),
         }
       );
-
       if (!response.ok) {
         throw new Error('Failed to update order status');
       }
-
       const data = await response.json();
       console.log('Order status updated:', data);
 
+      // Clear Redux store
       dispatch(removeOrder());
       dispatch(removeIncomingOrder());
       dispatch(removeCustomer());
+
+      // Go back to dashboard
       navigate('/dashboard');
     } catch (error) {
       console.error('Error updating order status:', error);
@@ -192,8 +202,37 @@ export default function DeliveryDetails() {
     }
   };
 
-  if (!customer?.id || !customerAddress || !destination) return null;
+  /**
+   * 1) If there's no order or status is missing:
+   *    Show "You currently don't have an order" fallback with an MUI icon.
+   */
+  if (!order?.id || !order?.status) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.card} style={{ textAlign: 'center' }}>
+          <RemoveShoppingCartIcon sx={{ fontSize: 64, color: 'gray' }} />
+          <h2>You currently don’t have an order</h2>
+          <button
+            className={styles.button}
+            onClick={() => navigate('/dashboard')}
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
+  /**
+   * 2) If addresses are not loaded yet, show a loading message.
+   */
+  if (!customer?.id || !customerAddress || !destination) {
+    return <div>Loading order details...</div>;
+  }
+
+  /**
+   * 3) Render the normal UI if we have a valid order, status, and addresses.
+   */
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -218,7 +257,7 @@ export default function DeliveryDetails() {
           </div>
 
           <div className={styles.route}>
-            <span>{customerAddress && customerAddress}</span>
+            <span>{customerAddress}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -232,7 +271,7 @@ export default function DeliveryDetails() {
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
               />
             </svg>
-            <span>{destination && destination}</span>
+            <span>{destination}</span>
           </div>
 
           <div className={styles.details}>

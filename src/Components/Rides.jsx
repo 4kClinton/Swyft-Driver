@@ -158,7 +158,7 @@ export default function RidesHistory() {
           className={styles.h1}
           style={{
             fontSize: '24px',
-            color: '#00d46a',
+            color: '#ffa600',
             marginTop: '3vh',
             fontFamily: 'Montserrat',
           }}

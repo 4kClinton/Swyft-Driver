@@ -13,7 +13,7 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-// Consider using a bucket name without spaces (e.g., 'driver-kyc-requirements')
+
 const STORAGE_BUCKET = import.meta.env.VITE_SUPABASE_STORAGE_BUCKET;
 
 const Verification = () => {
