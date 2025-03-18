@@ -74,7 +74,7 @@
 .input-group input[type="file"],
 .input-group select {
     padding: 10px;
-    height: 4vh;
+    height: 5vh;
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 15px;

@@ -187,7 +187,7 @@ function App() {
           }
         });
     }
-  }, [driver]);
+  }, [dispatch, driver]);
 
   useEffect(() => {
     fetch('https://swyft-backend-client-nine.vercel.app/orders/total_cost')
@@ -214,7 +214,10 @@ function App() {
       <Outlet />
       {location.pathname !== '/' &&
         location.pathname !== '/signup' &&
+        location.pathname !== '/unverified' &&
+        location.pathname !== '/forgotPassword' &&
         location.pathname !== '/verification' && <BottomNav />}
+
       <ToastContainer />
       {showCancelPopup && (
         <div
@@ -296,12 +299,15 @@ function App() {
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
             }}
           >
-            <Typography variant="h6" sx={{ mb: 2, fontFamily: 'Montserrat' }}>
+            <Typography
+              variant="h6"
+              sx={{ mb: 2, fontFamily: 'Montserrat', color: '#0000' }}
+            >
               Install Swyft
             </Typography>
             <Typography
               variant="body2"
-              sx={{ mb: 2, fontFamily: 'Montserrat' }}
+              sx={{ mb: 2, fontFamily: 'Montserrat', color: '#0000' }}
             >
               Get a better experience by installing our app.
             </Typography>
