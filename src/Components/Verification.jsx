@@ -1,6 +1,6 @@
 import { useState, useEffect, createRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Snackbar, Alert } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import '../Styles/Verification.css';
 import { addUser } from '../Redux/Reducers/UserSlice';
@@ -27,12 +27,17 @@ const Verification = () => {
   // Unique driver ID
   const [id] = useState(() => uuidv4());
   const [carType, setCarType] = useState('');
-  const [licenseNumber] = useState(''); // Not used if not required
-  const [licensePlate, setLicensePlate] = useState(''); // Car Number Plate
-  const [idNumber, setIdNumber] = useState(''); // New state for ID Number
+  const [licenseNumber] = useState('');
+  const [licensePlate, setLicensePlate] = useState('');
+  const [idNumber, setIdNumber] = useState('');
 
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Snackbar state for errors and success
+  const [error, setError] = useState(null);
+  const [openError, setOpenError] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [openSuccess, setOpenSuccess] = useState(false);
 
   // File states for Driver Documents
   const [drivingLicenseFile, setDrivingLicenseFile] = useState(null);
@@ -47,7 +52,7 @@ const Verification = () => {
   const [psvCarInsuranceFile, setPsvCarInsuranceFile] = useState(null);
   const [inspectionReportFile, setInspectionReportFile] = useState(null);
 
-  // Create refs for text inputs, wrapped in useMemo for stable references
+  // Create refs for text inputs
   const inputRefs = useMemo(
     () => ({
       carType: createRef(),
@@ -108,11 +113,36 @@ const Verification = () => {
     setError(null);
     const sanitizedEmail = email.trim().toLowerCase();
 
-    // Debug: log the idNumber value before submission
-    console.log('ID Number:', idNumber);
-
     try {
-      // Upload driver document files
+      // ----- Phase 1: Preliminary Verification (Text Data Only) -----
+      const preliminaryResponse = await fetch(
+        'https://swyft-backend-client-nine.vercel.app/driver/signup/verify',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id,
+            name,
+            phone: phoneNumber,
+            email: sanitizedEmail,
+            carType,
+            password,
+            licenseNumber,
+            licensePlate,
+            id_number: idNumber,
+          }),
+        }
+      );
+
+      const preliminaryData = await preliminaryResponse.json();
+
+      if (!preliminaryResponse.ok) {
+        throw new Error(
+          `Verification failed: ${preliminaryData.error || 'Please try again.'}`
+        );
+      }
+
+      // ----- Phase 2: Upload Files Only if Preliminary Check Passed -----
       const drivingLicenseURL = await uploadFile(
         drivingLicenseFile,
         'drivingLicense.jpg'
@@ -127,7 +157,6 @@ const Verification = () => {
       );
       const psvBadgeURL = await uploadFile(psvBadgeFile, 'psvBadge.jpg');
 
-      // Upload vehicle document files
       const vehicleRegistrationURL = await uploadFile(
         vehicleRegistrationFile,
         'vehicleRegistration.jpg'
@@ -149,22 +178,14 @@ const Verification = () => {
         'inspectionReport.jpg'
       );
 
-      // Send collected data to backend for KYC verification, including id_number
-      const response = await fetch(
-        'https://swyft-backend-client-nine.vercel.app/driver/signup',
+      // ----- Phase 3: Update User Record with Document URLs -----
+      const updateResponse = await fetch(
+        'https://swyft-backend-client-nine.vercel.app/driver/signup/update-documents',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id,
-            name,
-            phone: phoneNumber,
-            email: sanitizedEmail,
-            carType,
-            password,
-            licenseNumber,
-            licensePlate,
-            id_number: idNumber, // Include the driver's ID number
             documents: {
               drivingLicense: drivingLicenseURL,
               nationalIDFront: nationalIDFrontURL,
@@ -180,44 +201,62 @@ const Verification = () => {
         }
       );
 
-      const responseData = await response.json();
+      const updateData = await updateResponse.json();
 
-      if (!response.ok) {
+      if (!updateResponse.ok) {
         throw new Error(
-          `Verification failed: ${responseData.error || 'Please try again.'}`
+          `Document update failed: ${updateData.error || 'Please try again.'}`
         );
       }
 
-      const { access_token, user, message } = responseData;
-      Cookies.set('authTokendr2', access_token, {
+      // Save authentication tokens and user info
+      Cookies.set('authTokendr2', updateData.access_token, {
         expires: 7,
         secure: true,
         sameSite: 'Strict',
       });
-      dispatch(addUser(user));
-      Cookies.set('message', message || 'Driver created successfully!', {
-        expires: 7,
-      });
-      Cookies.set('user', JSON.stringify(user), { expires: 7 });
+      dispatch(addUser(updateData.user));
+      Cookies.set(
+        'message',
+        updateData.message || 'Driver created successfully!',
+        { expires: 7 }
+      );
+      Cookies.set('user', JSON.stringify(updateData.user), { expires: 7 });
       Cookies.set('status', 'Driver created!', { expires: 7 });
 
-      navigate('/dashboard');
+      // Instead of navigating immediately, set a success message and open the success popup.
+      setSuccessMessage(updateData.message || 'Account verified successfully!');
+      setOpenSuccess(true);
     } catch (err) {
       console.error('An error occurred during verification:', err);
       setError(err.message || 'An error occurred. Please try again.');
+      setOpenError(true);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCloseError = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setOpenError(false);
+  };
+
+  // When the success popup closes, navigate to /unverified.
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setOpenSuccess(false);
+    navigate('/unverified');
   };
 
   return (
     <div className="verification-component">
       <Box className="verification-container">
         <SecurityIcon className="security-icon" />
-        <header className="verification-header">{`Let’s verify your account, ${name}!`}</header>
-        {error && <Typography className="error-text">{error}</Typography>}
+        <header className="verification-header">
+          {`Let’s verify your account, ${name}!`}
+        </header>
         <form onSubmit={verifyAccount}>
-          {/* Text Input for Car Type */}
+          {/* Car Type and other text inputs */}
           <div className="input-group">
             <div className="car-type">
               <label htmlFor="carType" className="car-type-label">
@@ -379,6 +418,36 @@ const Verification = () => {
           </button>
         </form>
       </Box>
+
+      {/* Error Popup */}
+      <Snackbar
+        open={openError}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+      >
+        <Alert
+          onClose={handleCloseError}
+          severity="error"
+          sx={{ width: '100%' }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
+
+      {/* Success Popup */}
+      <Snackbar
+        open={openSuccess}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <Alert
+          onClose={handleCloseSuccess}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

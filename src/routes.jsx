@@ -11,6 +11,8 @@ import Earnings from './Components/Earnings';
 import DeliveryDetails from './Components/DeliveryDetails';
 import Support from './Components/Support';
 import Notification from './Components/Notification';
+import ForgotPassword from './Components/ForgotPassword';
+import Unverified from './Components/Unverified';
 
 const routes = [
   {
@@ -29,6 +31,8 @@ const routes = [
       { path: '/earnings', element: <Earnings /> },
       { path: '/support', element: <Support /> },
       { path: '/notification', element: <Notification /> },
+      { path: '/forgotPassword', element: <ForgotPassword /> },
+      { path: '/unverified', element: <Unverified /> },
     ],
   },
 ];

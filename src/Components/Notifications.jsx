@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications'; // Icon for each notification item
 import '../Styles/Rides.css'; // Import shared styles
+import { useNavigate } from 'react-router-dom';
 
 const Notifications = () => {
   // Mock data for notifications
@@ -18,7 +19,11 @@ const Notifications = () => {
     { id: 3, message: 'New app update available!', date: '2024-10-22' },
     { id: 4, message: 'Check out our new services!', date: '2024-10-18' },
   ];
+  const navigate = useNavigate();
 
+  const handleClick = () => {
+    navigate('/unverified');
+  };
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -31,6 +36,7 @@ const Notifications = () => {
   return (
     <div className="rides-history-container">
       <header className="rides-history-title">Notifications</header>
+      <button onClick={handleClick}>Go to Unverified</button>
       <List className="rides-history-list">
         {notifications.map((notification) => (
           <React.Fragment key={notification.id}>
@@ -55,6 +61,7 @@ const Notifications = () => {
           </React.Fragment>
         ))}
       </List>
+
       {/* Uncomment if BottomNav is needed */}
       {/* <BottomNav /> */}
     </div>
