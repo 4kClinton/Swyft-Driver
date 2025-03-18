@@ -107,7 +107,7 @@ const Earnings = () => {
         </span>
       </p>
       <p className="earnings-text">
-        Unpaid Commission (25%):{' '}
+        Unpaid Commission (18%):{' '}
         <span className="earnings-highlight">Ksh{commission.toFixed(2)}</span>
       </p>
 

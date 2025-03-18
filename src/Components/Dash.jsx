@@ -6,42 +6,46 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const Dash = () => {
-  // Start closed by default.
   const [isOpen, setIsOpen] = useState(false);
-  // dragOffset tracks the finger’s movement (in pixels)
   const [dragOffset, setDragOffset] = useState(0);
-  // startY stores the initial touch position
   const [startY, setStartY] = useState(null);
   const dashRef = useRef(null);
 
   const currentCustomer = useSelector((state) => state.currentCustomer.value);
   const user = useSelector((state) => state.user.value);
+  const driver = useSelector((state) => state.user.value);
 
-  // Replace static earnings with state variable
-  const [earnings, setEarnings] = useState('Loading...');
+  // We'll store a numeric value here; start with null or 0
+  const [earnings, setEarnings] = useState(null);
 
-  // Fetch earnings from the database on component mount.
   useEffect(() => {
     async function fetchEarnings() {
       try {
+        if (!driver.id) return; // Ensure we have a valid driver ID
         const response = await fetch(
-          'https://swyft-backend-client-nine.vercel.app/process-payment'
+          `https://swyft-backend-client-nine.vercel.app/earnings/${driver.id}`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        // Use the fetched total_unpaid_earnings value.
-        setEarnings(result.total_unpaid_earnings);
+
+        // Convert to a number (in case the server returns a string)
+        const numericValue = Number(result.total_unpaid_earnings);
+        if (isNaN(numericValue)) {
+          throw new Error('Earnings is not a valid number');
+        }
+        setEarnings(numericValue);
       } catch (error) {
         console.error('Error fetching earnings:', error);
-        setEarnings('Error fetching earnings');
+        // Set to null or some error state
+        setEarnings(null);
       }
     }
-    fetchEarnings();
-  }, []);
 
-  // When the dash is open, clicking outside closes it.
+    fetchEarnings();
+  }, [driver.id]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dashRef.current && !dashRef.current.contains(event.target)) {
@@ -59,15 +63,12 @@ const Dash = () => {
     setDragOffset(0);
   };
 
-  // Define how far down the dash sits when closed (adjust this value as needed)
   const closedOffset = 300;
 
-  // Record initial touch position
   const handleTouchStart = (e) => {
     setStartY(e.touches[0].clientY);
   };
 
-  // Update dragOffset as the user moves their finger
   const handleTouchMove = (e) => {
     if (startY !== null) {
       const currentY = e.touches[0].clientY;
@@ -76,25 +77,30 @@ const Dash = () => {
     }
   };
 
-  // On touch end, decide whether to open or close based on swipe distance
   const handleTouchEnd = () => {
-    const threshold = 50; // Minimum swipe distance in pixels
+    const threshold = 50;
     if (!isOpen && dragOffset < -threshold) {
-      // In closed state: swiping up (negative offset) opens the dash.
       setIsOpen(true);
     } else if (isOpen && dragOffset > threshold) {
-      // In open state: swiping down (positive offset) closes the dash.
       setIsOpen(false);
     }
-    // Reset drag values after determining state.
     setDragOffset(0);
     setStartY(null);
   };
 
-  // Calculate the current translateY value.
-  // When closed, the dash sits at 'closedOffset' plus any drag offset.
-  // When open, it starts at 0 and moves with the drag offset.
   const currentTransform = isOpen ? dragOffset : closedOffset + dragOffset;
+
+  // Decide what to display for the earnings text
+  let earningsText = 'Loading...';
+  if (earnings === null) {
+    earningsText = 'Error fetching earnings';
+  } else if (typeof earnings === 'number') {
+    // Format with commas for thousands and two decimal places
+    earningsText = `Ksh ${earnings.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }
 
   return (
     <div
@@ -119,7 +125,7 @@ const Dash = () => {
           <div className="card">
             <FaMoneyBillWave size={24} className="card-icon" />
             <h3>Earnings</h3>
-            <p>{earnings}</p>
+            <p>{earningsText}</p>
           </div>
         </Link>
         <Link to="/deliveryDetails" className="card-link">

@@ -13,7 +13,7 @@
   background-color: #3a3a3a;
   color: white;
   border-radius: 0.5rem;
-  border: 1px solid #00d46a;
+  border: 1px solid #ffa600;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
@@ -33,7 +33,7 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background-color: #00d46a;
+  background-color: #ffa600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,10 +110,11 @@
   border-radius: 0.375rem;
   font-size: 0.875rem;
   transition: background-color 0.2s;
+  background-color: #ffa600;
 }
 
 .button-primary {
-  background-color: #00d46a;
+  background-color: #ffa600;
   color: black;
   border: none;
 }
@@ -125,7 +126,7 @@
 .button-secondary {
   background-color: white;
   color: black;
-  border: 1px solid #00d46a;
+  border: 1px solid #ffa600;
 }
 
 .button-secondary a {

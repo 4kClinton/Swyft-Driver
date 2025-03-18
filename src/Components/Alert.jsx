@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
+
 import soundFile from '../assets/this-one.wav';
 import '../Styles/Alert.css';
 import { useSelector, useDispatch } from 'react-redux';
@@ -144,21 +144,6 @@ const Alert = () => {
       });
   };
 
-  if (loading) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </div>
-    );
-  }
-
   if (alertValue) {
     return (
       <div className="Alert">
@@ -168,8 +153,8 @@ const Alert = () => {
           <div className="call-text">Get Ready...</div>
         </div>
         <div className="buttons">
-          <button className="answer" onClick={AcceptOrder}>
-            Answer
+          <button className="answer" onClick={AcceptOrder} disabled={loading}>
+            {loading ? 'Processing...' : 'Answer'}
           </button>
         </div>
         <audio ref={audioRef} src={soundFile} preload="auto" />
