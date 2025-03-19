@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-
+import { useEffect, useRef } from 'react';
 import soundFile from '../assets/this-one.wav';
 import '../Styles/Alert.css';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,7 +14,7 @@ import caller from '../assets/swyft-logo2.png';
 import { removeIncomingOrder } from '../Redux/Reducers/incomingOrderSlice';
 
 const Alert = () => {
-  const [loading, setLoading] = useState(false);
+  // Removed unused loading state
   const audioRef = useRef(null);
 
   const alertValue = useSelector((state) => state.alert.value);
@@ -85,7 +84,6 @@ const Alert = () => {
   }, [alertValue, incomingOrder.id]);
 
   const AcceptOrder = () => {
-    setLoading(true);
     const token = Cookies.get('authTokendr2');
 
     if (audioRef.current) {
@@ -140,7 +138,6 @@ const Alert = () => {
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
-        setLoading(false);
       });
   };
 
@@ -153,8 +150,8 @@ const Alert = () => {
           <div className="call-text">Get Ready...</div>
         </div>
         <div className="buttons">
-          <button className="answer" onClick={AcceptOrder} disabled={loading}>
-            {loading ? 'Processing...' : 'Answer'}
+          <button className="answer" onClick={AcceptOrder}>
+            Accept
           </button>
         </div>
         <audio ref={audioRef} src={soundFile} preload="auto" />
