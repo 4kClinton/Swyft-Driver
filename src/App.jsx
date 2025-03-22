@@ -121,7 +121,7 @@ function App() {
           .catch((error) => console.error('Error removing channel:', error));
       }
     };
-  }, [driver.id, dispatch]);
+  }, [driver.id]);
 
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
@@ -182,7 +182,7 @@ function App() {
         })
         .catch((error) => console.error('Token verification failed:', error));
     }
-  });
+  }, []);
 
   useEffect(() => {
     const token = Cookies.get('authTokendr2');

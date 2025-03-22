@@ -88,7 +88,9 @@ const Verification = () => {
     if (!first_name) {
       navigate('/signup');
     }
+
   }, [first_name, navigate]);
+
 
   // Helper to upload a file and return its public URL
   const uploadFile = async (file, fileName) => {
