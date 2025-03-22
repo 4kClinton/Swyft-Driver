@@ -27,7 +27,7 @@ const Verification = () => {
   // Unique driver ID
   const [id] = useState(() => uuidv4());
   const [carType, setCarType] = useState('');
-  const [licenseNumber] = useState(''); // Not used if not required
+  const [licenseNumber,setLicenseNumber] = useState(''); // Not used if not required
   const [licensePlate, setLicensePlate] = useState(''); // Car Number Plate
   const [idNumber, setIdNumber] = useState(''); // New state for ID Number
 
@@ -86,21 +86,38 @@ const Verification = () => {
     }
   }, [name]);
 
-  // Helper to upload a file and return its public URL
+  
   const uploadFile = async (file, fileName) => {
+    console.log(STORAGE_BUCKET);
+    
     if (!file) return null;
+  
     const filePath = `${id}/${fileName}`;
+  
+    console.log(`Uploading ${fileName} to ${filePath}...`);
+    
     const { error: uploadError } = await supabase.storage
       .from(STORAGE_BUCKET)
       .upload(filePath, file);
+  
     if (uploadError) {
+      console.error(`Upload failed for ${fileName}:`, uploadError);
       throw new Error(`Upload failed for ${fileName}: ${uploadError.message}`);
     }
-    const { publicURL } = supabase.storage
-      .from(STORAGE_BUCKET)
-      .getPublicUrl(filePath);
-    return publicURL;
+  
+    // ✅ Correctly retrieve public URL
+    const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
+  
+    if (!data || !data.publicUrl) {
+      console.error(`Failed to retrieve public URL for ${fileName}`);
+      return null;
+    }
+ 
+    console.log(`Public URL for ${fileName}:`, data.publicUrl);
+    return data.publicUrl;
   };
+  
+  
 
   const verifyAccount = async (event) => {
     event.preventDefault();
@@ -149,14 +166,24 @@ const Verification = () => {
         'inspectionReport.jpg'
       );
 
-      // Send collected data to backend for KYC verification, including id_number
+      console.log("Driving License URL:", drivingLicenseURL);
+      console.log("National ID Front URL:", nationalIDFrontURL);
+      console.log("National ID Back URL:", nationalIDBackURL);
+      console.log("PSV Badge URL:", psvBadgeURL);
+      console.log("Vehicle Registration URL:", vehicleRegistrationURL);
+      console.log("Vehicle Picture Front URL:", vehiclePictureFrontURL);
+      console.log("Vehicle Picture Back URL:", vehiclePictureBackURL);
+      console.log("PSV Car Insurance URL:", psvCarInsuranceURL);
+      console.log("Inspection Report URL:", inspectionReportURL);
+      
+      /* // Send collected data to backend for KYC verification, including id_number
       const response = await fetch(
         'https://swyft-backend-client-nine.vercel.app/driver/signup',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            id,
+         
             name,
             phone: phoneNumber,
             email: sanitizedEmail,
@@ -164,7 +191,7 @@ const Verification = () => {
             password,
             licenseNumber,
             licensePlate,
-            id_number: idNumber, // Include the driver's ID number
+            idNumber,
             documents: {
               drivingLicense: drivingLicenseURL,
               nationalIDFront: nationalIDFrontURL,
@@ -178,17 +205,17 @@ const Verification = () => {
             },
           }),
         }
-      );
+      ); */
 
-      const responseData = await response.json();
+    /*   const responseData = await response.json();
 
       if (!response.ok) {
         throw new Error(
           `Verification failed: ${responseData.error || 'Please try again.'}`
         );
-      }
+      } */
 
-      const { access_token, user, message } = responseData;
+/*       const { access_token, user, message } = responseData;
       Cookies.set('authTokendr2', access_token, {
         expires: 7,
         secure: true,
@@ -199,9 +226,9 @@ const Verification = () => {
         expires: 7,
       });
       Cookies.set('user', JSON.stringify(user), { expires: 7 });
-      Cookies.set('status', 'Driver created!', { expires: 7 });
+      Cookies.set('status', 'Driver created!', { expires: 7 }); */
 
-      navigate('/dashboard');
+    /*   navigate('/dashboard'); */
     } catch (err) {
       console.error('An error occurred during verification:', err);
       setError(err.message || 'An error occurred. Please try again.');
@@ -262,6 +289,23 @@ const Verification = () => {
               onChange={(e) => setIdNumber(e.target.value)}
               required
               className="login-input"
+            />
+          </div>
+          <div className="input-group">
+            <input
+              ref={inputRefs.licenseNumber}
+              placeholder="License number"
+              className="login-input"
+              value={licenseNumber}
+              onChange={(e) => setLicenseNumber(e.target.value)}
+              required
+            />
+            <label>Vehicle Registration (Logbook)</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setVehicleRegistrationFile(e.target.files[0])}
+              required
             />
           </div>
           <div className="input-group">
