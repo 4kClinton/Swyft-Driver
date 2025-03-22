@@ -293,7 +293,7 @@ export default function DeliveryDetails() {
 
         <div className={styles['card-footer']}>
           <button className={`${styles.button} ${styles['button-secondary']}`}>
-            <a href="tel:0722812732">0722812732</a>
+            <a href={order.phone}>{order.phone}</a>
           </button>
 
           <button

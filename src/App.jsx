@@ -133,7 +133,53 @@ function App() {
           if (!response.ok) throw new Error('Failed to verify token');
           return response.json();
         })
-        .then((userData) => dispatch(addUser(userData)))
+        .then((userData) => {
+          dispatch(addUser(userData));
+          if (userData.online) {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                  const { latitude, longitude } = position.coords;
+
+                  try {
+                    const response = await fetch(
+                      `https://swyft-backend-client-nine.vercel.app/online/${driver.id}`,
+                      {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          online: true,
+                          location: {
+                            latitude,
+                            longitude,
+                          },
+                        }),
+                      }
+                    );
+                    if (response.ok) {
+                      console.log('Location pushed to DB:', {
+                        latitude,
+                        longitude,
+                      });
+                    } else {
+                      console.error('Failed to push location to the database.');
+                    }
+                  } catch (error) {
+                    console.error(
+                      'Network error while pushing location:',
+                      error
+                    );
+                  }
+                },
+                (error) => {
+                  console.error('Error getting location:', error);
+                }
+              );
+            }
+          }
+        })
         .catch((error) => console.error('Token verification failed:', error));
     }
   }, []);

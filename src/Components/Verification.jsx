@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from 'uuid';
 import Cookies from 'js-cookie';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client – replace these with your own values
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -22,7 +21,7 @@ const Verification = () => {
 
   // Retrieve signup data from cookies
   const storedData = JSON.parse(Cookies.get('signupData')) || {};
-  const { name, phoneNumber, email, password } = storedData;
+  const { first_name, last_name, phoneNumber, email, password } = storedData;
 
   // Unique driver ID
   const [id] = useState(() => uuidv4());
@@ -86,10 +85,12 @@ const Verification = () => {
   }, [inputRefs]);
 
   useEffect(() => {
-    if (!name) {
+    if (!first_name) {
       navigate('/signup');
     }
-  }, [name]);
+
+  }, [first_name, navigate]);
+
 
   // Helper to upload a file and return its public URL
   const uploadFile = async (file, fileName) => {
@@ -114,7 +115,7 @@ const Verification = () => {
     const sanitizedEmail = email.trim().toLowerCase();
 
     try {
-      // ----- Phase 1: Preliminary Verification (Text Data Only) -----
+      // Phase 1: Preliminary Verification (Text Data Only)
       const preliminaryResponse = await fetch(
         'https://swyft-backend-client-nine.vercel.app/driver/signup/verify',
         {
@@ -122,7 +123,8 @@ const Verification = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id,
-            name,
+            first_name,
+            last_name,
             phone: phoneNumber,
             email: sanitizedEmail,
             carType,
@@ -142,7 +144,7 @@ const Verification = () => {
         );
       }
 
-      // ----- Phase 2: Upload Files Only if Preliminary Check Passed -----
+      // Phase 2: Upload Files Only if Preliminary Check Passed
       const drivingLicenseURL = await uploadFile(
         drivingLicenseFile,
         'drivingLicense.jpg'
@@ -178,7 +180,7 @@ const Verification = () => {
         'inspectionReport.jpg'
       );
 
-      // ----- Phase 3: Update User Record with Document URLs -----
+      // Phase 3: Update User Record with Document URLs
       const updateResponse = await fetch(
         'https://swyft-backend-client-nine.vercel.app/driver/signup/update-documents',
         {
@@ -224,7 +226,7 @@ const Verification = () => {
       Cookies.set('user', JSON.stringify(updateData.user), { expires: 7 });
       Cookies.set('status', 'Driver created!', { expires: 7 });
 
-      // Instead of navigating immediately, set a success message and open the success popup.
+      // Set success message and open success popup
       setSuccessMessage(updateData.message || 'Account verified successfully!');
       setOpenSuccess(true);
     } catch (err) {
@@ -241,7 +243,6 @@ const Verification = () => {
     setOpenError(false);
   };
 
-  // When the success popup closes, navigate to /unverified.
   const handleCloseSuccess = (event, reason) => {
     if (reason === 'clickaway') return;
     setOpenSuccess(false);
@@ -253,7 +254,7 @@ const Verification = () => {
       <Box className="verification-container">
         <SecurityIcon className="security-icon" />
         <header className="verification-header">
-          {`Let’s verify your account, ${name}!`}
+          {`Let’s verify your account, ${first_name} ${last_name}!`}
         </header>
         <form onSubmit={verifyAccount}>
           {/* Car Type and other text inputs */}
@@ -405,7 +406,6 @@ const Verification = () => {
               required
             />
           </div>
-
           <button type="submit" className="verify-button" disabled={loading}>
             {loading ? 'Verifying...' : 'Verify'}
           </button>
