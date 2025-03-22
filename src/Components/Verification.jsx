@@ -135,7 +135,7 @@ const Verification = () => {
     try {
       //Phase 1: Preliminary Verification (Text Data Only)
       const preliminaryResponse = await fetch(
-        'http://127.0.0.1:5000/driver/signup',
+        'https://swyft-backend-client-nine.vercel.app/driver/signup',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
