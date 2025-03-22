@@ -21,12 +21,12 @@ const Verification = () => {
 
   // Retrieve signup data from cookies
   const storedData = JSON.parse(Cookies.get('signupData')) || {};
-  const { first_name, last_name, phoneNumber, email, password } = storedData;
+  const { first_name, last_name, phoneNumber, email, password, licenseNumber } =
+    storedData;
 
   // Unique driver ID
   const [id] = useState(() => uuidv4());
   const [carType, setCarType] = useState('');
-  const [licenseNumber] = useState('');
   const [licensePlate, setLicensePlate] = useState('');
   const [idNumber, setIdNumber] = useState('');
 
@@ -88,36 +88,54 @@ const Verification = () => {
     if (!first_name) {
       navigate('/signup');
     }
-
   }, [first_name, navigate]);
-
 
   // Helper to upload a file and return its public URL
   const uploadFile = async (file, fileName) => {
+    console.log(STORAGE_BUCKET);
+
     if (!file) return null;
+
     const filePath = `${id}/${fileName}`;
+
+    console.log(`Uploading ${fileName} to ${filePath}...`);
+
     const { error: uploadError } = await supabase.storage
       .from(STORAGE_BUCKET)
       .upload(filePath, file);
+
     if (uploadError) {
+      console.error(`Upload failed for ${fileName}:, uploadError`);
       throw new Error(`Upload failed for ${fileName}: ${uploadError.message}`);
     }
-    const { publicURL } = supabase.storage
+
+    // ✅ Correctly retrieve public URL
+    const { data } = supabase.storage
       .from(STORAGE_BUCKET)
       .getPublicUrl(filePath);
-    return publicURL;
+
+    if (!data || !data.publicUrl) {
+      console.error(`Failed to retrieve public URL for ${fileName}`);
+      return null;
+    }
+
+    console.log(`Public URL for ${fileName}:, data.publicUrl`);
+    return data.publicUrl;
   };
 
   const verifyAccount = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
+    console.log(STORAGE_BUCKET);
+    console.log(SUPABASE_URL, SUPABASE_KEY);
+
     const sanitizedEmail = email.trim().toLowerCase();
 
     try {
-      // Phase 1: Preliminary Verification (Text Data Only)
+      //Phase 1: Preliminary Verification (Text Data Only)
       const preliminaryResponse = await fetch(
-        'https://swyft-backend-client-nine.vercel.app/driver/signup/verify',
+        'http://127.0.0.1:5000/driver/signup',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -131,7 +149,7 @@ const Verification = () => {
             password,
             licenseNumber,
             licensePlate,
-            id_number: idNumber,
+            idNumber,
           }),
         }
       );
@@ -231,7 +249,7 @@ const Verification = () => {
       setOpenSuccess(true);
     } catch (err) {
       console.error('An error occurred during verification:', err);
-      setError(err.message || 'An error occurred. Please try again.');
+      setError('An error occurred. Please try again.');
       setOpenError(true);
     } finally {
       setLoading(false);
