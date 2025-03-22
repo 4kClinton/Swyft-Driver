@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Link } from '@mui/material';
 import Cookies from 'js-cookie';
@@ -7,64 +7,40 @@ import '../Styles/Login.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
-
-  const inputRefs = {
-    name: React.createRef(),
-    email: React.createRef(),
-    phoneNumber: React.createRef(),
-    password: React.createRef(),
-    confirmPassword: React.createRef(),
-  };
-
-  useEffect(() => {
-    const handleFocus = (e) => {
-      const focusedElement = e.target;
-      focusedElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center', // Adjust to "start" if you want the element at the top
-      });
-    };
-
-    // Attach the focus event listener to each input field
-    Object.values(inputRefs).forEach((inputRef) => {
-      if (inputRef.current) {
-        inputRef.current.addEventListener('focus', handleFocus);
-      }
-    });
-
-    // Cleanup: Remove event listeners when the component unmounts
-    return () => {
-      Object.values(inputRefs).forEach((inputRef) => {
-        if (inputRef.current) {
-          inputRef.current.removeEventListener('focus', handleFocus);
-        }
-      });
-    };
-  });
-
-  //eslint-disable-next-line
   const [loading, setLoading] = useState(false);
 
-  const handleSignUp = (event) => {
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const phoneRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
+
+  const handleSignUp = async (event) => {
     event.preventDefault();
     setError(null);
+    setLoading(true);
+    console.log('handleSignUp triggered');
 
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
+      setLoading(false);
       return;
     }
 
     // Temporarily store data in Cookies
-    const formData = { name, email, phoneNumber, password };
+    const formData = { first_name, last_name, email, phoneNumber, password };
     Cookies.set('signupData', JSON.stringify(formData), { expires: 7 });
 
-    // Navigate to verification page
+    console.log('Navigating to /verification');
+    setLoading(false);
     navigate('/verification');
   };
 
@@ -75,17 +51,27 @@ const SignUp = () => {
       <form className="form" onSubmit={handleSignUp}>
         <div className="input-group">
           <input
-            ref={inputRefs.name}
-            placeholder="Name or Username"
+            ref={firstNameRef}
+            placeholder="First Name"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={first_name}
+            onChange={(e) => setFirstName(e.target.value)}
             required
           />
         </div>
         <div className="input-group">
           <input
-            ref={inputRefs.email}
+            ref={lastNameRef}
+            placeholder="Last Name"
+            type="text"
+            value={last_name}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="input-group">
+          <input
+            ref={emailRef}
             placeholder="Email"
             type="email"
             value={email}
@@ -95,7 +81,7 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
-            ref={inputRefs.phoneNumber}
+            ref={phoneRef}
             placeholder="Phone Number"
             pattern="[0-9]{10}"
             title="Please enter a valid 10-digit phone number."
@@ -107,21 +93,23 @@ const SignUp = () => {
         </div>
         <div className="input-group">
           <input
-            ref={inputRefs.password}
+            ref={passwordRef}
             placeholder="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
             required
           />
         </div>
         <div className="input-group">
           <input
-            ref={inputRefs.confirmPassword}
+            ref={confirmPasswordRef}
             placeholder="Confirm Password"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
             required
           />
         </div>
@@ -134,17 +122,6 @@ const SignUp = () => {
         <span className="message">Or sign up with</span>
         <span className="line"></span>
       </div>
-      {/* <div className="social-icons">
-        <button className="icon">
-          <Google />
-        </button>
-        <button className="icon">
-          <Twitter />
-        </button>
-        <button className="icon">
-          <GitHub />
-        </button>
-      </div> */}
       <div className="signup">
         <span>Already have an account? </span>
         <Link href="/">Log in</Link>
