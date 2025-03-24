@@ -166,7 +166,8 @@ const Verification = () => {
       // Phase 2: Upload Files Only if Preliminary Check Passed
       const drivingLicenseURL = await uploadFile(
         drivingLicenseFile,
-        'drivingLicense.jpg'
+        'drivingLicense.jpg',
+        id
       );
       const nationalIDFrontURL = await uploadFile(
         nationalIDFrontFile,
