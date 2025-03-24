@@ -261,10 +261,47 @@ const Verification = () => {
     setOpenError(false);
   };
 
-  const handleCloseSuccess = (event, reason) => {
+  const handleCloseSuccess = async (event, reason) => {
     if (reason === 'clickaway') return;
+
     setOpenSuccess(false);
-    navigate('/unverified');
+
+    // Get the driver's ID from the local state or user context (depending on where the user info is stored)
+    const driverId = id; // You should implement this to retrieve the driver's ID (from context, localStorage, etc.)
+
+    if (!driverId) {
+      console.error('Driver ID is required');
+      return;
+    }
+
+    // Make a POST request to the backend to check verification status
+    try {
+      const response = await fetch(
+        'https://swyft-backend-client-nine.vercel.app/driver/check-verification',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: driverId }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Check the driver's verification status
+        if (!data.verification) {
+          navigate('/unverified'); // Redirect to the unverified page if not verified
+        } else {
+          navigate('/dashboard'); // Redirect to the dashboard if verified
+        }
+      } else {
+        console.error('Error fetching verification status:', data.error);
+      }
+    } catch (error) {
+      console.error('Error during verification check:', error);
+    }
   };
 
   return (
