@@ -20,9 +20,10 @@ const Verification = () => {
   const dispatch = useDispatch();
 
   // Retrieve signup data from cookies
-  const storedData = JSON.parse(Cookies.get('signupData')) || {};
+  const storedData = Cookies.get('signupData');
+  const parsedData = storedData ? JSON.parse(storedData) : {};
   const { first_name, last_name, phoneNumber, email, password, licenseNumber } =
-    storedData;
+    parsedData;
 
   // Unique driver ID
   const [id] = useState(() => uuidv4());
@@ -268,6 +269,7 @@ const Verification = () => {
 
     // Get the driver's ID from the local state or user context (depending on where the user info is stored)
     const driverId = id; // You should implement this to retrieve the driver's ID (from context, localStorage, etc.)
+    console.log(driverId);
 
     if (!driverId) {
       console.error('Driver ID is required');
