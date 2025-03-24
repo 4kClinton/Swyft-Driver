@@ -92,12 +92,12 @@ const Verification = () => {
   }, [first_name, navigate]);
 
   // Helper to upload a file and return its public URL
-  const uploadFile = async (file, fileName) => {
+  const uploadFile = async (file, fileName, userId) => {
     console.log(STORAGE_BUCKET);
 
     if (!file) return null;
 
-    const filePath = `${id}/${fileName}`;
+    const filePath = `${userId}/${fileName}`;
 
     console.log(`Uploading ${fileName} to ${filePath}...`);
 
@@ -170,33 +170,40 @@ const Verification = () => {
       );
       const nationalIDFrontURL = await uploadFile(
         nationalIDFrontFile,
-        'nationalID_front.jpg'
+        'nationalID_front.jpg',
+        id
       );
       const nationalIDBackURL = await uploadFile(
         nationalIDBackFile,
-        'nationalID_back.jpg'
+        'nationalID_back.jpg',
+        id
       );
-      const psvBadgeURL = await uploadFile(psvBadgeFile, 'psvBadge.jpg');
+      const psvBadgeURL = await uploadFile(psvBadgeFile, 'psvBadge.jpg', id);
 
       const vehicleRegistrationURL = await uploadFile(
         vehicleRegistrationFile,
-        'vehicleRegistration.jpg'
+        'vehicleRegistration.jpg',
+        id
       );
       const vehiclePictureFrontURL = await uploadFile(
         vehiclePictureFrontFile,
-        'vehiclePicture_front.jpg'
+        'vehiclePicture_front.jpg',
+        id
       );
       const vehiclePictureBackURL = await uploadFile(
         vehiclePictureBackFile,
-        'vehiclePicture_back.jpg'
+        'vehiclePicture_back.jpg',
+        id
       );
       const psvCarInsuranceURL = await uploadFile(
         psvCarInsuranceFile,
-        'psvCarInsurance.jpg'
+        'psvCarInsurance.jpg',
+        id
       );
       const inspectionReportURL = await uploadFile(
         inspectionReportFile,
-        'inspectionReport.jpg'
+        'inspectionReport.jpg',
+        id
       );
 
       // Phase 3: Update User Record with Document URLs
