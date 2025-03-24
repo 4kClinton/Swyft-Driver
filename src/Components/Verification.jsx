@@ -262,48 +262,10 @@ const Verification = () => {
     setOpenError(false);
   };
 
-  const handleCloseSuccess = async (event, reason) => {
+  const handleCloseSuccess = (event, reason) => {
     if (reason === 'clickaway') return;
-
     setOpenSuccess(false);
-
-    // Get the driver's ID from the local state or user context (depending on where the user info is stored)
-    const driverId = id; // You should implement this to retrieve the driver's ID (from context, localStorage, etc.)
-    console.log(driverId);
-
-    if (!driverId) {
-      console.error('Driver ID is required');
-      return;
-    }
-
-    // Make a POST request to the backend to check verification status
-    try {
-      const response = await fetch(
-        'https://swyft-backend-client-nine.vercel.app/driver/check-verification',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: driverId }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Check the driver's verification status
-        if (!data.verification) {
-          navigate('/unverified'); // Redirect to the unverified page if not verified
-        } else {
-          navigate('/dashboard'); // Redirect to the dashboard if verified
-        }
-      } else {
-        console.error('Error fetching verification status:', data.error);
-      }
-    } catch (error) {
-      console.error('Error during verification check:', error);
-    }
+    navigate('/unverified');
   };
 
   return (
@@ -332,11 +294,11 @@ const Verification = () => {
                   <option value="" disabled>
                     Select Car Type
                   </option>
-                  <option value="pickup">Pickup</option>
-                  <option value="miniTruck">Mini Truck</option>
-                  <option value="lorry">Lorry</option>
-                  <option value="Van">Van</option>
-                  <option value="TukTuk">Tuk Tuk - Pick-Up</option>
+                  <option value="pickup">Swyft Pickup</option>
+                  <option value="miniTruck">Swyft Mini Truck</option>
+                  <option value="lorry">Swyft Lorry</option>
+                  <option value="Van">Swyft Van</option>
+                  <option value="TukTuk">Swyft Tuk Tuk - Swyft Pick-Up</option>
                 </select>
               </div>
             </div>
