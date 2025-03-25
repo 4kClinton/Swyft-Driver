@@ -35,7 +35,7 @@ const Map = () => {
     if (!user.id) {
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user]);
 
   useEffect(() => {
     // Get user's current location

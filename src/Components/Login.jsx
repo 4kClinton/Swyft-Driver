@@ -35,6 +35,7 @@ const Login = () => {
     // Convert email to lowercase
     const sanitizedEmail = email.trim().toLowerCase();
     let storedFcmToken = Cookies.get('fcmToken');
+
     if (!storedFcmToken) {
       try {
         storedFcmToken = await messaging.getToken(messaging, {
@@ -54,7 +55,6 @@ const Login = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-
           body: JSON.stringify({
             email: sanitizedEmail,
             password,
@@ -68,15 +68,40 @@ const Login = () => {
       if (response.ok) {
         const { access_token, user, message } = data;
 
-        Cookies.set('message', message || 'Login successful!'), { expires: 7 };
-
+        Cookies.set('message', message || 'Login successful!', { expires: 7 });
         Cookies.set('authTokendr2', access_token, {
           expires: 7,
           secure: true,
           sameSite: 'Strict',
-        }); // Set cookie with options
-        dispatch(addUser(user));
-        navigate('/dashboard');
+        });
+
+        // Check if the driver is verified before navigating
+        const verificationResponse = await fetch(
+          'https://swyft-backend-client-nine.vercel.app/driver/check-verification',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: user.id }),
+          }
+        );
+
+        const verificationData = await verificationResponse.json();
+
+        if (verificationResponse.ok) {
+          if (verificationData.verification) {
+            dispatch(addUser(user));
+            navigate('/dashboard'); // Allow access to the dashboard
+          } else {
+            navigate('/unverified'); // Redirect to unverified page
+          }
+        } else {
+          setError(
+            verificationData.error ||
+              'Verification check failed. Please try again.'
+          );
+        }
       } else {
         setError(data.error || 'Login failed. Please try again.');
       }
