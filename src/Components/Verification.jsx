@@ -508,12 +508,12 @@ const Verification = () => {
 
   // Retrieve signup data from cookies
   const storedData = JSON.parse(Cookies.get('signupData')) || {};
-  const { first_name, last_name, phoneNumber, email, password } = storedData;
+  const { first_name, last_name, phoneNumber, email, password, licenseNumber } =
+    storedData;
 
   // Unique driver ID
   const [id] = useState(() => uuidv4());
   const [carType, setCarType] = useState('');
-  const [licenseNumber] = useState('');
   const [licensePlate, setLicensePlate] = useState('');
   const [idNumber, setIdNumber] = useState('');
 
