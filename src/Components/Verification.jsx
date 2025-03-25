@@ -575,7 +575,9 @@ const Verification = () => {
     if (!first_name) {
       navigate('/signup');
     }
-  }, [first_name, navigate]);
+
+    //eslint-disable-next-line
+  }, [first_name]);
 
   // Helper to upload a file and return its public URL
   const uploadFile = async (file, fileName) => {
@@ -587,10 +589,16 @@ const Verification = () => {
     if (uploadError) {
       throw new Error(`Upload failed for ${fileName}: ${uploadError.message}`);
     }
-    const { publicURL } = supabase.storage
+    const { data } = supabase.storage
       .from(STORAGE_BUCKET)
       .getPublicUrl(filePath);
-    return publicURL;
+    if (!data || !data.publicUrl) {
+      console.error(`Failed to retrieve public URL for ${fileName}`);
+      return null;
+    }
+
+    console.log(`Public URL for ${fileName}:, data.publicUrl`);
+    return data.publicUrl;
   };
 
   const verifyAccount = async (event) => {
@@ -664,6 +672,17 @@ const Verification = () => {
         inspectionReportFile,
         'inspectionReport.jpg'
       );
+      console.log(
+        drivingLicenseURL,
+        nationalIDFrontURL,
+        nationalIDBackURL,
+        psvBadgeURL,
+        vehicleRegistrationURL,
+        vehiclePictureFrontURL,
+        vehiclePictureBackURL,
+        psvCarInsuranceURL,
+        inspectionReportURL
+      );
 
       // Phase 3: Update User Record with Document URLs
       const updateResponse = await fetch(
@@ -688,31 +707,29 @@ const Verification = () => {
         }
       );
 
-      const updateData = await updateResponse.json();
-
       if (!updateResponse.ok) {
-        throw new Error(
-          `Document update failed: ${updateData.error || 'Please try again.'}`
-        );
+        throw new Error(`Document update failed:  'Please try again.'`);
       }
 
       // Save authentication tokens and user info
-      Cookies.set('authTokendr2', updateData.access_token, {
+      Cookies.set('authTokendr2', preliminaryData.access_token, {
         expires: 7,
         secure: true,
         sameSite: 'Strict',
       });
-      dispatch(addUser(updateData.user));
+      dispatch(addUser(preliminaryData.user));
       Cookies.set(
         'message',
-        updateData.message || 'Driver created successfully!',
+        preliminaryData.message || 'Driver created successfully!',
         { expires: 7 }
       );
-      Cookies.set('user', JSON.stringify(updateData.user), { expires: 7 });
+      Cookies.set('user', JSON.stringify(preliminaryData.user), { expires: 7 });
       Cookies.set('status', 'Driver created!', { expires: 7 });
 
       // Set success message and open success popup
-      setSuccessMessage(updateData.message || 'Account verified successfully!');
+      setSuccessMessage(
+        preliminaryData.message || 'Account verified successfully!'
+      );
       setOpenSuccess(true);
     } catch (err) {
       console.error('An error occurred during verification:', err);
@@ -760,11 +777,14 @@ const Verification = () => {
                   <option value="" disabled>
                     Select Car Type
                   </option>
-                  <option value="pickup">Pickup</option>
-                  <option value="miniTruck">Mini Truck</option>
-                  <option value="lorry">Lorry</option>
-                  <option value="Van">Van</option>
-                  <option value="TukTuk">Tuk Tuk - Pick-Up</option>
+                  <option value="pickup">Swyft Pickup</option>
+                  <option value="miniTruck">Swyft MiniTruck</option>
+                  <option value="lorry5Tonne">Swyft Lorry 5 Tonne</option>
+                  <option value="lorry10Tonne">Swyft Lorry 10 Tonne</option>
+                  <option value="van">Swyft Van</option>
+                  <option value="carRescue">Swyft Car Rescue</option>
+                  <option value="SwyftBoda">Swyft Boda</option>
+                  <option value="SwyftBodaElectric">Swyft Boda Electric</option>
                 </select>
               </div>
             </div>

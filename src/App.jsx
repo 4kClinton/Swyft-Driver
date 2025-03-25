@@ -31,7 +31,7 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const driver = useSelector((state) => state.user.value);
+  const driver = useSelector((state) => state?.user?.value);
   const [data, setData] = useState(null);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
 
@@ -121,7 +121,7 @@ function App() {
           .catch((error) => console.error('Error removing channel:', error));
       }
     };
-  }, [driver.id]);
+  }, [driver?.id]);
 
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
@@ -135,6 +135,9 @@ function App() {
         })
         .then((userData) => {
           dispatch(addUser(userData));
+          if (userData.verified === false) {
+            navigate('/unverified');
+          }
           if (userData.online) {
             if (navigator.geolocation) {
               navigator.geolocation.getCurrentPosition(
@@ -182,7 +185,7 @@ function App() {
         })
         .catch((error) => console.error('Token verification failed:', error));
     }
-  }, []);
+  }, [driver?.id]);
 
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
