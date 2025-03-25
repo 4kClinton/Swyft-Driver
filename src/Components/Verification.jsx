@@ -156,6 +156,7 @@ const Verification = () => {
       );
 
       const preliminaryData = await preliminaryResponse.json();
+      console.log('Preliminary Response:', preliminaryData);
 
       if (!preliminaryResponse.ok) {
         throw new Error(
@@ -163,48 +164,51 @@ const Verification = () => {
         );
       }
 
+      const driverId = preliminaryData.id || id;
+      console.log('Driver ID after preliminary verification:', driverId);
+
       // Phase 2: Upload Files Only if Preliminary Check Passed
       const drivingLicenseURL = await uploadFile(
         drivingLicenseFile,
         'drivingLicense.jpg',
-        id
+        driverId
       );
       const nationalIDFrontURL = await uploadFile(
         nationalIDFrontFile,
         'nationalID_front.jpg',
-        id
+        driverId
       );
       const nationalIDBackURL = await uploadFile(
         nationalIDBackFile,
         'nationalID_back.jpg',
-        id
+        driverId
       );
       const psvBadgeURL = await uploadFile(psvBadgeFile, 'psvBadge.jpg', id);
 
       const vehicleRegistrationURL = await uploadFile(
         vehicleRegistrationFile,
         'vehicleRegistration.jpg',
-        id
+        driverId
       );
       const vehiclePictureFrontURL = await uploadFile(
         vehiclePictureFrontFile,
         'vehiclePicture_front.jpg',
-        id
+        driverId
       );
       const vehiclePictureBackURL = await uploadFile(
         vehiclePictureBackFile,
         'vehiclePicture_back.jpg',
-        id
+        driverId
       );
       const psvCarInsuranceURL = await uploadFile(
         psvCarInsuranceFile,
         'psvCarInsurance.jpg',
-        id
+        driverId
       );
       const inspectionReportURL = await uploadFile(
         inspectionReportFile,
         'inspectionReport.jpg',
-        id
+        driverId
       );
 
       // Phase 3: Update User Record with Document URLs
