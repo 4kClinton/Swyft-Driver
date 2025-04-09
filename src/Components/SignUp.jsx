@@ -14,7 +14,7 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
-  const [licenseNumber, setLicenseNumber] = useState('');
+  // const [licenseNumber, setLicenseNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
   const firstNameRef = useRef(null);
@@ -23,7 +23,7 @@ const SignUp = () => {
   const phoneRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
-  const licenseNumberRef = useRef(null);
+  // const licenseNumberRef = useRef(null);
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -44,7 +44,7 @@ const SignUp = () => {
       email,
       phoneNumber,
       password,
-      licenseNumber,
+      // licenseNumber,
     };
     Cookies.set('signupData', JSON.stringify(formData), { expires: 7 });
 
@@ -55,11 +55,21 @@ const SignUp = () => {
 
   return (
     <div className="form-container">
-      <Typography className="title">Create an Account</Typography>
+      <Typography
+        className="title"
+        fontSize="larger"
+        fontFamily={'Montserrat'}
+        color="#fff"
+        fontWeight="bold"
+        marginBottom="10px"
+      >
+        Create an Account
+      </Typography>
       {error && <Typography color="error">{error}</Typography>}
       <form className="form" onSubmit={handleSignUp}>
-        <div className="input-group">
+        <div>
           <input
+            className="st2ndname"
             ref={firstNameRef}
             placeholder="First Name"
             type="text"
@@ -68,8 +78,9 @@ const SignUp = () => {
             required
           />
         </div>
-        <div className="input-group">
+        <div>
           <input
+            className="secondname"
             ref={lastNameRef}
             placeholder="Last Name"
             type="text"
@@ -100,7 +111,7 @@ const SignUp = () => {
             required
           />
         </div>
-        <div className="input-group">
+        {/* <div className="input-group">
           <input
             ref={licenseNumberRef}
             placeholder="license number"
@@ -110,7 +121,7 @@ const SignUp = () => {
             autoComplete="licenseNumber"
             required
           />
-        </div>
+        </div> */}
         <div className="input-group">
           <input
             ref={passwordRef}
