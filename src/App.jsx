@@ -25,13 +25,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import Block from '@mui/icons-material/Cancel';
 
 // MUI components for the custom install popup
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const driver = useSelector((state) => state.user.value);
+  const driver = useSelector((state) => state?.user?.value);
   const [data, setData] = useState(null);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
 
@@ -121,7 +121,7 @@ function App() {
           .catch((error) => console.error('Error removing channel:', error));
       }
     };
-  }, [driver.id]);
+  }, [driver?.id]);
 
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
@@ -135,6 +135,9 @@ function App() {
         })
         .then((userData) => {
           dispatch(addUser(userData));
+          if (userData.verified === false) {
+            navigate('/unverified');
+          }
           if (userData.online) {
             if (navigator.geolocation) {
               navigator.geolocation.getCurrentPosition(
@@ -182,7 +185,7 @@ function App() {
         })
         .catch((error) => console.error('Token verification failed:', error));
     }
-  }, []);
+  }, [driver?.id]);
 
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
@@ -339,24 +342,26 @@ function App() {
           <Box
             sx={{
               backgroundColor: '#fff',
+              color: '#0000',
               borderRadius: '8px',
               padding: '32px',
               textAlign: 'center',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{ mb: 2, fontFamily: 'Montserrat', color: '#0000' }}
-            >
+            <h2 style={{ mb: 2, fontFamily: 'Montserrat', color: '#000' }}>
               Install Swyft
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ mb: 2, fontFamily: 'Montserrat', color: '#0000' }}
+            </h2>
+            <h6
+              style={{
+                fontWeight: 'normal',
+                fontSize: 'smaller',
+                fontFamily: 'Montserrat',
+                color: '#000',
+              }}
             >
               Get a better experience by installing our app.
-            </Typography>
+            </h6>
             <Button
               onClick={handleInstallClick}
               sx={{

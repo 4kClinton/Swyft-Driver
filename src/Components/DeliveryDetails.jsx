@@ -286,14 +286,16 @@ export default function DeliveryDetails() {
           <div className={styles.commission}>
             Commission:{' '}
             <span className={styles.price}>
-              Ksh {Math.round(order.total_cost - order.loaderCost)}
+              Ksh {Math.round((order?.total_cost ?? 0) * 0.15)}
             </span>
           </div>
         </div>
 
         <div className={styles['card-footer']}>
           <button className={`${styles.button} ${styles['button-secondary']}`}>
-            <a href={order.phone}>{order.phone}</a>
+            <a href={`tel:${order?.phone || customer?.phone || ''}`}>
+              {order?.phone || customer?.phone || 'No phone'}
+            </a>
           </button>
 
           <button

@@ -33,11 +33,14 @@ const ForgotPassword = () => {
 
     try {
       // Replace with your actual endpoint for sending OTP
-      const response = await fetch('/api/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        'https://swyft-backend-client-nine.vercel.app/send-otp',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || 'Failed to send OTP.');
@@ -60,11 +63,14 @@ const ForgotPassword = () => {
 
     try {
       // Replace with your actual endpoint for resetting password
-      const response = await fetch('/api/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp, newPassword: password }),
-      });
+      const response = await fetch(
+        'https://swyft-backend-client-nine.vercel.app/reset-password',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp, newPassword: password }),
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || 'Failed to reset password.');

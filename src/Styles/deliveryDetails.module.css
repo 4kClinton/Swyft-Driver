@@ -73,9 +73,10 @@
 
 .distance {
   padding: 0.25rem 0.75rem;
-  background-color: lightgreen;
+  background-color: #00d46a;
   border-radius: 9999px;
-  color: black;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
   font-size: 0.875rem;
 }
 
@@ -89,10 +90,19 @@
   color: white;
   font-size: 0.875rem;
 }
+.commission{
+  padding: 0.25rem 0.75rem;
+    background-color: #00d46a;
+    border-radius: 9999px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    font-size: 0.875rem;
+    width: 50%;
+}
 
 .separator {
   height: 1px;
-  background-color: #fcd34d;
+  background-color: #ffa600;
   margin: 0.75rem 0;
 }
 
