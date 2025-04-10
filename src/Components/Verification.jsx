@@ -70,7 +70,7 @@ const ProgressBar = ({ activeStep }) => {
         alignItems: 'center',
         width: '100%',
         marginBottom: '30px',
-        fontFamily: 'Arial, sans-serif',
+        fontFamily: 'Montserrat',
       }}
     >
       {steps.map((title, index) => {
@@ -139,6 +139,12 @@ const Verification = () => {
   const [vehiclePictureFrontFile, setVehiclePictureFrontFile] = useState(null);
   const [vehiclePictureBackFile, setVehiclePictureBackFile] = useState(null);
   const [CarInsuranceFile, setCarInsuranceFile] = useState(null);
+
+  // New state for Vehicle Details
+  const [vehicleMake, setVehicleMake] = useState('');
+  const [vehicleModel, setVehicleModel] = useState('');
+  const [vehicleYear, setVehicleYear] = useState('');
+  const [vehicleColor, setVehicleColor] = useState('');
 
   // New field for Vehicle Requirements:
   const [
@@ -239,6 +245,11 @@ const Verification = () => {
             carType,
             password,
             licensePlate,
+            // Optionally include the new vehicle details in your API call:
+            vehicleMake,
+            vehicleModel,
+            vehicleYear,
+            vehicleColor,
           }),
         }
       );
@@ -519,6 +530,68 @@ const Verification = () => {
                   className="login-input"
                   value={licensePlate}
                   onChange={(e) => setLicensePlate(e.target.value)}
+                  required
+                />
+              </div>
+              {/* New Vehicle Detail Fields */}
+              <div className="input-group">
+                <label>Vehicle Make</label>
+                <select
+                  value={vehicleMake}
+                  onChange={(e) => setVehicleMake(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Vehicle Make
+                  </option>
+                  <option value="Toyota">Toyota</option>
+                  <option value="Honda">Honda</option>
+                  <option value="Ford">Ford</option>
+                  <option value="Chevrolet">Chevrolet</option>
+                </select>
+              </div>
+              <div className="input-group">
+                <label>Vehicle Model</label>
+                <select
+                  value={vehicleModel}
+                  onChange={(e) => setVehicleModel(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Vehicle Model
+                  </option>
+                  <option value="Corolla">Hilux</option>
+                  <option value="Civic">Civic</option>
+                  <option value="Focus">Focus</option>
+                  <option value="Malibu">Malibu</option>
+                </select>
+              </div>
+              <div className="input-group">
+                <label>Vehicle Year</label>
+                <select
+                  value={vehicleYear}
+                  onChange={(e) => setVehicleYear(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Year
+                  </option>
+                  {Array.from({ length: 26 }, (_, i) => 2000 + i).map(
+                    (year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+              <div className="input-group">
+                <label>Vehicle Color</label>
+                <input
+                  type="text"
+                  placeholder="Enter color"
+                  value={vehicleColor}
+                  onChange={(e) => setVehicleColor(e.target.value)}
                   required
                 />
               </div>
