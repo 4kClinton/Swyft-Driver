@@ -53,6 +53,26 @@
       "licenseNumber": "hswsdftyuikjhf",
       "idNumber": "dhjkjh",
       "licensePlate": "dfghjhgfdsdfg"
+    },
+    {
+      "id": "9b4eb2d3-610b-46c3-afc8-4062a62e71cd",
+      "first_name": "Clintin",
+      "last_name": "Kibet",
+      "phone": "0720301030",
+      "email": "borclinton200@gmail.com",
+      "carType": "van",
+      "password": "kinuthia",
+      "licensePlate": "kdj 205F"
+    },
+    {
+      "id": "9b4eb2d3-610b-46c3-afc8-4062a62e71cd",
+      "first_name": "Clintin",
+      "last_name": "Kibet",
+      "phone": "0720301030",
+      "email": "borclinton200@gmail.com",
+      "carType": "van",
+      "password": "kinuthia",
+      "licensePlate": "kdj 205F"
     }
   ],
   "Orders": []
