@@ -13,6 +13,7 @@ import Support from './Components/Support';
 import Notification from './Components/Notification';
 import ForgotPassword from './Components/ForgotPassword';
 import Unverified from './Components/Unverified';
+import TermsAndConditions from './Components/TermsAndConditions';
 
 const routes = [
   {
@@ -33,6 +34,7 @@ const routes = [
       { path: '/notification', element: <Notification /> },
       { path: '/forgotPassword', element: <ForgotPassword /> },
       { path: '/unverified', element: <Unverified /> },
+      { path: '/terms-and-conditions', element: <TermsAndConditions /> },
     ],
   },
 ];
