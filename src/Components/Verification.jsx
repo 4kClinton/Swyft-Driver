@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect, createRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Snackbar, Alert } from '@mui/material';
+import Link from '@mui/material/Link';
 import SecurityIcon from '@mui/icons-material/Security';
 import '../Styles/Verification.css';
 import { addUser } from '../Redux/Reducers/UserSlice';
@@ -666,8 +667,16 @@ const Verification = () => {
                 Complete Verification
               </Typography>
               <Typography variant="body1" style={{ marginBottom: '20px' }}>
-                Confirm your details and click &quot;Verify&quot; to submit your
-                information.
+                By clicking &quot;Verify,&quot; you acknowledge that you have
+                read and accepted the{' '}
+                <Link
+                  href="/terms-and-conditions"
+                  underline="hover"
+                  color="#ffa600"
+                >
+                  Terms and Conditions
+                </Link>
+                .
               </Typography>
             </>
           )}
