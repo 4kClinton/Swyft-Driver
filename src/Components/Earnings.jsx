@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import '../Styles/Earnings.css';
 import Cookies from 'js-cookie';
-import MpesaIcon from '../Assets/Mpesa-Logo.png';
+import MpesaIcon from '../assets/Mpesa-Logo.png';
 
 const Earnings = () => {
   const location = useLocation();
