@@ -1,56 +1,33 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import '../Styles/Earnings.css';
 import Cookies from 'js-cookie';
+import MpesaIcon from '../Assets/Mpesa-Logo.png';
 
 const Earnings = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const driver = useSelector((state) => state.user.value);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState('');
-  const [earningsData, setEarningsData] = useState(null);
+
+  const completedOrders = location.state?.completedRides || [];
 
   useEffect(() => {
-    if (!driver.id) return; // Only proceed if driver.id is available
+    console.log('Completed Orders:', completedOrders);
+  }, [completedOrders]);
 
-    fetch(`https://swyft-backend-client-nine.vercel.app/earnings/${driver.id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Ensure numerical data is converted to numbers
-        data.total_payments_made = Number(data.total_payments_made);
-        data.total_unpaid_earnings = Number(data.total_unpaid_earnings);
-        data.commission = Number(data.commission);
-        setEarningsData(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        setEarningsData({ error: error.message }); // Set an error state
-      });
-  }, [driver.id]); // Add driver.id as a dependency
+  const totalNetEarnings = completedOrders.reduce(
+    (sum, order) => sum + (Number(order.net_earnings) || 0),
+    0
+  );
 
-  if (earningsData === null) {
-    return <div>Loading...</div>;
-  }
-
-  if (earningsData.error) {
-    return <div>Error: {earningsData.error}</div>; // Display an error message
-  }
-
-  const { total_payments_made, total_unpaid_earnings, commission } =
-    earningsData;
+  const commission = totalNetEarnings * 0.15;
 
   const handleGoBack = () => {
-    navigate(-1); // Navigate one step back in the history stack
+    navigate(-1);
   };
 
   const handleMpesaPayment = async () => {
-    // Ensure phone number is in international format
     const formattedPhoneNumber = phoneNumber.replace(/^0/, '254');
 
     if (!formattedPhoneNumber.match(/^2547\d{8}$/)) {
@@ -58,24 +35,27 @@ const Earnings = () => {
       return;
     }
 
-    setError(''); // Clear any existing errors
+    setError('');
+
+    const payload = {
+      Amount: commission.toFixed(2),
+      phoneNumber: formattedPhoneNumber,
+    };
+
+    console.log('Payment Payload:', payload);
 
     try {
-      const token = Cookies.get('authTokendr2'); // Assuming the token is stored in session storage
+      const token = Cookies.get('authTokendr2');
 
       const response = await fetch(
         'https://swyft-backend-client-nine.vercel.app/process-payment',
         {
-          // Adjusted endpoint to match the backend
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Include the JWT token in the headers
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            Amount: commission,
-            phoneNumber: formattedPhoneNumber,
-          }), // Ensure the payload keys match the backend requirements
+          body: JSON.stringify(payload),
         }
       );
 
@@ -95,15 +75,9 @@ const Earnings = () => {
     <div className="earnings-container">
       <h1 className="earnings-heading">Earnings Overview</h1>
       <p className="earnings-text">
-        Total Payments Made:{' '}
+        Total Net Earnings:{' '}
         <span className="earnings-highlight">
-          Ksh{total_payments_made.toFixed(2)}
-        </span>
-      </p>
-      <p className="earnings-text">
-        Total Earnings:{' '}
-        <span className="earnings-highlight">
-          Ksh{total_unpaid_earnings.toFixed(2)}
+          Ksh{totalNetEarnings.toFixed(2)}
         </span>
       </p>
       <p className="earnings-text">
@@ -124,6 +98,9 @@ const Earnings = () => {
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
         {error && <p className="error-text">{error}</p>}
+      </div>
+      <div className="mpesa-img">
+        <img src={MpesaIcon} alt="Mpesa" />
       </div>
 
       <button className="payment-button" onClick={handleMpesaPayment}>

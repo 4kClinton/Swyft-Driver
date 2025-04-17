@@ -11,17 +11,38 @@ const Dash = () => {
   const [startY, setStartY] = useState(null);
   const dashRef = useRef(null);
 
-  const currentCustomer = useSelector((state) => state.currentCustomer.value);
-  const user = useSelector((state) => state.user.value);
-  const driver = useSelector((state) => state.user.value);
+  // Select data from Redux
+  const currentCustomer = useSelector(
+    (state) => state.currentCustomer?.value || {}
+  );
+  const user = useSelector((state) => state.user?.value || {});
+  const driver = useSelector((state) => state.user?.value || {});
+  const rides = useSelector((state) => state.rides?.value || []); // Default to an empty array if undefined
 
-  // We'll store a numeric value here; start with null or 0
+  // Debugging: Log the rides data
+  useEffect(() => {
+    console.log('Rides from Redux:', rides);
+  }, [rides]);
+
+  // Filter completed rides
+  const completedRides = Array.isArray(rides)
+    ? rides.filter((ride) => ride.status === 'completed')
+    : [];
+
+  // Debugging: Log the completed rides
+  useEffect(() => {
+    console.log('Completed Rides:', completedRides);
+  }, [completedRides]);
+
   const [earnings, setEarnings] = useState(null);
 
   useEffect(() => {
     async function fetchEarnings() {
       try {
-        if (!driver.id) return; // Ensure we have a valid driver ID
+        if (!driver.id) {
+          console.warn('Driver ID is missing');
+          return;
+        }
         const response = await fetch(
           `https://swyft-backend-client-nine.vercel.app/earnings/${driver.id}`
         );
@@ -29,8 +50,6 @@ const Dash = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-
-        // Convert to a number (in case the server returns a string)
         const numericValue = Number(result.total_unpaid_earnings);
         if (isNaN(numericValue)) {
           throw new Error('Earnings is not a valid number');
@@ -38,7 +57,6 @@ const Dash = () => {
         setEarnings(numericValue);
       } catch (error) {
         console.error('Error fetching earnings:', error);
-        // Set to null or some error state
         setEarnings(null);
       }
     }
@@ -90,12 +108,10 @@ const Dash = () => {
 
   const currentTransform = isOpen ? dragOffset : closedOffset + dragOffset;
 
-  // Decide what to display for the earnings text
   let earningsText = 'Loading...';
   if (earnings === null) {
     earningsText = 'Error fetching earnings';
   } else if (typeof earnings === 'number') {
-    // Format with commas for thousands and two decimal places
     earningsText = `Ksh ${earnings.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -121,7 +137,11 @@ const Dash = () => {
       </h2>
 
       <div className="dash-content">
-        <Link to="/earnings" className="card-link">
+        <Link
+          to="/rides"
+          className="card-link"
+          state={{ completedRides }} // Pass completed rides as state
+        >
           <div className="card">
             <FaMoneyBillWave size={24} className="card-icon" />
             <h3>Earnings</h3>

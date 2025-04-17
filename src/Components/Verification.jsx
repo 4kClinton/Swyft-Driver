@@ -550,6 +550,13 @@ const Verification = () => {
                   <option value="Toyota">Toyota</option>
                   <option value="Honda">Honda</option>
                   <option value="Ford">Ford</option>
+                  <option value="Nissan">Nissan</option>
+                  <option value="Mazda">Mazda</option>
+                  <option value="Volkswagen">Volkswagen</option>
+                  <option value="Hyundai">Hyundai</option>
+                  <option value="Daihatsu">Daihatsu</option>
+                  <option value="Mitsubishi">Mitsubishi</option>
+                  <option value="Isuzu">Isuzu</option>
                   <option value="Chevrolet">Chevrolet</option>
                 </select>
               </div>
@@ -564,6 +571,14 @@ const Verification = () => {
                     Select Vehicle Model
                   </option>
                   <option value="Corolla">Hilux</option>
+                  <option value="Bongo">Bongo</option>
+                  <option value="Dyna">Dyna</option>
+                  <option value="Probox">Probox</option>
+                  <option value="Hijet">Hijet</option>
+                  <option value="Gran Max">Gran Max</option>
+
+                  <option value="Ranger">Ranger</option>
+                  <option value="Canter">Canter</option>
                   <option value="Civic">Civic</option>
                   <option value="Focus">Focus</option>
                   <option value="Malibu">Malibu</option>

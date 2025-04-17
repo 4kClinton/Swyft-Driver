@@ -1,291 +1,212 @@
+:global(:root) {
+  --primary: #ffa600;
+  --text-primary: #fff;
+  --text-secondary: #999;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-strong: rgba(255, 255, 255, 0.1);
+}
+
+/* Container & blur toggle */
 .app {
-  margin: 0 auto;
-  padding: 20px;
-  padding-bottom: 80px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  max-width: 100%;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
+  padding: 1.5rem;
+  background: #1e1e1e;
+  min-height: 100vh;
+  transition: filter 0.3s ease;
 }
 
+.blur {
+  filter: blur(6px);
+  pointer-events: none;
+}
 
-header {
-
-  margin-bottom: 20px;
+/* Title */
+.title h1 {
+  font-size: 2rem;
   text-align: center;
+  color: var(--primary);
+  margin-bottom: 1rem;
 }
 
-h1 {
-  font-size: 32px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.info-button {
-  background: none;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  color: #666;
-}
-
-.tabs {
+/* Top card (commission + button) */
+.topCard {
   display: flex;
-  gap: 32px;
-  margin-bottom: 32px;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+  gap: 1.5rem;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(12px);
+  padding: 0.75rem 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
 }
 
-.tabs button {
-  background: none;
+.statusCleared,
+.statusDue {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 0.3rem 0.75rem;
+  font-weight: 600;
+}
+
+.statusCleared {
+  color: #00c853;
+}
+
+.statusDue {
+  color: #d50000;
+}
+
+.viewButton {
+  padding: 0.5rem 1rem;
+  background-color: #00c853;
+  color: #fff;
   border: none;
-  padding: 12px 0;
-  font-size: 18px;
-  color: #666;
+  border-radius: 0.75rem;
   cursor: pointer;
-  position: relative;
+  transition: background 0.3s, transform 0.2s;
 }
 
-.tabs button.active {
-  color: #000;
+.viewButton:hover {
+  background-color: #e59400;
+  transform: translateY(-2px);
 }
 
-.tabs button.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #2ecc71;
+/* Day header */
+.day_section {
+  margin-bottom: 2rem;
+  padding-left: 0;
 }
 
-.day-section {
-  font-family: 'Montserrat';
-  margin-bottom: 32px;
+.h2 {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px dotted var(--primary);
 }
 
-h2 {
-  font-family: 'Montserrat';
-  font-size: 24px;
-  margin-bottom: 16px;
-}
-
-.ride-entry {
+/* Ride entry */
+.ride_entry {
   display: flex;
-  align-items:center;
-  padding: 16px;
-  border-bottom: 1px solid #eee;
-  gap: 16px;
+  align-items: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.ride-icon {
-  color: #666;
+.ride_entry:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.ride_icon {
   flex-shrink: 0;
+  background: var(--glass-bg-strong);
+  border-radius: 50%;
+  padding: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  margin-right: 1rem;
 }
 
-.ride-details {
+.ride_details {
   flex: 1;
-  min-width: 0;
-}
-
-.ride-time {
-  font-size: 14px;
-  color: #666;
-  font-family: 'Montserrat';
-  margin-bottom: 4px;
-}
-
-.ride-location {
-  font-size: 16px;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  font-family: 'Montserrat';
-  text-overflow: ellipsis;
-}
-
-.ride-price {
-  font-family: 'Montserrat';
-  font-size: 14px;
-  color: #666;
-}
-
-.history-button {
-  background: none;
-  border: none;
-  padding: 8px;
-  font-family: 'Montserrat';
-  cursor: pointer;
-  color: #666;
-  flex-shrink: 0;
-}
-
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  font-family: 'Montserrat';
-  background: white;
-  display: flex;
-  justify-content: space-around;
-  padding: 12px;
-  border-top: 1px solid #eee;
-}
-
-.bottom-nav button {
-  background: none;
-  border: none;
-  padding: 8px;
-  font-family: 'Montserrat';
-  cursor: pointer;
-  color: #666;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  gap: 0.5rem;
 }
 
-.bottom-nav button.active {
-  color: #2ecc71;
+.ride_time {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+  gap: 0.75rem;
 }
 
 .status {
-  font-weight: bold;
-  padding-left: 10px;
+  margin-left: auto;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  backdrop-filter: blur(5px);
+  background: var(--glass-bg-strong);
 }
 
 .statusArrived {
-  color: green;
+  color: #03dac5;
+  background: rgba(3, 218, 197, 0.1);
 }
 
 .statusOnTheWay {
-  color: orange;
+  color: #2962ff;
+  background: rgba(41, 98, 255, 0.1);
+}
+
+.statusAccepted {
+  color: #ff6d00;
+  background: rgba(255, 109, 0, 0.1);
 }
 
 .statusCompleted {
-  font-family: 'Montserrat';
-  color: #ffa600;
+  color: #00c853;
+  background: rgba(0, 200, 83, 0.1);
 }
 
 .statusPending {
-  color: gray;
+  color: #ffd600;
+  background: rgba(255, 214, 0, 0.1);
 }
 
 .statusCanceled {
-  font-family: 'Montserrat';
-  color: red;
+  color: #d50000;
+  background: rgba(213, 0, 0, 0.1);
 }
 
 .statusUnknown {
-  color: black;
+  color: var(--text-secondary);
+  background: rgba(102, 102, 102, 0.1);
 }
 
-
-@media (max-width: 480px) {
-  .app {
-    padding: 16px;
-  }
-
-  h1 {
-    font-size: 28px;
-  }
-
-  .tabs {
-    gap: 24px;
-  }
-
-  .tabs button {
-    font-size: 16px;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  .ride-location {
-    font-size: 14px;
-  }
+.ride_location {
+  font-size: 0.9rem;
+  color: #fff;
 }
 
-.modal {
+.ride_price {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--primary);
+}
+
+/* Modal overlay + content */
+.modalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
+  justify-content: center;
+  z-index: 999;
 }
 
 .modalContent {
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 500px;
+  background: #2a2a2a;
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-height: 90vh;
   overflow-y: auto;
-  animation: slideIn 0.3s ease-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;  /* This centers the button */
-}
-
-.modalTitle {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.modalBody p {
-  font-size: 16px;
-  margin: 8px 0;
-  color: #555;
-}
-
-.modalBody strong {
-  color: #333;
-}
-
-.closeButton {
-  margin-top: 20px;
-  padding: 12px 25px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  width: 100%;  /* Make the button take full width of the container */
-  max-width: 200px; /* Limit button width */
-}
-
-.closeButton:hover {
-  background-color: #0056b3;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  0% {
-    transform: translateY(-50px);
-  }
-  100% {
-    transform: translateY(0);
-  }
 }

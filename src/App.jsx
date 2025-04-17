@@ -98,14 +98,29 @@ function App() {
           }
         }
       )
+
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'orders' },
         (payload) => {
+          console.log('Supabase update received:', payload);
+
           if (payload?.new?.driver_id === driver.id) {
             const updatedStatus = payload?.new?.status;
+            console.log(
+              'Order status updated:',
+              updatedStatus,
+              'Payload details:',
+              payload
+            );
+
             if (updatedStatus === 'cancelled') {
-              // Instead of a toast, display a popup
+              console.warn(
+                'Order cancelled for driver:',
+                driver.id,
+                'Cancellation reason:',
+                payload?.new?.cancellation_reason || 'Unknown'
+              );
               setShowCancelPopup(true);
             }
           }
