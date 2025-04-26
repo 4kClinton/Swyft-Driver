@@ -190,12 +190,14 @@ function App() {
   useEffect(() => {
     const token = Cookies.get('authTokendr2');
     if (token) {
-      fetch('https://swyft-backend-client-nine.vercel.app/orders', {
-        method: 'GET',
+      fetch('https://swyft-backend-client-nine.vercel.app/driver/orders', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({
+          id: driver.id,
+        }),
       })
         .then((response) => {
           if (!response.ok) throw new Error('Failed to fetch rides history');
